@@ -289,7 +289,7 @@ body {
 }
 .row-map {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 420px 1fr;
   gap: 16px;
 }
 
