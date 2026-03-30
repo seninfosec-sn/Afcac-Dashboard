@@ -83,12 +83,12 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
   ];
 
   return (
-    <div className="card" style={{ overflow: "hidden" }}>
+    <div className="card" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div className="card-head">
         <span className="card-head-title">Africa — Action Status Map</span>
         <span className="card-head-badge">Hover country for details</span>
       </div>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
         <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="oceanG" x1="0" y1="0" x2="1" y2="1">

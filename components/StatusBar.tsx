@@ -10,12 +10,12 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
   ];
 
   return (
-    <div className="card">
+    <div className="card" style={{ display: "flex", flexDirection: "column" }}>
       <div className="card-head">
         <span className="card-head-title">Global Status Distribution</span>
         <span className="card-head-badge">{kpis.totalActions} Actions</span>
       </div>
-      <div className="card-body">
+      <div className="card-body" style={{ flex: 1 }}>
         <div className="stack-bar">
           {segs.map((s) => (
             <div
