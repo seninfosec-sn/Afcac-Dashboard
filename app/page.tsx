@@ -21,9 +21,9 @@ export default async function DashboardPage() {
         <div className="db-header-inner">
           <div className="db-emblem">✈</div>
           <div className="db-title-wrap">
-            <div className="db-title">African Aerodrome Safety Action Plan Overview</div>
+            <div className="db-title">AFCAC Revised Abuja Safety Targets</div>
             <div className="db-sub">
-              AFCAC Global Aviation Safety Plan · Multi-State Monitoring Dashboard · Revised Abuja Safety Targets
+              Multi-State Monitoring Dashboard · Revised Abuja Safety Targets
             </div>
           </div>
           <div className="db-controls">
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
       {/* ── FOOTER ── */}
       <footer className="db-footer">
         <span>
-          <strong>AFCAC Global Aviation Safety Plan</strong> · African Aerodrome Safety Dashboard ·{" "}
+          <strong>Revised Abuja Safety Targets Dashboard</strong> ·{" "}
           Last updated: {kpis.lastUpdated}
         </span>
         <span>Data source: AST Questionnaire · All figures in USD · © AFCAC</span>
