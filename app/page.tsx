@@ -51,15 +51,15 @@ export default async function DashboardPage() {
         {/* Section 2: Status + Action Table */}
         <div className="section-label">Status Overview</div>
         <div className="row-wide">
-          <StatusBar kpis={kpis} />
+          <StatusDonut kpis={kpis} />
           <ActionTable actions={actions} />
         </div>
 
-        {/* Section 3: Map + Status Donut */}
+        {/* Section 3: Map + Status Bar */}
         <div className="section-label">Geographic &amp; Status Overview</div>
         <div className="row-map">
           <AfricaMap countries={countries} />
-          <StatusDonut kpis={kpis} />
+          <StatusBar kpis={kpis} />
         </div>
 
         {/* Section 4: Country Breakdown */}
