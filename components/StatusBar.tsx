@@ -53,6 +53,26 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
             ))}
           </div>
         </div>
+
+        {/* Description */}
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid var(--border2)" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 8 }}>
+            À propos de cet indicateur
+          </div>
+          <p style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.6, margin: 0 }}>
+            Ce graphique représente la <strong>répartition globale des statuts</strong> de l'ensemble des actions engagées dans le cadre des <strong>Revised Abuja Safety Targets</strong> (RAST) de l'AFCAC. Chaque segment correspond à une catégorie de progression :
+          </p>
+          <ul style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.7, margin: "8px 0 0 0", paddingLeft: 16 }}>
+            <li><strong style={{ color: "var(--c-complete)" }}>Completed</strong> — Cible pleinement atteinte (100%)</li>
+            <li><strong style={{ color: "var(--c-progress)" }}>In Progress</strong> — Mise en œuvre en cours</li>
+            <li><strong style={{ color: "var(--c-delayed)" }}>Delayed</strong> — Retard par rapport au calendrier prévu</li>
+            <li><strong style={{ color: "var(--c-onhold)" }}>On Hold</strong> — Action suspendue temporairement</li>
+            <li><strong style={{ color: "var(--c-nostart)" }}>Not Started</strong> — Action non encore initiée</li>
+          </ul>
+          <p style={{ fontSize: 10, color: "var(--ink3)", marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
+            Source : AFCAC Safety Unit via Countries Focal Point · Données mises à jour par les points focaux nationaux.
+          </p>
+        </div>
       </div>
     </div>
   );
