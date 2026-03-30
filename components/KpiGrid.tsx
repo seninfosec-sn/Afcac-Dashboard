@@ -24,10 +24,6 @@ function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, co
 }
 
 export default function KpiGrid({ kpis }: { kpis: KpiData }) {
-  const budget = kpis.totalBudget >= 1_000_000
-    ? `$${(kpis.totalBudget / 1_000_000).toFixed(1)}M`
-    : `$${kpis.totalBudget.toLocaleString()}`;
-
   return (
     <div className="kpi-grid">
       <KpiCard
@@ -41,31 +37,26 @@ export default function KpiGrid({ kpis }: { kpis: KpiData }) {
         trend={`▲ ${kpis.totalActionsTrend}`} trendClass="trend-up" delay=".1s"
       />
       <KpiCard
-        colorClass="k-gold" icon="💰" iconBg="#fff8e6"
-        value={budget} label="Total Budget (USD)"
-        trend="● Budget allocated" trendClass="trend-flat" delay=".15s"
-      />
-      <KpiCard
         colorClass="k-green" icon="✅" iconBg="#d4f0e0"
         value={`${kpis.pctCompleted}%`} valueColor="var(--c-complete)"
         label="% Completed"
-        trend={`▲ ${kpis.pctCompletedTrend}`} trendClass="trend-up" delay=".2s"
+        trend={`▲ ${kpis.pctCompletedTrend}`} trendClass="trend-up" delay=".15s"
       />
       <KpiCard
         colorClass="k-amber" icon="⏳" iconBg="#fff0e0"
         value={`${kpis.pctInProgress}%`} valueColor="var(--c-progress)"
         label="% In Progress"
-        trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".25s"
+        trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".2s"
       />
       <KpiCard
         colorClass="k-teal" icon="⏱" iconBg="#e8f2f8"
         value={String(kpis.avgDurationWeeks)} label="Avg Duration (wks)"
-        trend="● 3.5 months avg." trendClass="trend-flat" delay=".3s"
+        trend="● 3.5 months avg." trendClass="trend-flat" delay=".25s"
       />
       <KpiCard
         colorClass="k-blue" icon="👥" iconBg="#eee8f8"
         value={String(kpis.expertsPlanned)} label="Experts Planned"
-        trend="● AFCAC Experts" trendClass="trend-flat" delay=".35s"
+        trend="● AFCAC Experts" trendClass="trend-flat" delay=".3s"
       />
     </div>
   );
