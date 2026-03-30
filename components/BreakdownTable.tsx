@@ -14,7 +14,6 @@ export default function BreakdownTable({ countries }: { countries: CountryRow[] 
     { label: "Total Actions",  key: "actions" },
     { label: "% Completed",    key: "completed" },
     { label: "% In Progress",  key: "inprogress" },
-    { label: "Budget (USD)",   key: "budget" },
     { label: "Responsible",    key: "entity" },
   ];
 
@@ -58,7 +57,6 @@ export default function BreakdownTable({ countries }: { countries: CountryRow[] 
                 <td>
                   <span style={{ color: "#b07800", fontWeight: 700 }}>{row.inprogress}%</span>
                 </td>
-                <td style={{ fontWeight: 600 }}>${row.budget.toLocaleString()}</td>
                 <td style={{ color: "var(--ink3)", fontSize: 11 }}>{row.entity}</td>
                 <td style={{ minWidth: 120 }}>
                   <div style={{ display: "flex", gap: 2, height: 10 }}>
