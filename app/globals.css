@@ -279,7 +279,7 @@ body {
 /* ── ROW LAYOUTS ── */
 .row-wide {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 340px 1fr;
   gap: 16px;
 }
 .row-budget {
