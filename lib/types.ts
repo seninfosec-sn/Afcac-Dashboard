@@ -61,3 +61,16 @@ export interface DashboardData {
   countries: CountryRow[];
   targets: TargetRow[];
 }
+
+export interface UpdateLog {
+  username: string;
+  date: string;       // ISO string
+  targetsUpdated: number;
+}
+
+export interface ExpertStat {
+  username: string;
+  totalUpdates: number;
+  lastUpdate: string; // ISO string
+  avgTargetsPerUpdate: number;
+}

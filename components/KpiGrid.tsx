@@ -1,4 +1,5 @@
-import type { KpiData } from "@/lib/types";
+import type { KpiData, ExpertStat } from "@/lib/types";
+import TopExpertsCard from "./TopExpertsCard";
 
 interface KpiCardProps {
   icon: string;
@@ -23,7 +24,7 @@ function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, co
   );
 }
 
-export default function KpiGrid({ kpis }: { kpis: KpiData }) {
+export default function KpiGrid({ kpis, experts }: { kpis: KpiData; experts: ExpertStat[] }) {
   return (
     <div className="kpi-grid">
       <KpiCard
@@ -58,6 +59,7 @@ export default function KpiGrid({ kpis }: { kpis: KpiData }) {
         value={String(kpis.expertsPlanned)} label="Experts Planned"
         trend="● AFCAC Experts" trendClass="trend-flat" delay=".3s"
       />
+      <TopExpertsCard experts={experts} />
     </div>
   );
 }

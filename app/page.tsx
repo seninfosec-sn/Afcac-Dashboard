@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDashboardData } from "@/lib/data";
+import { getDashboardData, getTopExperts } from "@/lib/data";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic"; // always fresh data
 
 export default async function DashboardPage() {
   const { kpis, actions, countries, targets } = getDashboardData();
+  const experts = getTopExperts(3);
 
   return (
     <>
@@ -45,7 +46,7 @@ export default async function DashboardPage() {
 
         {/* Section 1: KPI Summary */}
         <div className="section-label">Executive Summary</div>
-        <KpiGrid kpis={kpis} />
+        <KpiGrid kpis={kpis} experts={experts} />
 
         {/* Section 2: Status + Action Table */}
         <div className="section-label">Status Overview</div>

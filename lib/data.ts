@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData } from "./types";
+import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat } from "./types";
 
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
@@ -63,4 +63,45 @@ export function saveDashboardData(data: DashboardData): void {
   saveActions(data.actions);
   saveCountries(data.countries);
   saveTargets(data.targets);
+}
+
+/* ── Update logs ── */
+export function getUpdateLogs(): UpdateLog[] {
+  try {
+    return readJson<UpdateLog[]>("updates.json");
+  } catch {
+    return [];
+  }
+}
+
+export function appendUpdateLog(log: UpdateLog): void {
+  const logs = getUpdateLogs();
+  logs.push(log);
+  writeJson("updates.json", logs);
+}
+
+export function getTopExperts(limit = 3): ExpertStat[] {
+  const logs = getUpdateLogs();
+  const map: Record<string, { total: number; targetsSum: number; lastDate: string }> = {};
+
+  for (const log of logs) {
+    if (!map[log.username]) {
+      map[log.username] = { total: 0, targetsSum: 0, lastDate: log.date };
+    }
+    map[log.username].total += 1;
+    map[log.username].targetsSum += log.targetsUpdated;
+    if (log.date > map[log.username].lastDate) {
+      map[log.username].lastDate = log.date;
+    }
+  }
+
+  return Object.entries(map)
+    .map(([username, s]) => ({
+      username,
+      totalUpdates: s.total,
+      lastUpdate: s.lastDate,
+      avgTargetsPerUpdate: Math.round(s.targetsSum / s.total),
+    }))
+    .sort((a, b) => b.totalUpdates - a.totalUpdates)
+    .slice(0, limit);
 }
