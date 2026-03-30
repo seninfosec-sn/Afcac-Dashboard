@@ -17,7 +17,7 @@ export default function ActionTable({ actions }: { actions: ActionRow[] }) {
 
   const cols: { label: string; key: keyof ActionRow }[] = [
     { label: "Country",   key: "country" },
-    { label: "Action ID", key: "action" },
+    { label: "Target ID", key: "action" },
     { label: "Section",   key: "section" },
     { label: "Status",    key: "status" },
     { label: "Start",     key: "start" },
