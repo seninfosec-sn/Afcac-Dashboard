@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPassword, createToken, buildSessionCookie } from "@/lib/auth";
+import { SignJWT } from "jose";
+
+const COOKIE_NAME = "afcac_session";
+const COOKIE_MAX_AGE = 60 * 60 * 8; // 8 hours
+
+function getSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET ?? "afcac-dashboard-dev-secret-key-2024-change-in-prod";
+  return new TextEncoder().encode(secret);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,23 +28,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // In development without a hash, allow a default password "admin123"
+    // Validate password
     let valid = false;
-    if (!passwordHash || passwordHash.startsWith("$REPLACE")) {
+    if (!passwordHash || passwordHash.startsWith("$REPLACE") || passwordHash === "") {
+      // Dev mode: plain text comparison
       valid = password === "admin123";
     } else {
-      valid = await verifyPassword(password, passwordHash);
+      // Production: bcrypt comparison — dynamic import to avoid bundler issues
+      const bcrypt = await import("bcryptjs");
+      valid = await bcrypt.compare(password, passwordHash);
     }
 
     if (!valid) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    const token = await createToken(username);
+    // Create JWT token
+    const token = await new SignJWT({ username })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("8h")
+      .sign(getSecret());
+
+    // Set cookie
+    const cookie = `${COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Strict${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+
     const response = NextResponse.json({ success: true });
-    response.headers.set("Set-Cookie", buildSessionCookie(token));
+    response.headers.set("Set-Cookie", cookie);
     return response;
-  } catch {
+
+  } catch (err) {
+    console.error("[LOGIN ERROR]", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
