@@ -88,8 +88,8 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
         <span className="card-head-title">Africa — Action Status Map</span>
         <span className="card-head-badge">Hover country for details</span>
       </div>
-      <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-        <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg">
+      <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch" }}>
+        <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "100%", display: "block" }}>
           <defs>
             <linearGradient id="oceanG" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#c8e0ea" />
