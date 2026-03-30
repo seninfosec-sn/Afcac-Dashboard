@@ -66,6 +66,8 @@ export interface UpdateLog {
   username: string;
   date: string;       // ISO string
   targetsUpdated: number;
+  fullName?: string;
+  country?: string;
 }
 
 export interface ExpertStat {

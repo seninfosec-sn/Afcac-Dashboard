@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await request.json()) as Partial<DashboardData> & { targetsUpdated?: number };
+    const body = (await request.json()) as Partial<DashboardData> & { targetsUpdated?: number; fullName?: string; updaterCountry?: string };
 
     if (session.role === "expert") {
       // Experts can only save targets
@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
       username: session.username,
       date: new Date().toISOString(),
       targetsUpdated,
+      fullName: body.fullName,
+      country: body.updaterCountry,
     });
 
     return NextResponse.json({ success: true, message: "Dashboard updated successfully" });
