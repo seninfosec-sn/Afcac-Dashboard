@@ -22,7 +22,6 @@ export default function ActionTable({ actions }: { actions: ActionRow[] }) {
     { label: "Status",    key: "status" },
     { label: "Start",     key: "start" },
     { label: "End",       key: "end" },
-    { label: "Budget",    key: "budget" },
   ];
 
   function handleSort(idx: number, key: keyof ActionRow) {
@@ -65,7 +64,6 @@ export default function ActionTable({ actions }: { actions: ActionRow[] }) {
                   <td><span className={`badge ${s.cls}`}>{s.label}</span></td>
                   <td>{row.start}</td>
                   <td>{row.end}</td>
-                  <td style={{ fontWeight: 600 }}>${row.budget.toLocaleString()}</td>
                 </tr>
               );
             })}
