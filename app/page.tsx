@@ -78,7 +78,7 @@ export default async function DashboardPage() {
           <strong>Revised Abuja Safety Targets Dashboard</strong> ·{" "}
           Last updated: {kpis.lastUpdated}
         </span>
-        <span>Data source: AST Questionnaire · All figures in USD · © AFCAC</span>
+        <span>Data source: AFCAC Safety Unit via Countries Focal Point · © AFCAC</span>
       </footer>
     </>
   );
