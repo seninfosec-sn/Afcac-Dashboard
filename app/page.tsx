@@ -6,7 +6,6 @@ import ActionTable from "@/components/ActionTable";
 import BreakdownTable from "@/components/BreakdownTable";
 import TargetGrid from "@/components/TargetGrid";
 import AfricaMap from "@/components/AfricaMap";
-import BudgetCharts from "@/components/BudgetCharts";
 import StatusDonut from "@/components/StatusDonut";
 
 export const dynamic = "force-dynamic"; // always fresh data
@@ -48,13 +47,10 @@ export default async function DashboardPage() {
         <div className="section-label">Executive Summary</div>
         <KpiGrid kpis={kpis} />
 
-        {/* Section 2: Budget + Action Table */}
-        <div className="section-label">Budget Allocation</div>
+        {/* Section 2: Status + Action Table */}
+        <div className="section-label">Status Overview</div>
         <div className="row-wide">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <BudgetCharts countries={countries} kpis={kpis} />
-            <StatusBar kpis={kpis} />
-          </div>
+          <StatusBar kpis={kpis} />
           <ActionTable actions={actions} />
         </div>
 
