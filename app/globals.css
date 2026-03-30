@@ -208,6 +208,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
+  align-items: stretch;
 }
 @media (max-width: 1400px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
 
@@ -220,6 +221,7 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 100%;
   overflow: hidden;
   cursor: default;
   transition: transform 0.2s, box-shadow 0.2s;
