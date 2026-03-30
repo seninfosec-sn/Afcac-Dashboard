@@ -74,3 +74,15 @@ export interface ExpertStat {
   lastUpdate: string; // ISO string
   avgTargetsPerUpdate: number;
 }
+
+export type UserRole = "admin" | "expert";
+
+export interface AppUser {
+  username: string;
+  displayName: string;
+  role: UserRole;
+  passwordHash: string;
+  devPassword: string;
+  email: string;
+  country: string;
+}

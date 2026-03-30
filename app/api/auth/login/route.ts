@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SignJWT } from "jose";
-
-const COOKIE_NAME = "afcac_session";
-const COOKIE_MAX_AGE = 60 * 60 * 8; // 8 hours
-
-function getSecret(): Uint8Array {
-  const secret = process.env.JWT_SECRET ?? "afcac-dashboard-dev-secret-key-2024-change-in-prod";
-  return new TextEncoder().encode(secret);
-}
+import { findUser } from "@/lib/data";
+import { createToken, buildSessionCookie } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,39 +14,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const expectedUsername = process.env.ADMIN_USERNAME ?? "admin";
-    const passwordHash = process.env.ADMIN_PASSWORD_HASH ?? "";
-
-    if (username !== expectedUsername) {
+    const user = findUser(username);
+    if (!user) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
     // Validate password
     let valid = false;
-    if (!passwordHash || passwordHash.startsWith("$REPLACE") || passwordHash === "") {
-      // Dev mode: plain text comparison
-      valid = password === "admin123";
+    if (!user.passwordHash || user.passwordHash === "") {
+      // Dev mode: plain text comparison against devPassword
+      valid = password === user.devPassword;
     } else {
-      // Production: bcrypt comparison — dynamic import to avoid bundler issues
+      // Production: bcrypt comparison
       const bcrypt = await import("bcryptjs");
-      valid = await bcrypt.compare(password, passwordHash);
+      valid = await bcrypt.compare(password, user.passwordHash);
     }
 
     if (!valid) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Create JWT token
-    const token = await new SignJWT({ username })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("8h")
-      .sign(getSecret());
-
-    // Set cookie
-    const cookie = `${COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Strict${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
-    }`;
+    const token = await createToken(user.username, user.role);
+    const cookie = buildSessionCookie(token);
 
     const response = NextResponse.json({ success: true });
     response.headers.set("Set-Cookie", cookie);

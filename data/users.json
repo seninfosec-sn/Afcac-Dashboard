@@ -1,0 +1,29 @@
+[
+  {
+    "username": "admin",
+    "displayName": "Administrator",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "admin123",
+    "email": "admin@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "expert1",
+    "displayName": "Expert AFCAC 1",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "expert123",
+    "email": "expert1@afcac.org",
+    "country": "Nigeria"
+  },
+  {
+    "username": "expert2",
+    "displayName": "Expert AFCAC 2",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "expert456",
+    "email": "expert2@afcac.org",
+    "country": "Kenya"
+  }
+]

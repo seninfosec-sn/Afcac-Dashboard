@@ -13,5 +13,5 @@ export default async function AdminPage() {
 
   if (!session) redirect("/login");
 
-  return <AdminClient initialData={data} username={session.username} />;
+  return <AdminClient initialData={data} username={session.username} role={session.role} />;
 }

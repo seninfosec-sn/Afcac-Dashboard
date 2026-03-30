@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow } from "@/lib/types";
+import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole } from "@/lib/types";
 
 /* ─── Types ──────────────────────────────────────── */
 type Tab = "kpis" | "targets" | "actions" | "countries";
@@ -39,12 +39,14 @@ function Toast({ msg, type, visible }: { msg: string; type: "ok" | "warn" | ""; 
 export default function AdminClient({
   initialData,
   username,
+  role,
 }: {
   initialData: DashboardData;
   username: string;
+  role: UserRole;
 }) {
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("targets");
+  const [tab, setTab] = useState<Tab>(role === "admin" ? "targets" : "targets");
   const [kpis, setKpis] = useState<KpiData>(initialData.kpis);
   const [actions, setActions] = useState<ActionRow[]>(initialData.actions);
   const [countries, setCountries] = useState<CountryRow[]>(initialData.countries);
@@ -69,10 +71,13 @@ export default function AdminClient({
   async function handleSave() {
     setSaving(true);
     try {
+      const payload = role === "expert"
+        ? { targets }
+        : { kpis, actions, countries, targets };
       const res = await fetch("/api/dashboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kpis, actions, countries, targets }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Erreur de sauvegarde");
@@ -180,7 +185,7 @@ export default function AdminClient({
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
             <div className="profile-name">{username}</div>
-            <div className="profile-role">Administrator · AFCAC</div>
+            <div className="profile-role">{role === "admin" ? "Administrator" : "Expert"} · AFCAC</div>
             <div className="profile-meta">
               <div className="profile-meta-row">
                 <span>🗓</span>
@@ -203,7 +208,7 @@ export default function AdminClient({
 
           {/* Navigation */}
           <div className="sb-section">Sections</div>
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => role === "admin" || item.id === "targets").map((item) => (
             <div
               key={item.id}
               className={`sb-item${tab === item.id ? " active" : ""}${tab === item.id ? " done" : ""}`}

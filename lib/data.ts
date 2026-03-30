@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat } from "./types";
+import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
 
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
@@ -63,6 +63,19 @@ export function saveDashboardData(data: DashboardData): void {
   saveActions(data.actions);
   saveCountries(data.countries);
   saveTargets(data.targets);
+}
+
+/* ── Users ── */
+export function getUsers(): AppUser[] {
+  try {
+    return readJson<AppUser[]>("users.json");
+  } catch {
+    return [];
+  }
+}
+
+export function findUser(username: string): AppUser | null {
+  return getUsers().find((u) => u.username === username) ?? null;
 }
 
 /* ── Update logs ── */

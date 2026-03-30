@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDashboardData, saveDashboardData, appendUpdateLog } from "@/lib/data";
+import { getDashboardData, saveDashboardData, saveTargets, appendUpdateLog } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import type { DashboardData } from "@/lib/types";
 
@@ -15,24 +15,33 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as Partial<DashboardData> & { targetsUpdated?: number };
-
-    if (!body.kpis || !body.actions || !body.countries || !body.targets) {
-      return NextResponse.json(
-        { error: "Missing required fields: kpis, actions, countries, targets" },
-        { status: 400 }
-      );
+    const session = await getServerSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    saveDashboardData(body as DashboardData);
+    const body = (await request.json()) as Partial<DashboardData> & { targetsUpdated?: number };
 
-    // Log the update with the authenticated user
-    const session = await getServerSession();
-    const username = session?.username ?? "admin";
-    const targetsUpdated = body.targetsUpdated ?? body.targets.filter((t) => t.pct > 0).length;
+    if (session.role === "expert") {
+      // Experts can only save targets
+      if (!body.targets) {
+        return NextResponse.json({ error: "Missing targets data" }, { status: 400 });
+      }
+      saveTargets(body.targets);
+    } else {
+      // Admins save everything
+      if (!body.kpis || !body.actions || !body.countries || !body.targets) {
+        return NextResponse.json(
+          { error: "Missing required fields: kpis, actions, countries, targets" },
+          { status: 400 }
+        );
+      }
+      saveDashboardData(body as DashboardData);
+    }
 
+    const targetsUpdated = body.targetsUpdated ?? (body.targets?.filter((t) => t.pct > 0).length ?? 0);
     appendUpdateLog({
-      username,
+      username: session.username,
       date: new Date().toISOString(),
       targetsUpdated,
     });

@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 const COOKIE_NAME = "afcac_session";
 
 function getSecret(): Uint8Array {
-  const secret = process.env.JWT_SECRET ?? "fallback-dev-secret-32-characters!!";
+  const secret = process.env.JWT_SECRET ?? "afcac-dashboard-dev-secret-key-2024-change-in-prod";
   return new TextEncoder().encode(secret);
 }
 
