@@ -2,19 +2,41 @@ import fs from "fs";
 import path from "path";
 import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
 
-const DATA_DIR = process.env.DATA_DIR
+// On Vercel (serverless), /var/task is read-only — write to /tmp instead
+const IS_SERVERLESS = process.env.VERCEL === "1" || process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined;
+const TMP_DIR = "/tmp/afcac-data";
+const SOURCE_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(process.cwd(), "data");
 
+function ensureTmpDir(): void {
+  if (!fs.existsSync(TMP_DIR)) {
+    fs.mkdirSync(TMP_DIR, { recursive: true });
+  }
+}
+
 function readJson<T>(filename: string): T {
-  const file = path.join(DATA_DIR, filename);
-  const raw = fs.readFileSync(file, "utf-8");
-  return JSON.parse(raw) as T;
+  if (IS_SERVERLESS) {
+    ensureTmpDir();
+    const tmpFile = path.join(TMP_DIR, filename);
+    // If not yet in /tmp, copy from bundled source
+    if (!fs.existsSync(tmpFile)) {
+      const srcFile = path.join(SOURCE_DIR, filename);
+      fs.copyFileSync(srcFile, tmpFile);
+    }
+    return JSON.parse(fs.readFileSync(tmpFile, "utf-8")) as T;
+  }
+  return JSON.parse(fs.readFileSync(path.join(SOURCE_DIR, filename), "utf-8")) as T;
 }
 
 function writeJson(filename: string, data: unknown): void {
-  const file = path.join(DATA_DIR, filename);
-  fs.writeFileSync(file, JSON.stringify(data, null, 2), "utf-8");
+  const content = JSON.stringify(data, null, 2);
+  if (IS_SERVERLESS) {
+    ensureTmpDir();
+    fs.writeFileSync(path.join(TMP_DIR, filename), content, "utf-8");
+  } else {
+    fs.writeFileSync(path.join(SOURCE_DIR, filename), content, "utf-8");
+  }
 }
 
 export function getKpis(): KpiData {
