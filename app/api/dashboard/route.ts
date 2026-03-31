@@ -63,9 +63,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: "Dashboard updated successfully" });
   } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
     console.error(`[SAVE ERROR at step=${step}]`, err);
     return NextResponse.json(
-      { error: `Failed to save data (step: ${step})` },
+      { error: `${step}: ${msg}` },
       { status: 500 }
     );
   }
