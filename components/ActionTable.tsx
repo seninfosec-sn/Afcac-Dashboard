@@ -21,7 +21,9 @@ export default function ActionTable({
   actions: ActionRow[];
   targets?: TargetRow[];
 }) {
-  const [sorted, setSorted] = useState<ActionRow[]>(actions);
+  const [sorted, setSorted] = useState<ActionRow[]>(
+    [...actions].sort((a, b) => a.country.localeCompare(b.country))
+  );
   const [sortCol, setSortCol] = useState(-1);
   const [sortAsc, setSortAsc] = useState(true);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
