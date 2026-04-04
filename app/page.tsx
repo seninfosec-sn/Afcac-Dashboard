@@ -52,7 +52,7 @@ export default async function DashboardPage() {
         <div className="section-label">Status Overview</div>
         <div className="row-wide">
           <StatusDonut kpis={kpis} />
-          <ActionTable actions={actions} />
+          <ActionTable actions={actions} targets={targets} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
