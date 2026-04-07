@@ -287,7 +287,7 @@ export default function AdminClient({
           <div className="intro">
             <div className="intro-title">
               {tab === "kpis"      && "📊 KPI Overview — Indicateurs Globaux"}
-              {tab === "targets"   && "🎯 AFCAC / ICAO — Revised Abuja Safety Targets · Mise à Jour des Progrès"}
+              {tab === "targets"   && "🎯 AFCAC — Revised Abuja Safety Targets · Mise à Jour des Progrès"}
               {tab === "actions"   && "📋 Plan d'Actions — Statut par Pays"}
               {tab === "countries" && "🌍 Données Pays — Répartition des Actions"}
             </div>
