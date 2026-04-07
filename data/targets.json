@@ -1,41 +1,353 @@
 [
-  { "id": "T1.1",  "group": "Safety Trend",         "title": "Decreasing Accident Rate Trend",               "pct": 50,  "status": "inprogress", "deadline": "Ongoing" },
-  { "id": "T1.2",  "group": "Safety Trend",         "title": "Loss of Separation Reduction ≥50%",            "pct": 25,  "status": "delayed",    "deadline": "Ongoing" },
-  { "id": "T2.1",  "group": "Safety Oversight",     "title": "Autonomous CAA Established",                   "pct": 75,  "status": "inprogress", "deadline": "2027" },
-  { "id": "T2.2",  "group": "Safety Oversight",     "title": "Safety Oversight EI Score (CEs/PQs)",          "pct": 50,  "status": "inprogress", "deadline": "2030" },
-  { "id": "T2.3",  "group": "Safety Oversight",     "title": "Independent Investigation Body",               "pct": 25,  "status": "delayed",    "deadline": "2028" },
-  { "id": "T2.4",  "group": "Safety Oversight",     "title": "Support Departments Established",              "pct": 50,  "status": "inprogress", "deadline": "Ongoing" },
-  { "id": "T3.1",  "group": "State Safety Programme","title": "SSP Foundation Implemented",                  "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T3.2",  "group": "State Safety Programme","title": "NASP Published",                              "pct": 0,   "status": "notstarted", "deadline": "Dec 2026" },
-  { "id": "T3.3",  "group": "State Safety Programme","title": "SSP Effective Implementation",                "pct": 25,  "status": "delayed",    "deadline": "2028" },
-  { "id": "T4.1",  "group": "Assistance & RASP",    "title": "Assistance Sought (Goals 2&3)",                "pct": 50,  "status": "inprogress", "deadline": "Dec 2026" },
-  { "id": "T4.2",  "group": "Assistance & RASP",    "title": "Updated RASP Published",                       "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T5.1",  "group": "Industry Standards",   "title": "Safety Information Sharing",                   "pct": 50,  "status": "inprogress", "deadline": "Ongoing" },
-  { "id": "T5.2",  "group": "Industry Standards",   "title": "IOSA/ISSA/ISAGO Participation",                "pct": 25,  "status": "delayed",    "deadline": "Ongoing" },
-  { "id": "T5.3",  "group": "Industry Standards",   "title": "Airlines IOSA/ISSA Registration",              "pct": 25,  "status": "delayed",    "deadline": "Ongoing" },
-  { "id": "T5.4",  "group": "Industry Standards",   "title": "GSP ISAGO Certification",                      "pct": 25,  "status": "delayed",    "deadline": "Ongoing" },
-  { "id": "T6.1",  "group": "Infrastructure",       "title": "ANS & Aerodrome Infrastructure ICAO Compliant","pct": 50,  "status": "inprogress", "deadline": "Ongoing" },
-  { "id": "T7.1",  "group": "Infrastructure",       "title": "Aerodrome Infrastructure Gap Analysis",        "pct": 50,  "status": "inprogress", "deadline": "Dec 2026" },
-  { "id": "T7.2",  "group": "Infrastructure",       "title": "ANS Infrastructure Gap Analysis",              "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T8",    "group": "Aerodrome Certification","title": "All International Aerodromes Certified",     "pct": 25,  "status": "delayed",    "deadline": "2030" },
-  { "id": "T9.1",  "group": "Search & Rescue",      "title": "SAR Organization Established",                 "pct": 25,  "status": "delayed",    "deadline": "Dec 2028" },
-  { "id": "T10.1", "group": "AIS to AIM",           "title": "AIS-AIM Transition Plan",                      "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T10.2", "group": "AIS to AIM",           "title": "ASBU Block 0 D-AIM Implementation",            "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T10.3", "group": "AIS to AIM",           "title": "Central Aeronautical Database",                "pct": 0,   "status": "notstarted", "deadline": "Dec 2028" },
-  { "id": "T11.1", "group": "PBN",                  "title": "75% Instrument Runways with PBN",              "pct": 50,  "status": "inprogress", "deadline": "Dec 2026" },
-  { "id": "T11.2", "group": "PBN",                  "title": "100% Instrument Runways with PBN",             "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T12.1", "group": "Seamless ANS",         "title": "ANS Infrastructure Gap Analysis",              "pct": 50,  "status": "inprogress", "deadline": "Dec 2026" },
-  { "id": "T12.2", "group": "Seamless ANS",         "title": "Seamless Airspace Masterplan Support",         "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T12.3", "group": "Seamless ANS",         "title": "Harmonized ANS Provision",                     "pct": 25,  "status": "delayed",    "deadline": "Dec 2028" },
-  { "id": "T12.4", "group": "Seamless ANS",         "title": "RECs & ANSPs Initiatives Harmonized",          "pct": 25,  "status": "delayed",    "deadline": "Dec 2028" },
-  { "id": "T13.1", "group": "ASBU",                 "title": "National ASBU Plan Developed",                 "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T13.2", "group": "ASBU",                 "title": "ASBU Block 0 (B0) Implemented",                "pct": 50,  "status": "inprogress", "deadline": "Dec 2025" },
-  { "id": "T13.3", "group": "ASBU",                 "title": "ASBU Block 1 (B1) Implemented",                "pct": 25,  "status": "delayed",    "deadline": "Dec 2028" },
-  { "id": "T13.4", "group": "ASBU",                 "title": "ASBU Block 2 (B2) Implemented",                "pct": 0,   "status": "notstarted", "deadline": "Dec 2030" },
-  { "id": "T13.5", "group": "ASBU",                 "title": "ASBU Block 3 (B3) Implemented",                "pct": 0,   "status": "notstarted", "deadline": "Dec 2036" },
-  { "id": "T14.1", "group": "CO2 Emissions",        "title": "CO2 Reduction Action Plan",                    "pct": 25,  "status": "delayed",    "deadline": "Dec 2026" },
-  { "id": "T14.2", "group": "CO2 Emissions",        "title": "CO2 Reduction Measures & Roadmap",             "pct": 0,   "status": "notstarted", "deadline": "From 2026" },
-  { "id": "T15.1", "group": "ANSP Peer Review",     "title": "ANSPs Join Peer Review Programme",             "pct": 50,  "status": "inprogress", "deadline": "Dec 2026" },
-  { "id": "T15.2", "group": "ANSP Peer Review",     "title": "ANSP SMS Maturity (50% by 2026)",              "pct": 50,  "status": "inprogress", "deadline": "Dec 2028" },
-  { "id": "T15.3", "group": "ANSP Peer Review",     "title": "ANSP Certification",                           "pct": 25,  "status": "delayed",    "deadline": "Dec 2036" }
+  {
+    "id": "T1.1",
+    "group": "Safety Trend",
+    "title": "Decreasing Accident Rate Trend",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State established mechanisms to monitor, analyze, and report on accident and serious incident occurrences, and confirms that the national accident/serious incident rate demonstrates a consistent decreasing trend over the past three years in alignment with the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T1.2",
+    "group": "Safety Trend",
+    "title": "Loss of Separation Reduction ≥50%",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "Has the State implemented measures to monitor and reduce loss of separation occurrences, and can confirm a reduction of at least 50% in the number of reported loss of separation events compared to the baseline period, in accordance with the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T2.1",
+    "group": "Safety Oversight",
+    "title": "Autonomous CAA Established",
+    "pct": 75,
+    "status": "inprogress",
+    "deadline": "2027",
+    "question": "Has the State established an autonomous Civil Aviation Authority (CAA) with a dedicated legal framework, financial independence, and technically qualified staff, fully separated from service providers, in compliance with ICAO Standards and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T2.2",
+    "group": "Safety Oversight",
+    "title": "Safety Oversight EI Score (CEs/PQs)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "2030",
+    "question": "Has the State achieved and maintained a satisfactory Effective Implementation (EI) score on the Critical Elements (CEs) and Protocol Questions (PQs) as assessed through ICAO's Universal Safety Oversight Audit Programme (USOAP), consistent with the benchmarks set in the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T2.3",
+    "group": "Safety Oversight",
+    "title": "Independent Investigation Body",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2028",
+    "question": "Has the State established an independent accident and incident investigation authority with a clear legal mandate, adequate funding, and qualified investigators, fully separate from the regulatory authority and service providers, in accordance with ICAO Annex 13 and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T2.4",
+    "group": "Safety Oversight",
+    "title": "Support Departments Established",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State established all necessary support departments within the civil aviation authority — including legal, finance, human resources, and information management units — to sustain effective safety oversight operations as required by the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T3.1",
+    "group": "State Safety Programme",
+    "title": "SSP Foundation Implemented",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State implemented the foundational components of its State Safety Programme (SSP), including safety policy and objectives, safety risk management, safety assurance, and safety promotion, in accordance with ICAO Doc 9859 and the Revised Abuja Safety Targets timeline?"
+  },
+  {
+    "id": "T3.2",
+    "group": "State Safety Programme",
+    "title": "NASP Published",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2026",
+    "question": "Has the State published a National Aviation Safety Plan (NASP) that identifies key safety priorities, outlines corrective actions, assigns responsibilities, and establishes timelines for implementation, aligned with regional and ICAO safety frameworks and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T3.3",
+    "group": "State Safety Programme",
+    "title": "SSP Effective Implementation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2028",
+    "question": "Has the State demonstrated effective implementation of its State Safety Programme (SSP) through measurable safety outcomes, regular safety performance reviews, and documented evidence of systemic safety improvements across all aviation sectors, in line with the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T4.1",
+    "group": "Assistance & RASP",
+    "title": "Assistance Sought (Goals 2&3)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State formally sought technical assistance from ICAO, AFCAC, or other international partners to address deficiencies related to Safety Oversight (Goal 2) and State Safety Programme (Goal 3) as identified through audits or self-assessments, consistent with the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T4.2",
+    "group": "Assistance & RASP",
+    "title": "Updated RASP Published",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State contributed to and endorsed the updated Regional Aviation Safety Plan (RASP) for Africa, which outlines collective safety improvement priorities, resource-sharing mechanisms, and collaborative actions aligned with the Revised Abuja Safety Targets and ICAO Global Aviation Safety Plan?"
+  },
+  {
+    "id": "T5.1",
+    "group": "Industry Standards",
+    "title": "Safety Information Sharing",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State established formal mechanisms for the voluntary sharing of safety information — including incident reports, safety data, and lessons learned — among aviation stakeholders, airlines, and regional partners, consistent with ICAO safety management principles and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T5.2",
+    "group": "Industry Standards",
+    "title": "IOSA/ISSA/ISAGO Participation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "Has the State encouraged and facilitated the participation of its aviation operators and service providers in IATA Operational Safety Audit (IOSA), IATA Safety Audit for Ground Operations (ISAGO), and IATA Standard Safety Assessment (ISSA) programmes as part of its commitment to industry safety standards under the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T5.3",
+    "group": "Industry Standards",
+    "title": "Airlines IOSA/ISSA Registration",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "Are all commercial airlines operating in the State registered on the IATA Operational Safety Audit (IOSA) or IATA Standard Safety Assessment (ISSA) registries, demonstrating compliance with internationally recognized safety standards in accordance with the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T5.4",
+    "group": "Industry Standards",
+    "title": "GSP ISAGO Certification",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "Are Ground Service Providers (GSPs) operating at the State's international airports certified under the IATA Safety Audit for Ground Operations (ISAGO) programme, ensuring that ground handling operations meet international safety standards as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T6.1",
+    "group": "Infrastructure",
+    "title": "ANS & Aerodrome Infrastructure ICAO Compliant",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State ensured that its Air Navigation Services (ANS) and aerodrome infrastructure meet ICAO Standards and Recommended Practices (SARPs), with documented compliance assessments, gap analyses, and corrective action plans in place as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T7.1",
+    "group": "Infrastructure",
+    "title": "Aerodrome Infrastructure Gap Analysis",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State conducted a comprehensive gap analysis of its aerodrome infrastructure against ICAO Annex 14 requirements, identified all significant deficiencies, and developed a prioritized corrective action plan with timelines and resource allocations, in line with the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T7.2",
+    "group": "Infrastructure",
+    "title": "ANS Infrastructure Gap Analysis",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State completed a detailed gap analysis of its Air Navigation Services (ANS) infrastructure against ICAO standards (Annexes 2, 10, 11, 15), documented the findings, and initiated implementation of corrective measures as required by the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T8",
+    "group": "Aerodrome Certification",
+    "title": "All International Aerodromes Certified",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2030",
+    "question": "Has the State certified all its international aerodromes in accordance with ICAO Annex 14 requirements through a formal aerodrome certification process, with regular safety inspections and documented compliance records, as required by the Revised Abuja Safety Targets by 2030?"
+  },
+  {
+    "id": "T9.1",
+    "group": "Search & Rescue",
+    "title": "SAR Organization Established",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "Has the State established a fully operational Search and Rescue (SAR) organization with a dedicated coordination centre, trained personnel, adequate equipment, and documented procedures in accordance with ICAO Annex 12 and the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T10.1",
+    "group": "AIS to AIM",
+    "title": "AIS-AIM Transition Plan",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed and published a formal transition plan from Aeronautical Information Services (AIS) to Aeronautical Information Management (AIM), including milestones, stakeholder responsibilities, and resource requirements, in accordance with ICAO Doc 10066 and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T10.2",
+    "group": "AIS to AIM",
+    "title": "ASBU Block 0 D-AIM Implementation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State implemented ICAO Aviation System Block Upgrade (ASBU) Block 0 modules related to Digital Aeronautical Information Management (D-AIM), enabling the provision of aeronautical data in digital formats consistent with ICAO standards and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T10.3",
+    "group": "AIS to AIM",
+    "title": "Central Aeronautical Database",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2028",
+    "question": "Has the State established or connected to a central aeronautical database that consolidates, validates, and distributes aeronautical information in accordance with ICAO quality management requirements and the AIS-to-AIM transition roadmap outlined in the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T11.1",
+    "group": "PBN",
+    "title": "75% Instrument Runways with PBN",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State implemented Performance-Based Navigation (PBN) approach procedures on at least 75% of its instrument runways at international airports, in accordance with ICAO's PBN implementation roadmap and the Revised Abuja Safety Targets deadline of December 2026?"
+  },
+  {
+    "id": "T11.2",
+    "group": "PBN",
+    "title": "100% Instrument Runways with PBN",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State achieved full implementation of Performance-Based Navigation (PBN) approach procedures on 100% of its instrument runways, ensuring that all instrument approaches at international and domestic aerodromes are PBN-compliant as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T12.1",
+    "group": "Seamless ANS",
+    "title": "ANS Infrastructure Gap Analysis",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State conducted a gap analysis of its Air Navigation Services infrastructure with specific focus on seamless regional ANS provision, identifying interoperability deficiencies and cross-border coordination gaps in alignment with the AFCAC Seamless ANS initiative and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T12.2",
+    "group": "Seamless ANS",
+    "title": "Seamless Airspace Masterplan Support",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State formally endorsed and committed resources to support the African Seamless Airspace Masterplan, including participation in regional working groups, alignment of national airspace plans with continental objectives, and implementation of agreed cross-border procedures as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T12.3",
+    "group": "Seamless ANS",
+    "title": "Harmonized ANS Provision",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "Has the State implemented harmonized Air Navigation Services procedures and standards consistent with regional agreements and ICAO SARPs, ensuring seamless transition for aircraft operating across borders, in accordance with the Seamless ANS objectives of the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T12.4",
+    "group": "Seamless ANS",
+    "title": "RECs & ANSPs Initiatives Harmonized",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "Has the State ensured alignment and harmonization between Regional Economic Community (REC) aviation initiatives and Air Navigation Service Provider (ANSP) operational programmes, supporting the continental seamless airspace vision as outlined in the Revised Abuja Safety Targets Action Plan?"
+  },
+  {
+    "id": "T13.1",
+    "group": "ASBU",
+    "title": "National ASBU Plan Developed",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed a comprehensive National Aviation System Block Upgrade (ASBU) implementation plan, identifying priority modules, timelines, required resources, and stakeholder responsibilities, consistent with the ICAO Global Air Navigation Plan and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T13.2",
+    "group": "ASBU",
+    "title": "ASBU Block 0 (B0) Implemented",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2025",
+    "question": "Has the State fully implemented ICAO Aviation System Block Upgrade (ASBU) Block 0 modules, including all applicable performance improvements in airport operations, globally interoperable systems, optimum capacity and flexible flights, and efficient flight paths, as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T13.3",
+    "group": "ASBU",
+    "title": "ASBU Block 1 (B1) Implemented",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "Has the State commenced and made measurable progress in implementing ICAO Aviation System Block Upgrade (ASBU) Block 1 modules, including enhanced airport operations, trajectory-based operations, and optimized airspace capacity, in line with the Revised Abuja Safety Targets timeline?"
+  },
+  {
+    "id": "T13.4",
+    "group": "ASBU",
+    "title": "ASBU Block 2 (B2) Implemented",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2030",
+    "question": "Has the State initiated planning and preliminary implementation activities for ICAO Aviation System Block Upgrade (ASBU) Block 2 modules, which include high-performance operations with advanced automation and collaborative air traffic management, as required by the Revised Abuja Safety Targets by 2030?"
+  },
+  {
+    "id": "T13.5",
+    "group": "ASBU",
+    "title": "ASBU Block 3 (B3) Implemented",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2036",
+    "question": "Has the State developed a long-term roadmap for ICAO Aviation System Block Upgrade (ASBU) Block 3 implementation, encompassing full trajectory-based operations, highly automated air traffic management, and complete global interoperability, as envisioned in the Revised Abuja Safety Targets horizon of 2036?"
+  },
+  {
+    "id": "T14.1",
+    "group": "CO2 Emissions",
+    "title": "CO2 Reduction Action Plan",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed and published a national aviation CO2 emissions reduction action plan, identifying specific measures, targets, timelines, and responsible entities for reducing aviation's carbon footprint in alignment with ICAO's Carbon Offsetting and Reduction Scheme for International Aviation (CORSIA) and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T14.2",
+    "group": "CO2 Emissions",
+    "title": "CO2 Reduction Measures & Roadmap",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "From 2026",
+    "question": "Has the State begun implementing concrete CO2 reduction measures for aviation — including Sustainable Aviation Fuel (SAF) uptake, operational efficiency improvements, and market-based measures — and published a long-term decarbonization roadmap consistent with ICAO's net-zero carbon goals and the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T15.1",
+    "group": "ANSP Peer Review",
+    "title": "ANSPs Join Peer Review Programme",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State's Air Navigation Service Provider (ANSP) formally joined and actively participated in a recognized ANSP peer review programme — such as CANSO's peer review mechanism — to assess operational performance, share best practices, and identify improvement opportunities, as required by the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T15.2",
+    "group": "ANSP Peer Review",
+    "title": "ANSP SMS Maturity (50% by 2026)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2028",
+    "question": "Has the State's ANSP achieved a Safety Management System (SMS) maturity level of at least 50% as assessed through a recognized framework (such as CANSO SMS maturity model), with documented safety risk management processes, safety performance monitoring, and continuous improvement mechanisms, per the Revised Abuja Safety Targets?"
+  },
+  {
+    "id": "T15.3",
+    "group": "ANSP Peer Review",
+    "title": "ANSP Certification",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2036",
+    "question": "Has the State's Air Navigation Service Provider (ANSP) obtained or is actively pursuing formal certification from the national civil aviation authority under a recognized regulatory framework, demonstrating compliance with ICAO standards for air navigation service provision, as envisioned in the Revised Abuja Safety Targets long-term roadmap?"
+  }
 ]

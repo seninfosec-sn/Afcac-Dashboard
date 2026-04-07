@@ -53,6 +53,7 @@ export interface TargetRow {
   pct: number;
   status: ActionStatus;
   deadline: string;
+  question?: string;
 }
 
 export interface DashboardData {

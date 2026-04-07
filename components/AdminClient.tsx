@@ -64,6 +64,7 @@ export default function AdminClient({
   const [countries, setCountries] = useState<CountryRow[]>(initialData.countries);
   const [targets, setTargets] = useState<TargetRow[]>(initialData.targets);
   const [saving, setSaving] = useState(false);
+  const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
   const [fullName, setFullName] = useState("");
   const [updaterCountry, setUpdaterCountry] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
@@ -145,6 +146,15 @@ export default function AdminClient({
   /* ── Country updater ── */
   function updateCountry(name: string, field: keyof CountryRow, value: unknown) {
     setCountries((p) => p.map((c) => (c.country === name ? { ...c, [field]: value } : c)));
+  }
+
+  /* ── Toggle question ── */
+  function toggleQuestion(id: string) {
+    setOpenQuestions((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
   }
 
   /* ── Group targets ── */
@@ -440,7 +450,25 @@ export default function AdminClient({
                           <span className="q-target">{t.id}</span>
                           <span className="q-title">{t.title}</span>
                           <span className="q-deadline">🗓 {t.deadline}</span>
+                          {t.question && (
+                            <button
+                              onClick={() => toggleQuestion(t.id)}
+                              title="Voir la question complète"
+                              style={{
+                                marginLeft: 8, width: 22, height: 22, borderRadius: "50%",
+                                border: "1.5px solid var(--gold)", background: openQuestions.has(t.id) ? "var(--gold)" : "transparent",
+                                color: openQuestions.has(t.id) ? "#fff" : "var(--gold)",
+                                fontWeight: 700, fontSize: 12, cursor: "pointer",
+                                flexShrink: 0, lineHeight: 1,
+                              }}
+                            >?</button>
+                          )}
                         </div>
+                        {t.question && openQuestions.has(t.id) && (
+                          <div style={{ margin: "0 20px 12px", padding: "10px 14px", background: "var(--surface2)", borderRadius: 6, borderLeft: "3px solid var(--gold)", fontSize: 12, color: "var(--ink2)", lineHeight: 1.65 }}>
+                            {t.question}
+                          </div>
+                        )}
                         <div className="q-options">
                           <div className="q-select-wrap">
                             <div className="q-swatch" style={{ background: PCT_COLORS[t.pct] ?? "var(--border)" }} />
