@@ -62,75 +62,6 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
           </div>
         </div>
 
-        {/* Gantt Chart */}
-        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid var(--border2)" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 10 }}>
-            Project Gantt — Status Timeline
-          </div>
-
-          {/* Quarter headers */}
-          <div style={{ display: "flex", marginBottom: 6, marginLeft: 90 }}>
-            {ganttPhases.map((q) => (
-              <div key={q.label} style={{ flex: 1, fontSize: 9, color: "var(--ink3)", fontWeight: 700, textAlign: "center", letterSpacing: ".04em" }}>
-                {q.label}
-              </div>
-            ))}
-          </div>
-
-          {/* Gantt rows */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-            {segs.map((s, si) => {
-              // Each status has a bar that spans proportionally based on its pct
-              // Bar starts at cumulative offset of previous statuses
-              const cumStart = segs.slice(0, si).reduce((acc, x) => acc + x.pct, 0);
-              const barLeft = cumStart;
-              const barWidth = s.pct;
-
-              return (
-                <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 0 }}>
-                  {/* Row label */}
-                  <div style={{ width: 88, fontSize: 10, color: "var(--ink2)", fontWeight: 600, flexShrink: 0, paddingRight: 8, textAlign: "right" }}>
-                    {s.label}
-                  </div>
-                  {/* Track */}
-                  <div style={{ flex: 1, height: 18, background: "var(--surface2)", borderRadius: 3, position: "relative", overflow: "hidden" }}>
-                    {/* Grid lines */}
-                    {[25, 50, 75].map((x) => (
-                      <div key={x} style={{ position: "absolute", left: `${x}%`, top: 0, bottom: 0, width: 1, background: "var(--border2)", zIndex: 0 }} />
-                    ))}
-                    {/* Bar */}
-                    {barWidth > 0 && (
-                      <div style={{
-                        position: "absolute",
-                        left: `${barLeft}%`,
-                        width: `${barWidth}%`,
-                        top: 2, bottom: 2,
-                        background: s.hex,
-                        borderRadius: 2,
-                        zIndex: 1,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                      }}>
-                        {barWidth >= 8 && (
-                          <span style={{ fontSize: 9, color: "#fff", fontWeight: 700 }}>{s.pct}%</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* X-axis ticks */}
-          <div style={{ display: "flex", marginTop: 4, marginLeft: 90 }}>
-            {[0, 25, 50, 75, 100].map((v) => (
-              <div key={v} style={{ position: "relative", flex: v === 100 ? 0 : 1 }}>
-                <span style={{ fontSize: 8, color: "var(--ink3)", position: "absolute", transform: "translateX(-50%)" }}>{v}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Description */}
         <div style={{ marginTop: 24, paddingTop: 14, borderTop: "1px solid var(--border2)" }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 8 }}>
@@ -150,6 +81,60 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
             Source : AFCAC Safety Unit via Countries Focal Point · Données mises à jour par les points focaux nationaux.
           </p>
         </div>
+
+        {/* Gantt Chart */}
+        <div style={{ marginTop: 24, paddingTop: 14, borderTop: "1px solid var(--border2)" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 10 }}>
+            Project Gantt — Status Timeline
+          </div>
+
+          {/* Quarter headers */}
+          <div style={{ display: "flex", marginBottom: 6, marginLeft: 90 }}>
+            {ganttPhases.map((q) => (
+              <div key={q.label} style={{ flex: 1, fontSize: 9, color: "var(--ink3)", fontWeight: 700, textAlign: "center", letterSpacing: ".04em" }}>
+                {q.label}
+              </div>
+            ))}
+          </div>
+
+          {/* Gantt rows */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            {segs.map((s, si) => {
+              const cumStart = segs.slice(0, si).reduce((acc, x) => acc + x.pct, 0);
+              return (
+                <div key={s.label} style={{ display: "flex", alignItems: "center" }}>
+                  <div style={{ width: 88, fontSize: 10, color: "var(--ink2)", fontWeight: 600, flexShrink: 0, paddingRight: 8, textAlign: "right" }}>
+                    {s.label}
+                  </div>
+                  <div style={{ flex: 1, height: 18, background: "var(--surface2)", borderRadius: 3, position: "relative", overflow: "hidden" }}>
+                    {[25, 50, 75].map((x) => (
+                      <div key={x} style={{ position: "absolute", left: `${x}%`, top: 0, bottom: 0, width: 1, background: "var(--border2)", zIndex: 0 }} />
+                    ))}
+                    {s.pct > 0 && (
+                      <div style={{
+                        position: "absolute", left: `${cumStart}%`, width: `${s.pct}%`,
+                        top: 2, bottom: 2, background: s.hex, borderRadius: 2, zIndex: 1,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        {s.pct >= 8 && <span style={{ fontSize: 9, color: "#fff", fontWeight: 700 }}>{s.pct}%</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* X-axis ticks */}
+          <div style={{ display: "flex", marginTop: 4, marginLeft: 90 }}>
+            {[0, 25, 50, 75, 100].map((v) => (
+              <div key={v} style={{ position: "relative", flex: v === 100 ? 0 : 1 }}>
+                <span style={{ fontSize: 8, color: "var(--ink3)", position: "absolute", transform: "translateX(-50%)" }}>{v}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
