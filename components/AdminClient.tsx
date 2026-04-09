@@ -465,8 +465,18 @@ export default function AdminClient({
                           )}
                         </div>
                         {t.question && openQuestions.has(t.id) && (
-                          <div style={{ margin: "0 20px 12px", padding: "10px 14px", background: "var(--surface2)", borderRadius: 6, borderLeft: "3px solid var(--gold)", fontSize: 12, color: "var(--ink2)", lineHeight: 1.65 }}>
-                            {t.question}
+                          <div style={{ margin: "0 20px 12px", padding: "12px 16px", background: "var(--surface2)", borderRadius: 6, borderLeft: "3px solid var(--gold)", fontSize: 12, color: "var(--ink2)", lineHeight: 1.65 }}>
+                            <div style={{ fontWeight: 700, color: "var(--ink1)", marginBottom: 8 }}>{t.question}</div>
+                            {t.options && (
+                              <ul style={{ margin: "6px 0 0 0", paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
+                                {(["0","25","50","75","100"] as const).map((k) => t.options![k] && (
+                                  <li key={k} style={{ fontSize: 11, color: "var(--ink2)" }}>
+                                    <span style={{ fontWeight: 700, color: PCT_COLORS[Number(k)] ?? "var(--ink3)", marginRight: 4 }}>{k}%</span>
+                                    — {t.options![k]}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                         )}
                         <div className="q-options">

@@ -54,6 +54,7 @@ export interface TargetRow {
   status: ActionStatus;
   deadline: string;
   question?: string;
+  options?: Record<string, string>;
 }
 
 export interface DashboardData {
