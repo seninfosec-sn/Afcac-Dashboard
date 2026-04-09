@@ -7,6 +7,18 @@ import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole
 /* ─── Types ──────────────────────────────────────── */
 type Tab = "kpis" | "targets" | "actions" | "countries";
 
+const AFRICAN_STATES = [
+  "Algeria","Angola","Benin","Botswana","Burkina Faso","Burundi","Cabo Verde",
+  "Cameroon","Central African Republic","Chad","Comoros","Congo (Republic)",
+  "DR Congo","Djibouti","Egypt","Equatorial Guinea","Eritrea","Eswatini",
+  "Ethiopia","Gabon","Gambia","Ghana","Guinea","Guinea-Bissau","Ivory Coast",
+  "Kenya","Lesotho","Liberia","Libya","Madagascar","Malawi","Mali","Mauritania",
+  "Mauritius","Morocco","Mozambique","Namibia","Niger","Nigeria","Rwanda",
+  "São Tomé & Príncipe","Senegal","Seychelles","Sierra Leone","Somalia",
+  "South Africa","South Sudan","Sudan","Tanzania","Togo","Tunisia","Uganda",
+  "Zambia","Zimbabwe",
+];
+
 
 const STATUS_OPTIONS = ["completed", "inprogress", "delayed", "onhold", "notstarted"] as const;
 const STATUS_LABELS: Record<string, string> = {
@@ -54,6 +66,8 @@ export default function AdminClient({
   const [targets, setTargets] = useState<TargetRow[]>(initialData.targets);
   const [saving, setSaving] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
+  const [fullName, setFullName] = useState("");
+  const [updaterCountry, setUpdaterCountry] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
   const [toastVisible, setToastVisible] = useState(false);
   const [loginTime] = useState(() => new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
@@ -74,8 +88,8 @@ export default function AdminClient({
     setSaving(true);
     try {
       const payload = role === "expert"
-        ? { targets }
-        : { kpis, actions, countries, targets };
+        ? { targets, fullName, updaterCountry }
+        : { kpis, actions, countries, targets, fullName, updaterCountry };
       const res = await fetch("/api/dashboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -293,6 +307,42 @@ export default function AdminClient({
               {tab === "targets"   && <>Ce formulaire couvre <strong>{targets.length} cibles</strong> AFCAC de sécurité réparties en {Object.keys(targetGroups).length} groupes. Pour chaque cible, sélectionnez le pourcentage de progression de <strong>0% (Non démarré)</strong> à <strong>100% (Pleinement atteint)</strong>. Les réponses mettront à jour la grille des cibles sur le dashboard.</>}
               {tab === "actions"   && <>Mettez à jour le <strong>statut de chaque action</strong> par pays. Ces données alimentent le tableau de détail et la carte Afrique sur le dashboard principal.</>}
               {tab === "countries" && <>Modifiez les <strong>données agrégées par pays</strong> : budget, actions totales, et répartition des statuts. Ces valeurs alimentent le tableau de ventilation pays.</>}
+            </div>
+          </div>
+
+          {/* ─────────────────── UPDATER IDENTITY ─────────────────── */}
+          <div className="group-header" style={{ marginTop: 0 }}>
+            <span className="gh-title">👤 Identité du Déclarant</span>
+            <span className="gh-count">Informations de la personne effectuant la mise à jour</span>
+          </div>
+          <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", marginBottom: 24 }}>
+            <div className="q-options">
+              <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
+                <div className="field-group">
+                  <label className="field-label">Nom complet</label>
+                  <input
+                    className="field-input"
+                    type="text"
+                    placeholder="Ex : Jean-Pierre Ndoye"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </div>
+                <div className="field-group">
+                  <label className="field-label">Pays représenté</label>
+                  <select
+                    className="field-input"
+                    value={updaterCountry}
+                    onChange={(e) => setUpdaterCountry(e.target.value)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <option value="">— Sélectionner un pays —</option>
+                    {AFRICAN_STATES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
