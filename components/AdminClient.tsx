@@ -2,10 +2,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole } from "@/lib/types";
+import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser } from "@/lib/types";
 
 /* ─── Types ──────────────────────────────────────── */
-type Tab = "kpis" | "targets" | "actions" | "countries";
+type Tab = "kpis" | "targets" | "actions" | "countries" | "users";
 
 const AFRICAN_STATES = [
   "Algeria","Angola","Benin","Botswana","Burkina Faso","Burundi","Cabo Verde",
@@ -30,11 +30,12 @@ const PCT_COLORS: Record<number, string> = {
 };
 
 /* ─── Section nav items ──────────────────────────── */
-const NAV_ITEMS: { id: Tab; icon: string; label: string; sub: string }[] = [
+const NAV_ITEMS: { id: Tab; icon: string; label: string; sub: string; adminOnly?: boolean }[] = [
   { id: "kpis",      icon: "📊", label: "KPI Overview",    sub: "Global indicators" },
   { id: "targets",   icon: "🎯", label: "Safety Targets",  sub: "39 AFCAC targets" },
   { id: "actions",   icon: "📋", label: "Action Plan",     sub: "15 country actions" },
   { id: "countries", icon: "🌍", label: "Country Data",    sub: "15 countries" },
+  { id: "users",     icon: "🔑", label: "Accès États",     sub: "54 points focaux", adminOnly: true },
 ];
 
 /* ─── Toast ──────────────────────────────────────── */
@@ -53,10 +54,12 @@ export default function AdminClient({
   initialData,
   username,
   role,
+  users = [],
 }: {
   initialData: DashboardData;
   username: string;
   role: UserRole;
+  users?: AppUser[];
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>(role === "admin" ? "targets" : "targets");
@@ -233,7 +236,7 @@ export default function AdminClient({
 
           {/* Navigation */}
           <div className="sb-section">Sections</div>
-          {NAV_ITEMS.filter((item) => role === "admin" || item.id === "targets").map((item) => (
+          {NAV_ITEMS.filter((item) => role === "admin" ? true : item.id === "targets").filter((item) => !item.adminOnly || role === "admin").map((item) => (
             <div
               key={item.id}
               className={`sb-item${tab === item.id ? " active" : ""}${tab === item.id ? " done" : ""}`}
@@ -301,50 +304,56 @@ export default function AdminClient({
               {tab === "targets"   && "🎯 AFCAC — Revised Abuja Safety Targets · Mise à Jour des Progrès"}
               {tab === "actions"   && "📋 Plan d'Actions — Statut par Pays"}
               {tab === "countries" && "🌍 Données Pays — Répartition des Actions"}
+              {tab === "users"     && "🔑 Accès États — Identifiants des Points Focaux"}
             </div>
             <div className="intro-text">
               {tab === "kpis"      && <>Modifiez les <strong>indicateurs clés de performance</strong> globaux du dashboard. Ces valeurs sont affichées sur la page principale dans la section Executive Summary.</>}
               {tab === "targets"   && <>Ce formulaire couvre <strong>{targets.length} cibles</strong> AFCAC de sécurité réparties en {Object.keys(targetGroups).length} groupes. Pour chaque cible, sélectionnez le pourcentage de progression de <strong>0% (Non démarré)</strong> à <strong>100% (Pleinement atteint)</strong>. Les réponses mettront à jour la grille des cibles sur le dashboard.</>}
               {tab === "actions"   && <>Mettez à jour le <strong>statut de chaque action</strong> par pays. Ces données alimentent le tableau de détail et la carte Afrique sur le dashboard principal.</>}
               {tab === "countries" && <>Modifiez les <strong>données agrégées par pays</strong> : budget, actions totales, et répartition des statuts. Ces valeurs alimentent le tableau de ventilation pays.</>}
+              {tab === "users"     && <>Liste des <strong>{users.length} points focaux</strong> — un par état membre AFCAC. Ces identifiants permettent à chaque représentant national d'accéder au formulaire de mise à jour.</>}
             </div>
           </div>
 
           {/* ─────────────────── UPDATER IDENTITY ─────────────────── */}
-          <div className="group-header" style={{ marginTop: 0 }}>
-            <span className="gh-title">👤 Identité du Déclarant</span>
-            <span className="gh-count">Informations de la personne effectuant la mise à jour</span>
-          </div>
-          <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", marginBottom: 24 }}>
-            <div className="q-options">
-              <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
-                <div className="field-group">
-                  <label className="field-label">Nom complet</label>
-                  <input
-                    className="field-input"
-                    type="text"
-                    placeholder="Ex : Jean-Pierre Ndoye"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                  />
-                </div>
-                <div className="field-group">
-                  <label className="field-label">Pays représenté</label>
-                  <select
-                    className="field-input"
-                    value={updaterCountry}
-                    onChange={(e) => setUpdaterCountry(e.target.value)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <option value="">— Sélectionner un pays —</option>
-                    {AFRICAN_STATES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
+          {tab !== "users" && (
+            <>
+              <div className="group-header" style={{ marginTop: 0 }}>
+                <span className="gh-title">👤 Identité du Déclarant</span>
+                <span className="gh-count">Informations de la personne effectuant la mise à jour</span>
+              </div>
+              <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", marginBottom: 24 }}>
+                <div className="q-options">
+                  <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
+                    <div className="field-group">
+                      <label className="field-label">Nom complet</label>
+                      <input
+                        className="field-input"
+                        type="text"
+                        placeholder="Ex : Jean-Pierre Ndoye"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                    <div className="field-group">
+                      <label className="field-label">Pays représenté</label>
+                      <select
+                        className="field-input"
+                        value={updaterCountry}
+                        onChange={(e) => setUpdaterCountry(e.target.value)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <option value="">— Sélectionner un pays —</option>
+                        {AFRICAN_STATES.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
 
           {/* ─────────────────── KPIs ─────────────────── */}
           {tab === "kpis" && (
@@ -717,6 +726,48 @@ export default function AdminClient({
                   </div>
                 );
               })}
+            </>
+          )}
+
+          {/* ─────────────────── USERS / ACCESS ─────────────────── */}
+          {tab === "users" && (
+            <>
+              <div className="group-header" style={{ marginTop: 0 }}>
+                <span className="gh-title">🔑 Identifiants d&apos;accès — 54 États membres</span>
+                <span className="gh-count">{users.length} comptes · URL : <strong>/login</strong></span>
+              </div>
+              <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", padding: 0, overflow: "hidden" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: "var(--surface2)", borderBottom: "2px solid var(--border)" }}>
+                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 30 }}>#</th>
+                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Pays</th>
+                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Nom d&apos;utilisateur</th>
+                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Mot de passe</th>
+                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((u, i) => (
+                      <tr key={u.username} style={{ borderBottom: "1px solid var(--border)", background: i % 2 === 0 ? "transparent" : "var(--surface2)" }}>
+                        <td style={{ padding: "8px 14px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
+                        <td style={{ padding: "8px 14px", fontWeight: 600, color: "var(--ink1)" }}>{u.country}</td>
+                        <td style={{ padding: "8px 14px" }}>
+                          <code style={{ background: "var(--surface2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
+                            {u.username}
+                          </code>
+                        </td>
+                        <td style={{ padding: "8px 14px" }}>
+                          <code style={{ background: "var(--surface2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--amber)", border: "1px solid var(--border)" }}>
+                            {u.devPassword}
+                          </code>
+                        </td>
+                        <td style={{ padding: "8px 14px", fontSize: 11, color: "var(--ink3)" }}>{u.email}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </>
           )}
 

@@ -1,4 +1,4 @@
-import { getDashboardData } from "@/lib/data";
+import { getDashboardData, getUsers } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import AdminClient from "@/components/AdminClient";
 import { redirect } from "next/navigation";
@@ -13,5 +13,7 @@ export default async function AdminPage() {
 
   if (!session) redirect("/login");
 
-  return <AdminClient initialData={data} username={session.username} role={session.role} />;
+  const users = session.role === "admin" ? getUsers().filter((u) => u.role === "expert") : [];
+
+  return <AdminClient initialData={data} username={session.username} role={session.role} users={users} />;
 }
