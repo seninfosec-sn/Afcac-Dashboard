@@ -87,6 +87,80 @@ export function saveDashboardData(data: DashboardData): void {
   saveTargets(data.targets);
 }
 
+/* ── Country-specific targets ── */
+
+const COUNTRY_REGIONS: Record<string, string> = {
+  "Algeria": "North Africa",     "Angola": "Southern Africa",   "Benin": "West Africa",
+  "Botswana": "Southern Africa", "Burkina Faso": "West Africa", "Burundi": "East Africa",
+  "Cabo Verde": "West Africa",   "Cameroon": "Central Africa",  "Central African Republic": "Central Africa",
+  "Chad": "Central Africa",      "Comoros": "East Africa",      "Congo (Republic)": "Central Africa",
+  "DR Congo": "Central Africa",  "Djibouti": "East Africa",     "Egypt": "North Africa",
+  "Equatorial Guinea": "Central Africa", "Eritrea": "East Africa", "Eswatini": "Southern Africa",
+  "Ethiopia": "East Africa",     "Gabon": "Central Africa",     "Gambia": "West Africa",
+  "Ghana": "West Africa",        "Guinea": "West Africa",       "Guinea-Bissau": "West Africa",
+  "Ivory Coast": "West Africa",  "Kenya": "East Africa",        "Lesotho": "Southern Africa",
+  "Liberia": "West Africa",      "Libya": "North Africa",       "Madagascar": "East Africa",
+  "Malawi": "East Africa",       "Mali": "West Africa",         "Mauritania": "North Africa",
+  "Mauritius": "East Africa",    "Morocco": "North Africa",     "Mozambique": "Southern Africa",
+  "Namibia": "Southern Africa",  "Niger": "West Africa",        "Nigeria": "West Africa",
+  "Rwanda": "East Africa",       "São Tomé & Príncipe": "Central Africa", "Senegal": "West Africa",
+  "Seychelles": "East Africa",   "Sierra Leone": "West Africa", "Somalia": "East Africa",
+  "South Africa": "Southern Africa", "South Sudan": "East Africa", "Sudan": "North Africa",
+  "Tanzania": "East Africa",     "Togo": "West Africa",         "Tunisia": "North Africa",
+  "Uganda": "East Africa",       "Zambia": "Southern Africa",   "Zimbabwe": "Southern Africa",
+};
+
+export function getCountryTargets(country: string): TargetRow[] {
+  try {
+    const all = readJson<Record<string, TargetRow[]>>("country_targets.json");
+    if (all[country] && all[country].length > 0) return all[country];
+  } catch { /* fall through */ }
+  // Return base template with pct=0
+  return getTargets().map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
+}
+
+export function saveCountryTargets(country: string, targets: TargetRow[]): void {
+  // 1. Persist per-country answers
+  let all: Record<string, TargetRow[]> = {};
+  try { all = readJson<Record<string, TargetRow[]>>("country_targets.json"); } catch { /* empty */ }
+  all[country] = targets;
+  writeJson("country_targets.json", all);
+
+  // 2. Sync this country's stats into countries.json
+  syncCountryStats(country, targets);
+}
+
+function syncCountryStats(country: string, targets: TargetRow[]): void {
+  const total = targets.length;
+  if (total === 0) return;
+
+  const completed  = Math.round(targets.filter((t) => t.pct === 100).length               / total * 100);
+  const inprogress = Math.round(targets.filter((t) => t.pct === 50 || t.pct === 75).length / total * 100);
+  const delayed    = Math.round(targets.filter((t) => t.pct === 25).length                 / total * 100);
+  const notstarted = Math.max(0, 100 - completed - inprogress - delayed);
+
+  const countries = getCountries();
+  const idx = countries.findIndex((c) => c.country === country);
+
+  if (idx >= 0) {
+    countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, onhold: 0, notstarted };
+  } else {
+    countries.push({
+      country,
+      region: COUNTRY_REGIONS[country] ?? "Africa",
+      actions: total,
+      completed,
+      inprogress,
+      delayed,
+      onhold: 0,
+      notstarted,
+      budget: 0,
+      entity: "CAA",
+    });
+  }
+  saveCountries(countries);
+}
+
 /* ── Users ── */
 export function getUsers(): AppUser[] {
   try {

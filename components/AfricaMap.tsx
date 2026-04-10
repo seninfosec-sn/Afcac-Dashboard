@@ -63,7 +63,7 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
     { name: "Senegal",      points: "124,178 158,175 163,193 142,204 120,200 112,188" },
     { name: "Uganda",       points: "272,244 298,240 302,262 284,270 266,262" },
     { name: "Cameroon",     points: "202,220 228,216 234,238 218,252 198,245 193,228" },
-    { name: "DRC",          points: "216,254 272,248 284,282 272,320 242,330 210,314 200,276" },
+    { name: "DR Congo",     points: "216,254 272,248 284,282 272,320 242,330 210,314 200,276" },
     { name: "Zambia",       points: "232,328 274,320 284,344 270,366 240,370 218,350" },
     { name: "Zimbabwe",     points: "246,366 274,360 280,382 264,396 240,394 234,378" },
   ];

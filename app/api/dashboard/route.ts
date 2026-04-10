@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDashboardData, saveDashboardData, saveTargets, appendUpdateLog } from "@/lib/data";
+import { getDashboardData, saveDashboardData, saveTargets, saveCountryTargets, findUser, appendUpdateLog } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import type { DashboardData } from "@/lib/types";
 
@@ -33,7 +33,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Missing targets data" }, { status: 400 });
       }
       step = "save_targets";
-      saveTargets(body.targets);
+      const user = findUser(session.username);
+      const country = user?.country ?? body.updaterCountry ?? "";
+      if (country) {
+        saveCountryTargets(country, body.targets);
+      } else {
+        saveTargets(body.targets);
+      }
     } else {
       if (!body.kpis || !body.actions || !body.countries || !body.targets) {
         return NextResponse.json(
