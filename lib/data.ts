@@ -139,6 +139,31 @@ export function saveCountryTargets(country: string, targets: TargetRow[]): void 
 
   // 3. Sync action row in actions.json
   syncActionRow(country, targets);
+
+  // 4. Recompute aggregate targets.json so TargetGrid reflects all submissions
+  recomputeAggregateTargets(all);
+}
+
+function recomputeAggregateTargets(all: Record<string, TargetRow[]>): void {
+  const submissions = Object.values(all).filter((s) => s.length > 0);
+  if (submissions.length === 0) return; // nothing submitted yet — keep existing targets.json
+
+  const base = getTargets(); // template (IDs, titles, questions, options, deadlines)
+  const VALID = [0, 25, 50, 75, 100] as const;
+  const statusMap: Record<number, TargetRow["status"]> = {
+    0: "notstarted", 25: "delayed", 50: "inprogress", 75: "inprogress", 100: "completed",
+  };
+
+  const aggregate = base.map((t) => {
+    const pcts = submissions.map((s) => s.find((x) => x.id === t.id)?.pct ?? 0);
+    const avg = pcts.reduce((a, b) => a + b, 0) / pcts.length;
+    const rounded = VALID.reduce((prev, curr) =>
+      Math.abs(curr - avg) < Math.abs(prev - avg) ? curr : prev
+    );
+    return { ...t, pct: rounded, status: statusMap[rounded] };
+  });
+
+  saveTargets(aggregate);
 }
 
 function syncActionRow(country: string, targets: TargetRow[]): void {
