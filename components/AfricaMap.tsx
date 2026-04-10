@@ -10,28 +10,33 @@ const STATUS_COLORS: Record<string, string> = {
   notstarted: "#95a5a6",
 };
 
-// Country status derived from dominant status in countries data
 function getDominantStatus(row: CountryRow): string {
-  const vals = [
+  return [
     { k: "completed",  v: row.completed },
     { k: "inprogress", v: row.inprogress },
     { k: "delayed",    v: row.delayed },
     { k: "onhold",     v: row.onhold },
     { k: "notstarted", v: row.notstarted },
-  ];
-  return vals.reduce((a, b) => (b.v > a.v ? b : a)).k;
+  ].reduce((a, b) => (b.v > a.v ? b : a)).k;
 }
 
-interface Tooltip {
-  x: number;
-  y: number;
-  country: string;
-  data: CountryRow | null;
+/** Compute hexagon points string for a given center and radius */
+function hex(cx: number, cy: number, r: number): string {
+  const p = (x: number, y: number) => `${Math.round(x)},${Math.round(y)}`;
+  return [
+    p(cx,           cy - r),
+    p(cx + r*0.866, cy - r*0.5),
+    p(cx + r*0.866, cy + r*0.5),
+    p(cx,           cy + r),
+    p(cx - r*0.866, cy + r*0.5),
+    p(cx - r*0.866, cy - r*0.5),
+  ].join(" ");
 }
+
+interface Tooltip { x: number; y: number; country: string; data: CountryRow | null }
 
 export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
-
   const countryMap = Object.fromEntries(countries.map((c) => [c.country, c]));
 
   function getColor(name: string): string {
@@ -42,15 +47,11 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
 
   function handleMouseMove(e: React.MouseEvent, name: string) {
     const rect = (e.currentTarget as SVGElement).closest("svg")!.getBoundingClientRect();
-    setTooltip({
-      x: e.clientX - rect.left + 10,
-      y: e.clientY - rect.top - 10,
-      country: name,
-      data: countryMap[name] ?? null,
-    });
+    setTooltip({ x: e.clientX - rect.left + 10, y: e.clientY - rect.top - 10, country: name, data: countryMap[name] ?? null });
   }
 
-  const shapes: { name: string; points: string }[] = [
+  /* ── 15 custom-outlined shapes (original 15 countries) ── */
+  const customShapes: { name: string; points: string }[] = [
     { name: "Nigeria",      points: "188,202 222,198 236,208 233,228 216,240 194,232 180,219" },
     { name: "South Africa", points: "195,400 248,390 272,402 275,428 252,455 222,458 196,440 186,420" },
     { name: "Egypt",        points: "252,78 302,76 312,102 306,136 272,144 248,130 242,100" },
@@ -68,27 +69,63 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
     { name: "Zimbabwe",     points: "246,366 274,360 280,382 264,396 240,394 234,378" },
   ];
 
-  const passive = [
-    "246,78 306,72 315,100 304,134 259,140 248,130 242,100",
-    "260,136 305,130 316,164 300,195 272,200 250,185 246,156",
-    "310,160 360,154 370,198 348,220 316,214 300,192",
-    "168,114 200,112 208,138 190,162 164,148",
-    "134,110 168,114 160,148 140,158 122,140",
-    "348,220 395,214 404,248 378,265 350,256",
-    "226,340 270,334 274,360 252,370 230,362",
-    "180,260 216,254 200,276 210,314 192,318 170,296",
-    "130,240 160,238 166,260 148,272 126,264",
-    "370,268 408,265 416,295 394,310 370,304",
-    "400,298 434,295 440,325 418,338 398,328",
+  /* ── 39 remaining countries as hexagonal shapes ── */
+  /* Positions derived from equirectangular projection fitted to SVG viewBox 520×540
+     Scale: x ≈ 3.28*lon+184, y ≈ -5.69*lat+255  */
+  const hexShapes: { name: string; cx: number; cy: number; r: number }[] = [
+    { name: "Angola",                   cx: 243, cy: 319, r: 15 },
+    { name: "Benin",                    cx: 192, cy: 202, r:  7 },
+    { name: "Botswana",                 cx: 265, cy: 382, r: 11 },
+    { name: "Burkina Faso",             cx: 179, cy: 185, r:  8 },
+    { name: "Burundi",                  cx: 282, cy: 276, r:  5 },
+    { name: "Cabo Verde",               cx:  98, cy: 164, r:  5 },
+    { name: "Central African Republic", cx: 253, cy: 217, r: 12 },
+    { name: "Chad",                     cx: 245, cy: 167, r: 15 },
+    { name: "Comoros",                  cx: 326, cy: 321, r:  4 },
+    { name: "Congo (Republic)",         cx: 228, cy: 261, r:  9 },
+    { name: "Djibouti",                 cx: 330, cy: 188, r:  4 },
+    { name: "Equatorial Guinea",        cx: 214, cy: 247, r:  5 },
+    { name: "Eritrea",                  cx: 320, cy: 170, r:  7 },
+    { name: "Eswatini",                 cx: 283, cy: 408, r:  4 },
+    { name: "Gabon",                    cx: 220, cy: 262, r:  8 },
+    { name: "Gambia",                   cx: 127, cy: 183, r:  4 },
+    { name: "Guinea",                   cx: 146, cy: 196, r:  9 },
+    { name: "Guinea-Bissau",            cx: 128, cy: 193, r:  5 },
+    { name: "Ivory Coast",              cx: 164, cy: 215, r: 10 },
+    { name: "Lesotho",                  cx: 264, cy: 428, r:  4 },
+    { name: "Liberia",                  cx: 150, cy: 222, r:  7 },
+    { name: "Libya",                    cx: 240, cy: 106, r: 17 },
+    { name: "Madagascar",               cx: 339, cy: 362, r: 14 },
+    { name: "Malawi",                   cx: 296, cy: 331, r:  6 },
+    { name: "Mali",                     cx: 169, cy: 157, r: 17 },
+    { name: "Mauritania",               cx: 146, cy: 140, r: 17 },
+    { name: "Mauritius",                cx: 374, cy: 372, r:  4 },
+    { name: "Mozambique",               cx: 299, cy: 362, r: 12 },
+    { name: "Namibia",                  cx: 236, cy: 390, r: 12 },
+    { name: "Niger",                    cx: 211, cy: 156, r: 16 },
+    { name: "Rwanda",                   cx: 282, cy: 268, r:  4 },
+    { name: "São Tomé & Príncipe",      cx: 203, cy: 257, r:  3 },
+    { name: "Seychelles",               cx: 366, cy: 284, r:  4 },
+    { name: "Sierra Leone",             cx: 143, cy: 210, r:  6 },
+    { name: "Somalia",                  cx: 338, cy: 228, r: 14 },
+    { name: "South Sudan",              cx: 284, cy: 218, r: 13 },
+    { name: "Sudan",                    cx: 282, cy: 183, r: 17 },
+    { name: "Togo",                     cx: 186, cy: 210, r:  5 },
+    { name: "Tunisia",                  cx: 215, cy:  62, r:  7 },
+  ];
+
+  const allShapes = [
+    ...customShapes.map((s) => ({ name: s.name, points: s.points })),
+    ...hexShapes.map((s) => ({ name: s.name, points: hex(s.cx, s.cy, s.r) })),
   ];
 
   return (
     <div className="card" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div className="card-head">
         <span className="card-head-title">Africa — Action Status Map</span>
-        <span className="card-head-badge">Hover country for details</span>
+        <span className="card-head-badge">{countries.length} Countries</span>
       </div>
-      <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch" }}>
+      <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch", position: "relative" }}>
         <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "100%", display: "block" }}>
           <defs>
             <linearGradient id="oceanG" x1="0" y1="0" x2="1" y2="1">
@@ -98,11 +135,10 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
           </defs>
           <rect width="520" height="540" fill="url(#oceanG)" />
 
-          {passive.map((pts, i) => (
-            <polygon key={`p${i}`} points={pts} fill="#b8c8c0" opacity="0.5" />
-          ))}
+          {/* Continent outline fill (background) */}
+          <polygon points="144,74 252,74 306,72 315,100 312,136 306,136 302,76 252,78 242,100 248,130 272,144 306,136 316,164 352,214 370,198 395,214 404,248 416,295 378,265 350,256 348,220 340,240 338,195 292,200 278,212 286,232 272,200 250,185 246,156 260,136 244,132 210,138 208,138 190,162 168,114 164,148 134,110 122,140 112,188 120,200 124,178 158,175 163,193 142,204 130,240 148,272 166,260 160,238 155,235 160,250 180,257 196,244 192,222 188,202 180,219 194,232 216,240 233,228 236,208 222,198 188,202 180,219 194,232 216,240 233,228 234,238 218,252 198,245 216,254 200,276 210,314 192,318 170,296 180,260 200,276 210,314 242,330 272,320 284,282 272,248 284,270 302,262 298,240 302,262 298,296 325,288 336,260 322,242 330,310 315,336 288,340 278,292 268,318 274,360 270,366 284,344 274,320 232,328 218,350 240,370 252,370 226,340 230,362 246,366 234,378 240,394 264,396 280,382 274,360 275,428 252,455 222,458 196,440 186,420 195,400 248,390 272,402" fill="#d8e8d8" opacity="0.3" />
 
-          {shapes.map((s) => (
+          {allShapes.map((s) => (
             <polygon
               key={s.name}
               className="country-shape"
@@ -110,39 +146,42 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
               points={s.points}
               fill={getColor(s.name)}
               opacity="0.88"
+              stroke="rgba(255,255,255,0.4)"
+              strokeWidth="0.5"
               onMouseMove={(e) => handleMouseMove(e, s.name)}
               onMouseLeave={() => setTooltip(null)}
             />
           ))}
 
-          {/* Country labels */}
-          {shapes.map((s) => {
+          {/* Country labels — only for larger shapes */}
+          {allShapes.map((s) => {
             const pts = s.points.split(" ").map((p) => p.split(",").map(Number));
             const cx = pts.reduce((a, p) => a + p[0], 0) / pts.length;
             const cy = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+            // Only show label if shape is big enough (derived from point spread)
+            const xSpread = Math.max(...pts.map(p=>p[0])) - Math.min(...pts.map(p=>p[0]));
+            if (xSpread < 10) return null;
+            const short = s.name.length > 10 ? s.name.split(" ")[0] : s.name;
             return (
               <text
                 key={`lbl-${s.name}`}
                 x={cx} y={cy}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                style={{ fontSize: 7, fill: "white", fontWeight: 700, pointerEvents: "none", fontFamily: "Barlow Condensed, sans-serif", letterSpacing: "0.05em" }}
+                style={{ fontSize: 6.5, fill: "white", fontWeight: 700, pointerEvents: "none", fontFamily: "Barlow Condensed, sans-serif", letterSpacing: "0.04em" }}
               >
-                {s.name.length > 8 ? s.name.split(" ")[0] : s.name}
+                {short}
               </text>
             );
           })}
         </svg>
 
         {tooltip && (
-          <div
-            className="map-tooltip"
-            style={{ left: tooltip.x, top: tooltip.y }}
-          >
+          <div className="map-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
             <div style={{ fontWeight: 700, marginBottom: 4 }}>{tooltip.country}</div>
             {tooltip.data ? (
               <>
-                <div>Actions: {tooltip.data.actions}</div>
+                <div>Targets: {tooltip.data.actions}</div>
                 <div style={{ color: "#52b788" }}>✓ {tooltip.data.completed}% completed</div>
                 <div style={{ color: "#f0a500" }}>⏳ {tooltip.data.inprogress}% in progress</div>
                 <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data.entity}</div>
@@ -158,7 +197,7 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
           {Object.entries(STATUS_COLORS).map(([k, c]) => (
             <div key={k} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
-              <span style={{ color: "var(--ink2)", textTransform: "capitalize" }}>{k.replace("inprogress", "In Progress").replace("notstarted", "Not Started").replace("onhold", "On Hold")}</span>
+              <span style={{ color: "var(--ink2)", textTransform: "capitalize" }}>{k.replace("inprogress","In Progress").replace("notstarted","Not Started").replace("onhold","On Hold")}</span>
             </div>
           ))}
         </div>

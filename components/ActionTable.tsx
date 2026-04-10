@@ -17,9 +17,11 @@ const PCT_COLOR: Record<number, string> = {
 export default function ActionTable({
   actions,
   targets = [],
+  countryTargets = {},
 }: {
   actions: ActionRow[];
   targets?: TargetRow[];
+  countryTargets?: Record<string, TargetRow[]>;
 }) {
   const [sorted, setSorted] = useState<ActionRow[]>(
     [...actions].sort((a, b) => a.country.localeCompare(b.country))
@@ -126,7 +128,7 @@ export default function ActionTable({
                               </tr>
                             </thead>
                             <tbody>
-                              {targets.map((t, ti) => {
+                              {(countryTargets[row.country] ?? targets).map((t, ti) => {
                                 const pctColor = PCT_COLOR[t.pct] ?? PCT_COLOR[0];
                                 const ts = SC[t.status] ?? SC.notstarted;
                                 return (

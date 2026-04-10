@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { KpiData, ActionRow, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
+import type { KpiData, ActionRow, ActionStatus, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
 
 // On Vercel (serverless), /var/task is read-only — write to /tmp instead
 const IS_SERVERLESS = process.env.VERCEL === "1" || process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined;
@@ -119,6 +119,14 @@ export function getCountryTargets(country: string): TargetRow[] {
   return getTargets().map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
 }
 
+export function getAllCountryTargets(): Record<string, TargetRow[]> {
+  try {
+    return readJson<Record<string, TargetRow[]>>("country_targets.json");
+  } catch {
+    return {};
+  }
+}
+
 export function saveCountryTargets(country: string, targets: TargetRow[]): void {
   // 1. Persist per-country answers
   let all: Record<string, TargetRow[]> = {};
@@ -128,6 +136,45 @@ export function saveCountryTargets(country: string, targets: TargetRow[]): void 
 
   // 2. Sync this country's stats into countries.json
   syncCountryStats(country, targets);
+
+  // 3. Sync action row in actions.json
+  syncActionRow(country, targets);
+}
+
+function syncActionRow(country: string, targets: TargetRow[]): void {
+  const total = targets.length;
+  if (total === 0) return;
+
+  const completed  = targets.filter((t) => t.pct === 100).length;
+  const inprogress = targets.filter((t) => t.pct === 50 || t.pct === 75).length;
+  const delayed    = targets.filter((t) => t.pct === 25).length;
+  const notstarted = targets.filter((t) => t.pct === 0).length;
+
+  let status: ActionStatus;
+  if (completed === total)                                         status = "completed";
+  else if (notstarted === total)                                   status = "notstarted";
+  else if (inprogress >= delayed && inprogress >= notstarted)     status = "inprogress";
+  else if (delayed > notstarted)                                   status = "delayed";
+  else                                                             status = "notstarted";
+
+  const actions = getActions();
+  const idx = actions.findIndex((a) => a.country === country);
+  const row = {
+    country,
+    action: "AST",
+    section: "Safety Targets Questionnaire",
+    status,
+    start: 2024,
+    end: 2025,
+    duration: 1,
+    budget: 0,
+  };
+  if (idx >= 0) {
+    actions[idx] = { ...actions[idx], status };
+  } else {
+    actions.push(row);
+  }
+  saveActions(actions);
 }
 
 function syncCountryStats(country: string, targets: TargetRow[]): void {

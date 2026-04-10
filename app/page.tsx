@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDashboardData, getTopExperts } from "@/lib/data";
+import { getDashboardData, getTopExperts, getAllCountryTargets } from "@/lib/data";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -12,7 +12,10 @@ export const dynamic = "force-dynamic"; // always fresh data
 
 export default async function DashboardPage() {
   const { kpis, actions, countries, targets } = getDashboardData();
-  const experts = getTopExperts(3);
+  const [experts, countryTargets] = await Promise.all([
+    Promise.resolve(getTopExperts(3)),
+    Promise.resolve(getAllCountryTargets()),
+  ]);
 
   return (
     <>
@@ -52,7 +55,7 @@ export default async function DashboardPage() {
         <div className="section-label">Status Overview</div>
         <div className="row-wide">
           <StatusDonut kpis={kpis} />
-          <ActionTable actions={actions} targets={targets} />
+          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
