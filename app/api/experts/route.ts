@@ -3,7 +3,7 @@ import { getTopExperts } from "@/lib/data";
 
 export async function GET() {
   try {
-    const experts = getTopExperts(3);
+    const experts = await getTopExperts(3);
     return NextResponse.json(experts);
   } catch (err) {
     console.error("GET /api/experts error:", err);

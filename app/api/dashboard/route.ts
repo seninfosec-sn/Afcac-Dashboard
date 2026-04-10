@@ -5,7 +5,7 @@ import type { DashboardData } from "@/lib/types";
 
 export async function GET() {
   try {
-    const data = getDashboardData();
+    const data = await getDashboardData();
     return NextResponse.json(data);
   } catch (err) {
     console.error("GET /api/dashboard error:", err);
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
       const user = findUser(session.username);
       const country = user?.country ?? body.updaterCountry ?? "";
       if (country) {
-        saveCountryTargets(country, body.targets);
+        await saveCountryTargets(country, body.targets);
       } else {
-        saveTargets(body.targets);
+        await saveTargets(body.targets);
       }
     } else {
       if (!body.kpis || !body.actions || !body.countries || !body.targets) {
@@ -48,14 +48,14 @@ export async function POST(request: NextRequest) {
         );
       }
       step = "save_dashboard";
-      saveDashboardData(body as DashboardData);
+      await saveDashboardData(body as DashboardData);
     }
 
     step = "append_log";
     try {
       const targetsUpdated =
         body.targetsUpdated ?? (body.targets?.filter((t) => t.pct > 0).length ?? 0);
-      appendUpdateLog({
+      await appendUpdateLog({
         username: session.username,
         date: new Date().toISOString(),
         targetsUpdated,

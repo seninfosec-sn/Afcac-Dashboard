@@ -1,93 +1,89 @@
 import fs from "fs";
 import path from "path";
+import { kvGet, kvSet } from "./db";
 import type { KpiData, ActionRow, ActionStatus, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
 
-// On Vercel (serverless), /var/task is read-only — write to /tmp instead
-const IS_SERVERLESS = process.env.VERCEL === "1" || process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined;
-const TMP_DIR = "/tmp/afcac-data";
+// JSON files are read-only seeds (bundled at build time — readable on Vercel too)
 const SOURCE_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(process.cwd(), "data");
 
-function ensureTmpDir(): void {
-  if (!fs.existsSync(TMP_DIR)) {
-    fs.mkdirSync(TMP_DIR, { recursive: true });
-  }
-}
-
-function readJson<T>(filename: string): T {
-  if (IS_SERVERLESS) {
-    ensureTmpDir();
-    const tmpFile = path.join(TMP_DIR, filename);
-    // If not yet in /tmp, copy from bundled source
-    if (!fs.existsSync(tmpFile)) {
-      const srcFile = path.join(SOURCE_DIR, filename);
-      fs.copyFileSync(srcFile, tmpFile);
-    }
-    return JSON.parse(fs.readFileSync(tmpFile, "utf-8")) as T;
-  }
+function readJsonFile<T>(filename: string): T {
   return JSON.parse(fs.readFileSync(path.join(SOURCE_DIR, filename), "utf-8")) as T;
 }
 
-function writeJson(filename: string, data: unknown): void {
-  const content = JSON.stringify(data, null, 2);
-  if (IS_SERVERLESS) {
-    ensureTmpDir();
-    fs.writeFileSync(path.join(TMP_DIR, filename), content, "utf-8");
-  } else {
-    fs.writeFileSync(path.join(SOURCE_DIR, filename), content, "utf-8");
-  }
+// DB keys
+const K = {
+  kpis:           "kpis",
+  actions:        "actions",
+  countries:      "countries",
+  targets:        "targets",
+  countryTargets: "country_targets",
+  updates:        "updates",
+} as const;
+
+/** Read from DB; if missing, seed from the bundled JSON file and return. */
+async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
+  const cached = await kvGet<T>(key);
+  if (cached !== null) return cached;
+  const data = readJsonFile<T>(filename);
+  await kvSet(key, data);
+  return data;
 }
 
-export function getKpis(): KpiData {
-  return readJson<KpiData>("kpis.json");
+/* ── Readers ─────────────────────────────────────── */
+
+export async function getKpis(): Promise<KpiData> {
+  return dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
 }
 
-export function getActions(): ActionRow[] {
-  return readJson<ActionRow[]>("actions.json");
+export async function getActions(): Promise<ActionRow[]> {
+  return dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
 }
 
-export function getCountries(): CountryRow[] {
-  return readJson<CountryRow[]>("countries.json");
+export async function getCountries(): Promise<CountryRow[]> {
+  return dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
 }
 
-export function getTargets(): TargetRow[] {
-  return readJson<TargetRow[]>("targets.json");
+export async function getTargets(): Promise<TargetRow[]> {
+  return dbGetOrSeed<TargetRow[]>(K.targets, "targets.json");
 }
 
-export function getDashboardData(): DashboardData {
-  return {
-    kpis: getKpis(),
-    actions: getActions(),
-    countries: getCountries(),
-    targets: getTargets(),
-  };
+export async function getDashboardData(): Promise<DashboardData> {
+  const [kpis, actions, countries, targets] = await Promise.all([
+    getKpis(), getActions(), getCountries(), getTargets(),
+  ]);
+  return { kpis, actions, countries, targets };
 }
 
-export function saveKpis(data: KpiData): void {
-  writeJson("kpis.json", data);
+/* ── Writers ─────────────────────────────────────── */
+
+export async function saveKpis(data: KpiData): Promise<void> {
+  await kvSet(K.kpis, data);
 }
 
-export function saveActions(data: ActionRow[]): void {
-  writeJson("actions.json", data);
+export async function saveActions(data: ActionRow[]): Promise<void> {
+  await kvSet(K.actions, data);
 }
 
-export function saveCountries(data: CountryRow[]): void {
-  writeJson("countries.json", data);
+export async function saveCountries(data: CountryRow[]): Promise<void> {
+  await kvSet(K.countries, data);
 }
 
-export function saveTargets(data: TargetRow[]): void {
-  writeJson("targets.json", data);
+export async function saveTargets(data: TargetRow[]): Promise<void> {
+  await kvSet(K.targets, data);
 }
 
-export function saveDashboardData(data: DashboardData): void {
-  saveKpis(data.kpis);
-  saveActions(data.actions);
-  saveCountries(data.countries);
-  saveTargets(data.targets);
+export async function saveDashboardData(data: DashboardData): Promise<void> {
+  await Promise.all([
+    saveKpis(data.kpis),
+    saveActions(data.actions),
+    saveCountries(data.countries),
+    saveTargets(data.targets),
+  ]);
 }
 
-/* ── Country-specific targets ── */
+/* ── Country-specific targets ───────────────────── */
 
 const COUNTRY_REGIONS: Record<string, string> = {
   "Algeria": "North Africa",     "Angola": "Southern Africa",   "Benin": "West Africa",
@@ -110,45 +106,37 @@ const COUNTRY_REGIONS: Record<string, string> = {
   "Uganda": "East Africa",       "Zambia": "Southern Africa",   "Zimbabwe": "Southern Africa",
 };
 
-export function getCountryTargets(country: string): TargetRow[] {
-  try {
-    const all = readJson<Record<string, TargetRow[]>>("country_targets.json");
-    if (all[country] && all[country].length > 0) return all[country];
-  } catch { /* fall through */ }
-  // Return base template with pct=0
-  return getTargets().map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
+export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
+  return (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
 }
 
-export function getAllCountryTargets(): Record<string, TargetRow[]> {
-  try {
-    return readJson<Record<string, TargetRow[]>>("country_targets.json");
-  } catch {
-    return {};
-  }
+export async function getCountryTargets(country: string): Promise<TargetRow[]> {
+  const all = await getAllCountryTargets();
+  if (all[country]?.length > 0) return all[country];
+  // First visit: blank template (pct=0)
+  const base = await getTargets();
+  return base.map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
 }
 
-export function saveCountryTargets(country: string, targets: TargetRow[]): void {
+export async function saveCountryTargets(country: string, targets: TargetRow[]): Promise<void> {
   // 1. Persist per-country answers
-  let all: Record<string, TargetRow[]> = {};
-  try { all = readJson<Record<string, TargetRow[]>>("country_targets.json"); } catch { /* empty */ }
+  const all = await getAllCountryTargets();
   all[country] = targets;
-  writeJson("country_targets.json", all);
+  await kvSet(K.countryTargets, all);
 
-  // 2. Sync this country's stats into countries.json
-  syncCountryStats(country, targets);
-
-  // 3. Sync action row in actions.json
-  syncActionRow(country, targets);
-
-  // 4. Recompute aggregate targets.json so TargetGrid reflects all submissions
-  recomputeAggregateTargets(all);
+  // 2–4. Update all derived data in parallel where possible
+  await Promise.all([
+    syncCountryStats(country, targets),
+    syncActionRow(country, targets),
+  ]);
+  await recomputeAggregateTargets(all);
 }
 
-function recomputeAggregateTargets(all: Record<string, TargetRow[]>): void {
+async function recomputeAggregateTargets(all: Record<string, TargetRow[]>): Promise<void> {
   const submissions = Object.values(all).filter((s) => s.length > 0);
-  if (submissions.length === 0) return; // nothing submitted yet — keep existing targets.json
+  if (submissions.length === 0) return;
 
-  const base = getTargets(); // template (IDs, titles, questions, options, deadlines)
+  const base = await getTargets();
   const VALID = [0, 25, 50, 75, 100] as const;
   const statusMap: Record<number, TargetRow["status"]> = {
     0: "notstarted", 25: "delayed", 50: "inprogress", 75: "inprogress", 100: "completed",
@@ -163,10 +151,10 @@ function recomputeAggregateTargets(all: Record<string, TargetRow[]>): void {
     return { ...t, pct: rounded, status: statusMap[rounded] };
   });
 
-  saveTargets(aggregate);
+  await saveTargets(aggregate);
 }
 
-function syncActionRow(country: string, targets: TargetRow[]): void {
+async function syncActionRow(country: string, targets: TargetRow[]): Promise<void> {
   const total = targets.length;
   if (total === 0) return;
 
@@ -176,104 +164,72 @@ function syncActionRow(country: string, targets: TargetRow[]): void {
   const notstarted = targets.filter((t) => t.pct === 0).length;
 
   let status: ActionStatus;
-  if (completed === total)                                         status = "completed";
-  else if (notstarted === total)                                   status = "notstarted";
-  else if (inprogress >= delayed && inprogress >= notstarted)     status = "inprogress";
-  else if (delayed > notstarted)                                   status = "delayed";
-  else                                                             status = "notstarted";
+  if (completed === total)                                     status = "completed";
+  else if (notstarted === total)                               status = "notstarted";
+  else if (inprogress >= delayed && inprogress >= notstarted) status = "inprogress";
+  else if (delayed > notstarted)                              status = "delayed";
+  else                                                        status = "notstarted";
 
-  const actions = getActions();
+  const actions = await getActions();
   const idx = actions.findIndex((a) => a.country === country);
-  const row = {
-    country,
-    action: "AST",
-    section: "Safety Targets Questionnaire",
-    status,
-    start: 2024,
-    end: 2025,
-    duration: 1,
-    budget: 0,
-  };
   if (idx >= 0) {
     actions[idx] = { ...actions[idx], status };
   } else {
-    actions.push(row);
+    actions.push({ country, action: "AST", section: "Safety Targets Questionnaire", status, start: 2024, end: 2025, duration: 1, budget: 0 });
   }
-  saveActions(actions);
+  await saveActions(actions);
 }
 
-function syncCountryStats(country: string, targets: TargetRow[]): void {
+async function syncCountryStats(country: string, targets: TargetRow[]): Promise<void> {
   const total = targets.length;
   if (total === 0) return;
 
-  const completed  = Math.round(targets.filter((t) => t.pct === 100).length               / total * 100);
+  const completed  = Math.round(targets.filter((t) => t.pct === 100).length                / total * 100);
   const inprogress = Math.round(targets.filter((t) => t.pct === 50 || t.pct === 75).length / total * 100);
-  const delayed    = Math.round(targets.filter((t) => t.pct === 25).length                 / total * 100);
+  const delayed    = Math.round(targets.filter((t) => t.pct === 25).length                  / total * 100);
   const notstarted = Math.max(0, 100 - completed - inprogress - delayed);
 
-  const countries = getCountries();
+  const countries = await getCountries();
   const idx = countries.findIndex((c) => c.country === country);
-
   if (idx >= 0) {
     countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, onhold: 0, notstarted };
   } else {
-    countries.push({
-      country,
-      region: COUNTRY_REGIONS[country] ?? "Africa",
-      actions: total,
-      completed,
-      inprogress,
-      delayed,
-      onhold: 0,
-      notstarted,
-      budget: 0,
-      entity: "CAA",
-    });
+    countries.push({ country, region: COUNTRY_REGIONS[country] ?? "Africa", actions: total, completed, inprogress, delayed, onhold: 0, notstarted, budget: 0, entity: "CAA" });
   }
-  saveCountries(countries);
+  await saveCountries(countries);
 }
 
-/* ── Users ── */
+/* ── Users (read-only from bundled file) ─────────── */
+
 export function getUsers(): AppUser[] {
-  try {
-    return readJson<AppUser[]>("users.json");
-  } catch {
-    return [];
-  }
+  try { return readJsonFile<AppUser[]>("users.json"); } catch { return []; }
 }
 
 export function findUser(username: string): AppUser | null {
   return getUsers().find((u) => u.username === username) ?? null;
 }
 
-/* ── Update logs ── */
-export function getUpdateLogs(): UpdateLog[] {
-  try {
-    return readJson<UpdateLog[]>("updates.json");
-  } catch {
-    return [];
-  }
+/* ── Update logs ─────────────────────────────────── */
+
+export async function getUpdateLogs(): Promise<UpdateLog[]> {
+  return (await kvGet<UpdateLog[]>(K.updates)) ?? [];
 }
 
-export function appendUpdateLog(log: UpdateLog): void {
-  const logs = getUpdateLogs();
+export async function appendUpdateLog(log: UpdateLog): Promise<void> {
+  const logs = await getUpdateLogs();
   logs.push(log);
-  writeJson("updates.json", logs);
+  await kvSet(K.updates, logs);
 }
 
-export function getTopExperts(limit = 3): ExpertStat[] {
-  const logs = getUpdateLogs();
+export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
+  const logs = await getUpdateLogs();
   const map: Record<string, { total: number; targetsSum: number; lastDate: string }> = {};
 
   for (const log of logs) {
-    if (!map[log.username]) {
-      map[log.username] = { total: 0, targetsSum: 0, lastDate: log.date };
-    }
+    if (!map[log.username]) map[log.username] = { total: 0, targetsSum: 0, lastDate: log.date };
     map[log.username].total += 1;
     map[log.username].targetsSum += log.targetsUpdated;
-    if (log.date > map[log.username].lastDate) {
-      map[log.username].lastDate = log.date;
-    }
+    if (log.date > map[log.username].lastDate) map[log.username].lastDate = log.date;
   }
 
   return Object.entries(map)

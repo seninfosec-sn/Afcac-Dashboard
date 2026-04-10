@@ -11,10 +11,10 @@ import StatusDonut from "@/components/StatusDonut";
 export const dynamic = "force-dynamic"; // always fresh data
 
 export default async function DashboardPage() {
-  const { kpis, actions, countries, targets } = getDashboardData();
-  const [experts, countryTargets] = await Promise.all([
-    Promise.resolve(getTopExperts(3)),
-    Promise.resolve(getAllCountryTargets()),
+  const [{ kpis, actions, countries, targets }, experts, countryTargets] = await Promise.all([
+    getDashboardData(),
+    getTopExperts(3),
+    getAllCountryTargets(),
   ]);
 
   return (

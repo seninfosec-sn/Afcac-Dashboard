@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const [session, data] = await Promise.all([
     getServerSession(),
-    Promise.resolve(getDashboardData()),
+    getDashboardData(),
   ]);
 
   if (!session) redirect("/login");
@@ -18,7 +18,7 @@ export default async function AdminPage() {
   if (session.role === "expert") {
     const user = findUser(session.username);
     if (user?.country) {
-      initialData = { ...data, targets: getCountryTargets(user.country) };
+      initialData = { ...data, targets: await getCountryTargets(user.country) };
     }
   }
 
