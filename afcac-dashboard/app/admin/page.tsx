@@ -22,7 +22,9 @@ export default async function AdminPage() {
     }
   }
 
+  const currentUser = findUser(session.username);
+  const displayName = currentUser?.displayName ?? session.username;
   const users = session.role === "admin" ? getUsers().filter((u) => u.role === "expert") : [];
 
-  return <AdminClient initialData={initialData} username={session.username} role={session.role} users={users} />;
+  return <AdminClient initialData={initialData} username={displayName} role={session.role} users={users} />;
 }

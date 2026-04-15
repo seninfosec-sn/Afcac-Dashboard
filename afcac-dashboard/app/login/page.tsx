@@ -58,7 +58,7 @@ function LoginForm() {
               className="form-input"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
+              placeholder="your.username"
               autoComplete="username"
               required
             />
@@ -88,8 +88,11 @@ function LoginForm() {
         </div>
 
         <div style={{ marginTop: 16, padding: "10px 14px", background: "var(--snow)", borderRadius: 6, fontSize: 11, color: "var(--ink3)", borderLeft: "3px solid var(--gold)" }}>
-          <strong>Dev default:</strong> username <code>admin</code> / password <code>admin123</code><br />
-          Change credentials in <code>.env.local</code> before production.
+          <strong>Admin accounts :</strong>
+          <ul style={{ margin: "6px 0 0 0", paddingLeft: 16, lineHeight: 1.8 }}>
+            <li><code>admin</code> — password : <code>admin123</code></li>
+            <li><code>agnes.aguma</code> — password : <code>AgnesAguma@AFCAC2024</code></li>
+          </ul>
         </div>
       </div>
     </div>
