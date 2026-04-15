@@ -1,0 +1,16 @@
+Country,Region,Total_Actions,Pct_Completed,Pct_InProgress,Pct_Delayed,Pct_OnHold,Pct_NotStarted,Budget_USD,Responsible_Entity,Start_Year,Status_Global
+Nigeria,West Africa,20,40,46,7,0,7,2025000,CAA / FAAN,2024,In Progress
+South Africa,Southern Africa,20,40,45,8,0,7,2025000,SACAA,2024,In Progress
+Egypt,North Africa,20,44,47,5,0,4,1695000,ECAA,2024,In Progress
+Kenya,East Africa,20,59,72,0,0,0,1395000,KCAA,2024,In Progress
+Ethiopia,East Africa,26,49,27,10,0,14,1125000,ECAA,2024,In Progress
+Algeria,North Africa,31,35,55,5,0,5,1115000,CAA,2024,In Progress
+Morocco,North Africa,30,40,37,10,0,13,996000,ANAC,2024,In Progress
+Ghana,West Africa,29,43,27,15,0,15,995000,GCAA,2024,In Progress
+Tanzania,East Africa,20,40,36,12,0,12,996000,TCAA,2024,In Progress
+Uganda,East Africa,21,35,57,4,0,4,995000,UCAA,2024,In Progress
+Senegal,West Africa,18,28,44,14,0,14,875000,ANACIM,2024,Delayed
+Cameroon,Central Africa,16,19,38,20,0,23,820000,CAA,2024,Delayed
+DRC,Central Africa,24,8,25,20,47,0,750000,CAA,2024,On Hold
+Zambia,Southern Africa,19,32,48,10,0,10,810000,CAA,2024,In Progress
+Zimbabwe,Southern Africa,15,20,33,20,0,27,680000,CAA,2024,Not Started

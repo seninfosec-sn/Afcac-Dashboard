@@ -1,0 +1,16 @@
+Country,Action_ID,Section,Status,Start_Year,End_Year,Duration_Weeks,Budget_USD
+Nigeria,1.1.1.1,Strategic Alignment & Planning,Completed,2024,2024,30,150000
+South Africa,1.1.1.1,Safety Oversight Enhancement,In Progress,2024,2024,18,139000
+Egypt,1.1.1.1,Infrastructure & Innovation,In Progress,2024,2024,20,191000
+Kenya,1.1.1.1,Capacity Building,In Progress,2024,2024,18,130000
+Ethiopia,1.1.1.1,Legislative & Regulatory Framework,In Progress,2024,2024,18,130000
+Algeria,1.1.1.2,Strategic Alignment & Planning,Completed,2024,2024,30,130000
+Morocco,1.1.1.2,Capacity Building,In Progress,2024,2024,18,130000
+Ghana,1.1.1.2,Safety Oversight Enhancement,In Progress,2024,2024,18,130000
+Tanzania,1.1.1.3,Infrastructure & Innovation,Delayed,2024,2024,18,190000
+Senegal,1.1.1.3,Capacity Building,Delayed,2024,2024,17,150000
+Uganda,1.1.1.4,Safety Oversight Enhancement,In Progress,2024,2025,22,145000
+Cameroon,1.1.1.4,Legislative & Regulatory Framework,Not Started,2024,2025,16,120000
+DRC,1.1.2.1,Strategic Alignment & Planning,On Hold,2024,2025,14,110000
+Zambia,1.1.2.1,Capacity Building,In Progress,2024,2024,12,135000
+Zimbabwe,1.1.2.2,Safety Oversight Enhancement,Not Started,2024,2025,20,125000

@@ -1,0 +1,40 @@
+Target_ID,Group,Title,Pct_Progress,Status,Deadline,Description
+T1.1,Safety Trend,Decreasing Accident Rate Trend,50,In Progress,Ongoing,Monitoring accident and serious incident rate trend
+T1.2,Safety Trend,Loss of Separation Reduction ≥50%,25,Delayed,Ongoing,Reduce loss of separation occurrences by at least 50%
+T2.1,Safety Oversight,Autonomous CAA Established,75,In Progress,2027,Establish autonomous Civil Aviation Authority
+T2.2,Safety Oversight,Safety Oversight EI Score (CEs/PQs),50,In Progress,2030,Improve Effective Implementation score for Critical Elements
+T2.3,Safety Oversight,Independent Investigation Body,25,Delayed,2028,Establish independent aircraft accident investigation organization
+T2.4,Safety Oversight,Support Departments Established,50,In Progress,Ongoing,Establish meteorological/communications/radioactive material departments
+T3.1,State Safety Programme,SSP Foundation Implemented,25,Delayed,Dec 2026,Implement foundation of State Safety Programme
+T3.2,State Safety Programme,NASP Published,0,Not Started,Dec 2026,Publish National Aviation Safety Plan
+T3.3,State Safety Programme,SSP Effective Implementation,25,Delayed,2028,SSP present by 2026 and effective by 2028
+T4.1,Assistance & RASP,Assistance Sought (Goals 2&3),50,In Progress,Dec 2026,States seek assistance to strengthen safety oversight capabilities
+T4.2,Assistance & RASP,Updated RASP Published,25,Delayed,Dec 2026,Publish updated Regional Aviation Safety Plan
+T5.1,Industry Standards,Safety Information Sharing,50,In Progress,Ongoing,Maintain increasing trend in safety information sharing networks
+T5.2,Industry Standards,IOSA/ISSA/ISAGO Participation,25,Delayed,Ongoing,Increase service providers in ICAO assessment programmes
+T5.3,Industry Standards,Airlines IOSA/ISSA Registration,25,Delayed,Ongoing,African airlines attain IATA IOSA/ISSA standards
+T5.4,Industry Standards,GSP ISAGO Certification,25,Delayed,Ongoing,Ground handling providers attain IATA ISAGO standards
+T6.1,Infrastructure,ANS & Aerodrome Infrastructure ICAO Compliant,50,In Progress,Ongoing,Establish increasing trend of ICAO-compliant infrastructure
+T7.1,Infrastructure,Aerodrome Infrastructure Gap Analysis,50,In Progress,Dec 2026,Identify gaps in international aerodrome infrastructure
+T7.2,Infrastructure,ANS Infrastructure Gap Analysis,25,Delayed,Dec 2026,Identify gaps in air navigation services infrastructure
+T8,Aerodrome Certification,All International Aerodromes Certified,25,Delayed,2030,Certify all international aerodromes
+T9.1,Search & Rescue,SAR Organization Established,25,Delayed,Dec 2028,Establish effective Search and Rescue organization
+T10.1,AIS to AIM,AIS-AIM Transition Plan (BBBs & DAIM-B1),25,Delayed,Dec 2026,National action plan for AIS to AIM transition
+T10.2,AIS to AIM,ASBU Block 0 D-AIM Implementation,25,Delayed,Dec 2026,Implement National Action Plan per ASBU Block 0 D-AIM
+T10.3,AIS to AIM,Central Aeronautical Database,0,Not Started,Dec 2028,Develop central aeronautical database for Africa
+T11.1,PBN,75% Instrument Runways with PBN,50,In Progress,Dec 2026,PBN procedures on 75% of instrument runways
+T11.2,PBN,100% Instrument Runways with PBN,25,Delayed,Dec 2026,PBN procedures on all instrument runways
+T12.1,Seamless ANS,ANS Infrastructure Gap Analysis,50,In Progress,Dec 2026,Comprehensive ANS gap analysis for AFI region
+T12.2,Seamless ANS,Seamless Airspace Masterplan Support,25,Delayed,Dec 2026,Support Seamless Airspace Masterplan development
+T12.3,Seamless ANS,Harmonized ANS Provision,25,Delayed,Dec 2028,Ensure harmonized Air Navigation Services
+T12.4,Seamless ANS,RECs & ANSPs Initiatives Harmonized,25,Delayed,Dec 2028,Harmonize all REC and ANSP initiatives in AFI Region
+T13.1,ASBU,National ASBU Plan Developed,25,Delayed,Dec 2026,Develop National Aviation System Block Upgrade Plan
+T13.2,ASBU,ASBU Block 0 (B0) Implemented,50,In Progress,Dec 2025,Implement National ASBU Block 0 elements
+T13.3,ASBU,ASBU Block 1 (B1) Implemented,25,Delayed,Dec 2028,Implement ASBU Block 1 elements
+T13.4,ASBU,ASBU Block 2 (B2) Implemented,0,Not Started,Dec 2030,Implement ASBU Block 2 elements
+T13.5,ASBU,ASBU Block 3 (B3) Implemented,0,Not Started,Dec 2036,Implement ASBU Block 3 modules
+T14.1,CO2 Emissions,CO2 Reduction Action Plan,25,Delayed,Dec 2026,Develop/update State Action Plan for CO2 reduction every 3 years
+T14.2,CO2 Emissions,CO2 Reduction Measures & Roadmap,0,Not Started,From 2026,Quantify CO2 reduction potential and develop roadmap
+T15.1,ANSP Peer Review,ANSPs Join Peer Review Programme,50,In Progress,Dec 2026,All ANSPs join African ANSP Peer Review Programme
+T15.2,ANSP Peer Review,ANSP SMS Maturity (50% by 2026),50,In Progress,Dec 2028,ANSPs reach SMS maturity 50% by 2026 and 100% by 2028
+T15.3,ANSP Peer Review,ANSP Certification,25,Delayed,Dec 2036,All ANSPs attain certification

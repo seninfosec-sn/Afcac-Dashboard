@@ -1,0 +1,13 @@
+KPI_Name,Value,Unit,Trend,Category
+Total Countries,54,Count,+2 since 2023,Overview
+Total Actions,312,Count,+18 this quarter,Overview
+Total Budget,19500000,USD,Allocated,Overview
+Pct Completed,26,Percent,+4% this month,Status
+Pct In Progress,44,Percent,On track,Status
+Pct Delayed,7,Percent,Watch,Status
+Pct On Hold,4,Percent,Critical,Status
+Pct Not Started,19,Percent,Pending,Status
+Avg Duration Weeks,14,Weeks,3.5 months avg,Planning
+Experts Planned,14,Count,AFCAC Experts,Planning
+Report Period,Q4 2024,Period,,Metadata
+Last Updated,2024-02-13,Date,,Metadata
