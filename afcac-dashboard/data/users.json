@@ -9,6 +9,15 @@
     "country": "AFCAC HQ"
   },
   {
+    "username": "agnes.aguma",
+    "displayName": "Agnes Aguma",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "AgnesAguma@AFCAC2024",
+    "email": "agnes.aguma@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
     "username": "algeria",
     "displayName": "Focal Point — Algeria",
     "role": "expert",
