@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import type { ActionRow, TargetRow } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 const SC: Record<string, { label: string; cls: string }> = {
   completed:  { label: "Completed",   cls: "s-completed" },
@@ -59,11 +61,29 @@ export default function ActionTable({
     });
   }
 
+  const SC_LABEL: Record<string, string> = {
+    completed: "Completed", inprogress: "In Progress",
+    delayed: "Delayed", onhold: "On Hold", notstarted: "Not Started",
+  };
+
+  async function handleExcel() {
+    const headers = ["Country", "Target ID", "Section", "Status", "Start", "End"];
+    const rows = sorted.map(r => [r.country, r.action, r.section, SC_LABEL[r.status] ?? r.status, r.start, r.end]);
+    await exportExcel("AFCAC_Action_Plan", "Action Plan", headers, rows);
+  }
+
+  async function handlePdf() {
+    const headers = ["Country", "Target ID", "Section", "Status", "Start", "End"];
+    const rows = sorted.map(r => [r.country, r.action, r.section, SC_LABEL[r.status] ?? r.status, r.start, r.end]);
+    await exportPdf("AFCAC_Action_Plan", "Action Plan — Detail", headers, rows, `${sorted.length} countries`);
+  }
+
   return (
     <div className="card" style={{ height: "fit-content" }}>
       <div className="card-head">
         <span className="card-head-title">Action Plan — Detail</span>
         <span className="card-head-badge">{sorted.length} rows</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
       <div className="tbl-scroll">
         <table className="dtable">

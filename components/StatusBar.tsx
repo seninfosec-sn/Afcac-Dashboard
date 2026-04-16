@@ -1,4 +1,7 @@
+"use client";
 import type { KpiData } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 export default function StatusBar({ kpis }: { kpis: KpiData }) {
   const segs = [
@@ -9,11 +12,26 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
     { pct: kpis.pctNotStarted,  color: "var(--c-nostart)",  label: "Not Started", hex: "#95a5a6" },
   ];
 
+  async function handleExcel() {
+    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const rows = segs.map(s => [s.label, s.pct, Math.round(s.pct * kpis.totalActions / 100)]);
+    rows.push(["TOTAL", 100, kpis.totalActions] as (string | number)[]);
+    await exportExcel("AFCAC_Continental_Status", "Continental Status", headers, rows);
+  }
+
+  async function handlePdf() {
+    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const rows = segs.map(s => [s.label, `${s.pct}%`, Math.round(s.pct * kpis.totalActions / 100)]);
+    rows.push(["TOTAL", "100%", kpis.totalActions] as (string | number)[]);
+    await exportPdf("AFCAC_Continental_Status", "Continental Status Distribution", headers, rows, `Total: ${kpis.totalActions} actions`);
+  }
+
   return (
     <div className="card" style={{ display: "flex", flexDirection: "column" }}>
       <div className="card-head">
         <span className="card-head-title">Continental Status Distribution</span>
         <span className="card-head-badge">{kpis.totalActions} Actions</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
       <div className="card-body" style={{ flex: 1 }}>
         {/* Stacked bar */}

@@ -13,10 +13,13 @@
     "@neondatabase/serverless": "^1.0.2",
     "bcryptjs": "^2.4.3",
     "jose": "^5.9.6",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "recharts": "^2.14.1"
+    "recharts": "^2.14.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

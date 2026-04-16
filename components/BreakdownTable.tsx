@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 type SortKey = keyof CountryRow;
 
@@ -28,11 +30,24 @@ export default function BreakdownTable({ countries }: { countries: CountryRow[] 
     }));
   }
 
+  async function handleExcel() {
+    const headers = ["Country", "Total Actions", "% Completed", "% In Progress", "% Delayed", "% On Hold", "% Not Started", "Entity"];
+    const rows = sorted.map(r => [r.country, r.actions, r.completed, r.inprogress, r.delayed, r.onhold, r.notstarted, r.entity]);
+    await exportExcel("AFCAC_Country_Breakdown", "Country Breakdown", headers, rows);
+  }
+
+  async function handlePdf() {
+    const headers = ["Country", "Actions", "Completed", "In Progress", "Delayed", "On Hold", "Not Started", "Entity"];
+    const rows = sorted.map(r => [r.country, r.actions, `${r.completed}%`, `${r.inprogress}%`, `${r.delayed}%`, `${r.onhold}%`, `${r.notstarted}%`, r.entity]);
+    await exportPdf("AFCAC_Country_Breakdown", "Action Plan Country Breakdown", headers, rows, `${sorted.length} African States`);
+  }
+
   return (
     <div className="card">
       <div className="card-head">
         <span className="card-head-title">Action Plan Country Breakdown</span>
         <span className="card-head-badge">{sorted.length} Countries</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
       <div className="tbl-scroll" style={{ maxHeight: "none" }}>
         <table className="dtable">

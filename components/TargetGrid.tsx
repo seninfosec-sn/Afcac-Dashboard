@@ -1,4 +1,7 @@
+"use client";
 import type { TargetRow } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 /* ── Mapping : numéro de target → nom officiel RAST ── */
 const TARGET_NAMES: Record<number, string> = {
@@ -63,11 +66,25 @@ export default function TargetGrid({ targets }: { targets: TargetRow[] }) {
   /* Score global continent (moyenne des 15 groupes) */
   const globalAvg = Math.round(rows.reduce((s, r) => s + r.avgPct, 0) / rows.length);
 
+  async function handleExcel() {
+    const headers = ["#", "Target Name", "Avg Score (%)", "Status", "Deadlines", "Sub-targets"];
+    const tableRows = rows.map(r => [r.num, r.name, r.avgPct, statusLabel(r.avgPct).label, r.deadlines, r.count]);
+    tableRows.push(["", "Continental Average", globalAvg, "", "", ""]);
+    await exportExcel("AFCAC_Safety_Targets", "Safety Targets", headers, tableRows);
+  }
+
+  async function handlePdf() {
+    const headers = ["#", "Target Name", "Score", "Status", "Deadlines", "Sub-targets"];
+    const tableRows = rows.map(r => [r.num, r.name, `${r.avgPct}%`, statusLabel(r.avgPct).label, r.deadlines, r.count]);
+    await exportPdf("AFCAC_Safety_Targets", "Abuja Safety Targets — Achievement Progress", headers, tableRows, `Continental Average: ${globalAvg}%`);
+  }
+
   return (
     <div className="card">
       <div className="card-head">
         <span className="card-head-title">AFCAC / Abuja Safety Targets — Achievement Progress</span>
         <span className="card-head-badge">Continental Score · {globalAvg}%</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
 
       <div className="card-body">

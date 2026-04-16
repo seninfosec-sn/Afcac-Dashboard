@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 const STATUS_COLORS: Record<string, string> = {
   completed:  "#2d9d5e",
@@ -119,11 +121,33 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
     ...hexShapes.map((s) => ({ name: s.name, points: hex(s.cx, s.cy, s.r) })),
   ];
 
+  const STATUS_LABEL: Record<string, string> = {
+    completed: "Completed", inprogress: "In Progress",
+    delayed: "Delayed", onhold: "On Hold", notstarted: "Not Started",
+  };
+
+  async function handleExcel() {
+    const headers = ["Country", "Region", "Total Actions", "% Completed", "% In Progress", "% Delayed", "% On Hold", "% Not Started", "Entity", "Dominant Status"];
+    const rows = [...countries]
+      .sort((a, b) => a.country.localeCompare(b.country))
+      .map(c => [c.country, c.region ?? "", c.actions, c.completed, c.inprogress, c.delayed, c.onhold, c.notstarted, c.entity, STATUS_LABEL[getDominantStatus(c)]]);
+    await exportExcel("AFCAC_Africa_Map_Status", "Africa Map Status", headers, rows);
+  }
+
+  async function handlePdf() {
+    const headers = ["Country", "Actions", "Completed", "In Progress", "Delayed", "Not Started", "Entity"];
+    const rows = [...countries]
+      .sort((a, b) => a.country.localeCompare(b.country))
+      .map(c => [c.country, c.actions, `${c.completed}%`, `${c.inprogress}%`, `${c.delayed}%`, `${c.notstarted}%`, c.entity]);
+    await exportPdf("AFCAC_Africa_Map_Status", "Africa — Action Status Map", headers, rows, `${countries.length} African States`);
+  }
+
   return (
     <div className="card" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div className="card-head">
         <span className="card-head-title">Africa — Action Status Map</span>
         <span className="card-head-badge">{countries.length} Countries</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
       <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch", position: "relative" }}>
         <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "100%", display: "block" }}>

@@ -1,6 +1,8 @@
 "use client";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import type { KpiData } from "@/lib/types";
+import ExportButtons from "@/components/ExportButtons";
+import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 export default function StatusDonut({ kpis }: { kpis: KpiData }) {
   const data = [
@@ -11,11 +13,26 @@ export default function StatusDonut({ kpis }: { kpis: KpiData }) {
     { name: "Not Started", value: kpis.pctNotStarted, color: "#95a5a6" },
   ];
 
+  async function handleExcel() {
+    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const rows = data.map(d => [d.name, d.value, Math.round(d.value * kpis.totalActions / 100)]);
+    rows.push(["TOTAL", 100, kpis.totalActions]);
+    await exportExcel("AFCAC_Status_Distribution", "Status Distribution", headers, rows);
+  }
+
+  async function handlePdf() {
+    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const rows = data.map(d => [d.name, `${d.value}%`, Math.round(d.value * kpis.totalActions / 100)]);
+    rows.push(["TOTAL", "100%", kpis.totalActions]);
+    await exportPdf("AFCAC_Status_Distribution", "Status Distribution", headers, rows, `Total: ${kpis.totalActions} actions`);
+  }
+
   return (
     <div className="card">
       <div className="card-head">
         <span className="card-head-title">Status Distribution</span>
         <span className="card-head-badge">{kpis.totalActions} Actions</span>
+        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
       </div>
       <div className="card-body">
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
