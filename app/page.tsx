@@ -38,7 +38,7 @@ export default async function DashboardPage() {
               📅 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 11 }}>{kpis.reportPeriod}</span>
             </div>
             <Link href="/login" className="hbtn" title="Admin Login" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none" }}>
-              🔐 Admin
+              🔐 Sign In
             </Link>
           </div>
         </div>
