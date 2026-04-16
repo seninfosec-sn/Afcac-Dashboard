@@ -18,6 +18,51 @@
     "country": "AFCAC HQ"
   },
   {
+    "username": "james",
+    "displayName": "James",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "James2024",
+    "email": "james@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "faraji",
+    "displayName": "Faraji",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Faraji2024",
+    "email": "faraji@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "henry",
+    "displayName": "Henry",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Henry2024",
+    "email": "henry@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "loise",
+    "displayName": "Loise",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Loise2024",
+    "email": "loise@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "ebenezer",
+    "displayName": "Ebenezer",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Ebenezer2024",
+    "email": "ebenezer@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
     "username": "algeria",
     "displayName": "Focal Point — Algeria",
     "role": "expert",
