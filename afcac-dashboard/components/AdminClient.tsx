@@ -207,6 +207,14 @@ export default function AdminClient({
             <Link href="/" className="hbtn" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none" }}>
               👁 Dashboard
             </Link>
+            <button
+              onClick={handleLogout}
+              className="hbtn"
+              style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, cursor: "pointer", border: "1.5px solid rgba(255,100,100,0.5)", background: "rgba(200,50,50,0.15)", color: "#ffaaaa" }}
+              title="Se déconnecter"
+            >
+              ⏻ Log Out
+            </button>
           </div>
         </div>
       </header>
