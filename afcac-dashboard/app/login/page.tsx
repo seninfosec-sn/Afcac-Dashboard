@@ -91,7 +91,7 @@ function LoginForm() {
           <strong>Admin accounts :</strong>
           <ul style={{ margin: "6px 0 0 0", paddingLeft: 16, lineHeight: 1.8 }}>
             <li><code>admin</code> — password : <code>admin123</code></li>
-            <li><code>agnes.aguma</code> — password : <code>AgnesAguma@AFCAC2024</code></li>
+            <li><code>agnes.aguma</code> — password : <code>Agnes2024</code></li>
           </ul>
         </div>
       </div>

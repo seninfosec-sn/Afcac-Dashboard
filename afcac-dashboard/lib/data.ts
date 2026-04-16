@@ -206,7 +206,8 @@ export function getUsers(): AppUser[] {
 }
 
 export function findUser(username: string): AppUser | null {
-  return getUsers().find((u) => u.username === username) ?? null;
+  const normalized = username.trim().toLowerCase();
+  return getUsers().find((u) => u.username.toLowerCase() === normalized) ?? null;
 }
 
 /* ── Update logs ─────────────────────────────────── */
