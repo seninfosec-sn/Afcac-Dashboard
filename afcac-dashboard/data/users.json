@@ -1087,5 +1087,23 @@
     "passwordHash": "",
     "email": "jacob.sibanda@afcac.org",
     "country": ""
+  },
+  {
+    "username": "ahmed.badr",
+    "displayName": "Ahmed Badr",
+    "devPassword": "AhmedB2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "ahmed.badr@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mohamed.ali",
+    "displayName": "Mohamed Ali",
+    "devPassword": "MohamedA2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mohamed.ali@afcac.org",
+    "country": ""
   }
 ]
