@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = findUser(username.trim().toLowerCase());
+    const user = await findUser(username.trim().toLowerCase());
     if (!user) {
       console.warn("[LOGIN] User not found:", username);
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });

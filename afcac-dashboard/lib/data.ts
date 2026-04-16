@@ -199,15 +199,20 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   await saveCountries(countries);
 }
 
-/* ── Users (read-only from bundled file) ─────────── */
+/* ── Users (Neon DB primary, JSON file fallback) ─── */
 
-export function getUsers(): AppUser[] {
+export async function getUsers(): Promise<AppUser[]> {
+  try {
+    const fromDb = await kvGet<AppUser[]>("users");
+    if (fromDb && fromDb.length > 0) return fromDb;
+  } catch { /* fall through */ }
   try { return readJsonFile<AppUser[]>("users.json"); } catch { return []; }
 }
 
-export function findUser(username: string): AppUser | null {
+export async function findUser(username: string): Promise<AppUser | null> {
   const normalized = username.trim().toLowerCase();
-  return getUsers().find((u) => u.username.toLowerCase() === normalized) ?? null;
+  const users = await getUsers();
+  return users.find((u) => u.username.toLowerCase() === normalized) ?? null;
 }
 
 /* ── Update logs ─────────────────────────────────── */
