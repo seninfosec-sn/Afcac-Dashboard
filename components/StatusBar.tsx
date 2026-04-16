@@ -3,7 +3,7 @@ import type { KpiData } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
-export default function StatusBar({ kpis }: { kpis: KpiData }) {
+export default function StatusBar({ kpis, isAdmin }: { kpis: KpiData; isAdmin?: boolean }) {
   const segs = [
     { pct: kpis.pctCompleted,   color: "var(--c-complete)", label: "Completed",   hex: "#2d9d5e" },
     { pct: kpis.pctInProgress,  color: "var(--c-progress)", label: "In Progress", hex: "#f0a500" },
@@ -31,7 +31,7 @@ export default function StatusBar({ kpis }: { kpis: KpiData }) {
       <div className="card-head">
         <span className="card-head-title">Continental Status Distribution</span>
         <span className="card-head-badge">{kpis.totalActions} Actions</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="card-body" style={{ flex: 1 }}>
         {/* Stacked bar */}

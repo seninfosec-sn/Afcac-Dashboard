@@ -6,7 +6,7 @@ import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
 type SortKey = keyof CountryRow;
 
-export default function BreakdownTable({ countries }: { countries: CountryRow[] }) {
+export default function BreakdownTable({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
   const [sorted, setSorted] = useState<CountryRow[]>(countries);
   const [sortCol, setSortCol] = useState(-1);
   const [sortAsc, setSortAsc] = useState(true);
@@ -47,7 +47,7 @@ export default function BreakdownTable({ countries }: { countries: CountryRow[] 
       <div className="card-head">
         <span className="card-head-title">Action Plan Country Breakdown</span>
         <span className="card-head-badge">{sorted.length} Countries</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll" style={{ maxHeight: "none" }}>
         <table className="dtable">

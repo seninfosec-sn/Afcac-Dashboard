@@ -20,10 +20,12 @@ export default function ActionTable({
   actions,
   targets = [],
   countryTargets = {},
+  isAdmin,
 }: {
   actions: ActionRow[];
   targets?: TargetRow[];
   countryTargets?: Record<string, TargetRow[]>;
+  isAdmin?: boolean;
 }) {
   const [sorted, setSorted] = useState<ActionRow[]>(
     [...actions].sort((a, b) => a.country.localeCompare(b.country))
@@ -83,7 +85,7 @@ export default function ActionTable({
       <div className="card-head">
         <span className="card-head-title">Action Plan — Detail</span>
         <span className="card-head-badge">{sorted.length} rows</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll">
         <table className="dtable">

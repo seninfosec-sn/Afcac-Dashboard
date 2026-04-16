@@ -37,7 +37,7 @@ function hex(cx: number, cy: number, r: number): string {
 
 interface Tooltip { x: number; y: number; country: string; data: CountryRow | null }
 
-export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
+export default function AfricaMap({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const countryMap = Object.fromEntries(countries.map((c) => [c.country, c]));
 
@@ -147,7 +147,7 @@ export default function AfricaMap({ countries }: { countries: CountryRow[] }) {
       <div className="card-head">
         <span className="card-head-title">Africa — Action Status Map</span>
         <span className="card-head-badge">{countries.length} Countries</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch", position: "relative" }}>
         <svg className="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "100%", display: "block" }}>

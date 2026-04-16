@@ -4,7 +4,7 @@ import type { KpiData } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
 
-export default function StatusDonut({ kpis }: { kpis: KpiData }) {
+export default function StatusDonut({ kpis, isAdmin }: { kpis: KpiData; isAdmin?: boolean }) {
   const data = [
     { name: "Completed",   value: kpis.pctCompleted,  color: "#2d9d5e" },
     { name: "In Progress", value: kpis.pctInProgress, color: "#f0a500" },
@@ -32,7 +32,7 @@ export default function StatusDonut({ kpis }: { kpis: KpiData }) {
       <div className="card-head">
         <span className="card-head-title">Status Distribution</span>
         <span className="card-head-badge">{kpis.totalActions} Actions</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="card-body">
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>

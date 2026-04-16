@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDashboardData, getTopExperts, getAllCountryTargets } from "@/lib/data";
+import { getServerSession } from "@/lib/auth";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -11,11 +12,13 @@ import StatusDonut from "@/components/StatusDonut";
 export const dynamic = "force-dynamic"; // always fresh data
 
 export default async function DashboardPage() {
-  const [{ kpis, actions, countries, targets }, experts, countryTargets] = await Promise.all([
+  const [{ kpis, actions, countries, targets }, experts, countryTargets, session] = await Promise.all([
     getDashboardData(),
     getTopExperts(3),
     getAllCountryTargets(),
+    getServerSession(),
   ]);
+  const isAdmin = session?.role === "admin";
 
   return (
     <>
@@ -54,24 +57,24 @@ export default async function DashboardPage() {
         {/* Section 2: Status + Action Table */}
         <div className="section-label">Status Overview</div>
         <div className="row-wide">
-          <StatusDonut kpis={kpis} />
-          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} />
+          <StatusDonut kpis={kpis} isAdmin={isAdmin} />
+          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
         <div className="section-label">Geographic &amp; Status Overview</div>
         <div className="row-map">
-          <AfricaMap countries={countries} />
-          <StatusBar kpis={kpis} />
+          <AfricaMap countries={countries} isAdmin={isAdmin} />
+          <StatusBar kpis={kpis} isAdmin={isAdmin} />
         </div>
 
         {/* Section 4: Country Breakdown */}
         <div className="section-label">Action Plan Country Breakdown</div>
-        <BreakdownTable countries={countries} />
+        <BreakdownTable countries={countries} isAdmin={isAdmin} />
 
         {/* Section 5: Safety Targets */}
         <div className="section-label">AFCAC Safety Targets — Questionnaire Progress</div>
-        <TargetGrid targets={targets} />
+        <TargetGrid targets={targets} isAdmin={isAdmin} />
 
       </div>
 

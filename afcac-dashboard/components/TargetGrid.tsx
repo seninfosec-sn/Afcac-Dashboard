@@ -44,7 +44,7 @@ function groupNum(id: string): number {
   return parseInt(id.replace(/^T/, "").split(".")[0], 10);
 }
 
-export default function TargetGrid({ targets }: { targets: TargetRow[] }) {
+export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[]; isAdmin?: boolean }) {
   /* Regrouper les sous-targets par numéro de target principal */
   const grouped = targets.reduce<Record<number, TargetRow[]>>((acc, t) => {
     const n = groupNum(t.id);
@@ -84,7 +84,7 @@ export default function TargetGrid({ targets }: { targets: TargetRow[] }) {
       <div className="card-head">
         <span className="card-head-title">AFCAC / Abuja Safety Targets — Achievement Progress</span>
         <span className="card-head-badge">Continental Score · {globalAvg}%</span>
-        <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />
+        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
 
       <div className="card-body">
