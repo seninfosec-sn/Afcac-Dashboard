@@ -14,20 +14,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = findUser(username);
+    const user = await findUser(username.trim().toLowerCase());
     if (!user) {
+      console.warn("[LOGIN] User not found:", username);
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
     // Validate password
     let valid = false;
+    const trimmedPassword = password.trim();
     if (!user.passwordHash || user.passwordHash === "") {
       // Dev mode: plain text comparison against devPassword
-      valid = password === user.devPassword;
+      valid = trimmedPassword === user.devPassword;
+      console.log("[LOGIN] Dev auth for", user.username, "→", valid);
     } else {
       // Production: bcrypt comparison
       const bcrypt = await import("bcryptjs");
-      valid = await bcrypt.compare(password, user.passwordHash);
+      valid = await bcrypt.compare(trimmedPassword, user.passwordHash);
     }
 
     if (!valid) {

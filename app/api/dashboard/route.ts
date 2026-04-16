@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Missing targets data" }, { status: 400 });
       }
       step = "save_targets";
-      const user = findUser(session.username);
+      const user = await findUser(session.username);
       const country = user?.country ?? body.updaterCountry ?? "";
       if (country) {
         await saveCountryTargets(country, body.targets);

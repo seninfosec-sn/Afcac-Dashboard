@@ -16,13 +16,16 @@ export default async function AdminPage() {
   // Experts load their own country's targets (not the global aggregate)
   let initialData = data;
   if (session.role === "expert") {
-    const user = findUser(session.username);
+    const user = await findUser(session.username);
     if (user?.country) {
       initialData = { ...data, targets: await getCountryTargets(user.country) };
     }
   }
 
-  const users = session.role === "admin" ? getUsers().filter((u) => u.role === "expert") : [];
+  const currentUser = await findUser(session.username);
+  const displayName = currentUser?.displayName ?? session.username;
+  const allUsers = await getUsers();
+  const users = session.role === "admin" ? allUsers.filter((u) => u.role === "expert") : [];
 
-  return <AdminClient initialData={initialData} username={session.username} role={session.role} users={users} />;
+  return <AdminClient initialData={initialData} username={displayName} role={session.role} users={users} />;
 }
