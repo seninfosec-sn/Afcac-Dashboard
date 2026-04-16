@@ -3,9 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser } from "@/lib/types";
+import OnlineUsers from "@/components/OnlineUsers";
 
 /* ─── Types ──────────────────────────────────────── */
-type Tab = "kpis" | "targets" | "actions" | "countries" | "users";
+type Tab = "kpis" | "targets" | "actions" | "countries" | "users" | "sessions";
 
 const AFRICAN_STATES = [
   "Algeria","Angola","Benin","Botswana","Burkina Faso","Burundi","Cabo Verde",
@@ -35,7 +36,8 @@ const NAV_ITEMS: { id: Tab; icon: string; label: string; sub: string; adminOnly?
   { id: "targets",   icon: "🎯", label: "Safety Targets",  sub: "39 AFCAC targets" },
   { id: "actions",   icon: "📋", label: "Action Plan",     sub: "15 country actions" },
   { id: "countries", icon: "🌍", label: "Country Data",    sub: "15 countries" },
-  { id: "users",     icon: "🔑", label: "Accès États",     sub: "54 points focaux", adminOnly: true },
+  { id: "users",     icon: "🔑", label: "Accès États",     sub: "54 points focaux",   adminOnly: true },
+  { id: "sessions",  icon: "🟢", label: "Utilisateurs",   sub: "En ligne & historique", adminOnly: true },
 ];
 
 /* ─── Toast ──────────────────────────────────────── */
@@ -76,6 +78,14 @@ export default function AdminClient({
   const [loginTime] = useState(() => new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
   const [loginDate] = useState(() => new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }));
   const mainRef = useRef<HTMLElement>(null);
+
+  /* ── Heartbeat: keep session "online" every 2 min ── */
+  useEffect(() => {
+    const ping = () => fetch("/api/auth/heartbeat", { method: "POST" }).catch(() => {});
+    ping();
+    const id = setInterval(ping, 2 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
 
   function showToast(msg: string, type: "ok" | "warn") {
     setToast({ msg, type });
@@ -305,6 +315,7 @@ export default function AdminClient({
               {tab === "actions"   && "📋 Plan d'Actions — Statut par Pays"}
               {tab === "countries" && "🌍 Données Pays — Répartition des Actions"}
               {tab === "users"     && "🔑 Accès États — Identifiants des Points Focaux"}
+              {tab === "sessions"  && "🟢 Utilisateurs Connectés — Surveillance en Temps Réel"}
             </div>
             <div className="intro-text">
               {tab === "kpis"      && <>Modifiez les <strong>indicateurs clés de performance</strong> globaux du dashboard. Ces valeurs sont affichées sur la page principale dans la section Executive Summary.</>}
@@ -312,6 +323,7 @@ export default function AdminClient({
               {tab === "actions"   && <>Mettez à jour le <strong>statut de chaque action</strong> par pays. Ces données alimentent le tableau de détail et la carte Afrique sur le dashboard principal.</>}
               {tab === "countries" && <>Modifiez les <strong>données agrégées par pays</strong> : budget, actions totales, et répartition des statuts. Ces valeurs alimentent le tableau de ventilation pays.</>}
               {tab === "users"     && <>Liste des <strong>{users.length} points focaux</strong> — un par état membre AFCAC. Ces identifiants permettent à chaque représentant national d'accéder au formulaire de mise à jour.</>}
+              {tab === "sessions"  && <>Visualisez en temps réel les <strong>utilisateurs connectés</strong> : heure de connexion, localisation (pays/ville) et adresse IP. Rafraîchissement automatique toutes les 30 secondes.</>}
             </div>
           </div>
 
@@ -769,6 +781,11 @@ export default function AdminClient({
                 </table>
               </div>
             </>
+          )}
+
+          {/* ─────────────────── SESSIONS ─────────────────── */}
+          {tab === "sessions" && role === "admin" && (
+            <OnlineUsers />
           )}
 
         </main>

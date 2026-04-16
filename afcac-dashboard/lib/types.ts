@@ -81,6 +81,20 @@ export interface ExpertStat {
 
 export type UserRole = "admin" | "expert";
 
+export interface SessionEntry {
+  sessionId: string;
+  username: string;
+  displayName: string;
+  role: string;
+  loginTime: string;   // ISO
+  lastSeen: string;    // ISO
+  logoutTime?: string; // ISO
+  ip: string;
+  country?: string;
+  city?: string;
+  countryCode?: string;
+}
+
 export interface AppUser {
   username: string;
   displayName: string;
