@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { getDashboardData, getTopExperts, getAllCountryTargets } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
+import HeaderControls from "@/components/HeaderControls";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -40,9 +40,7 @@ export default async function DashboardPage() {
             <div className="hctl">
               📅 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 11 }}>{kpis.reportPeriod}</span>
             </div>
-            <Link href="/login" className="hbtn" title="Admin Login" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none" }}>
-              🔐 Sign In
-            </Link>
+            <HeaderControls session={session} />
           </div>
         </div>
       </header>
