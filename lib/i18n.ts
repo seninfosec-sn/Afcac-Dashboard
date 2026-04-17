@@ -6,7 +6,7 @@ export const translations = {
   en: {
     // Header
     dashboardTitle: "AFCAC Revised Abuja Safety Targets",
-    dashboardSub: "Multi-State Monitoring Dashboard · Revised Abuja Safety Targets",
+    dashboardSub: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     live: "Live",
     signIn: "🔐 Sign In",
     adminLogin: "Admin Login",
@@ -141,7 +141,7 @@ export const translations = {
   fr: {
     // Header
     dashboardTitle: "AFCAC Objectifs de Sécurité Révisés d'Abuja",
-    dashboardSub: "Tableau de Bord Multi-États · Objectifs de Sécurité Révisés d'Abuja",
+    dashboardSub: "Tableau de Bord de Suivi et de Reporting des Objectifs de Sécurité Révisés d'Abuja",
     live: "En direct",
     signIn: "🔐 Se connecter",
     adminLogin: "Connexion Admin",
@@ -276,7 +276,7 @@ export const translations = {
   pt: {
     // Header
     dashboardTitle: "AFCAC Metas de Segurança Revistas de Abuja",
-    dashboardSub: "Painel Multi-Estado · Metas de Segurança Revistas de Abuja",
+    dashboardSub: "Painel de Monitorização e Relatórios das Metas de Segurança Revistas de Abuja",
     live: "Ao vivo",
     signIn: "🔐 Entrar",
     adminLogin: "Login Admin",
