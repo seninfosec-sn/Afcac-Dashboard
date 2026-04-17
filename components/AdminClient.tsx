@@ -191,7 +191,7 @@ export default function AdminClient({
           <div className="db-emblem">✈</div>
           <div className="db-title-wrap">
             <div className="db-title">AFCAC — Mise à Jour du Tableau de Bord</div>
-            <div className="db-sub">AASAP Dashboard Admin · Données en temps réel · Révisées Abuja Safety Targets</div>
+            <div className="db-sub">AFCAC Dashboard · Données en temps réel · Révisées Abuja Safety Targets</div>
           </div>
           <div className="db-controls">
             {/* Header progress */}
