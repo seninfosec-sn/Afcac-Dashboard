@@ -51,7 +51,9 @@ function LoginForm() {
           <LanguageSwitcher />
         </div>
 
-        <div className="login-logo">✈</div>
+        <div className="login-logo">
+          <img src="/afcac_logo.png" alt="AFCAC Logo" style={{ height: 64, width: "auto", objectFit: "contain" }} />
+        </div>
         <div className="login-title">{t("loginTitle")}</div>
         <div className="login-sub">{t("loginSub")}</div>
 

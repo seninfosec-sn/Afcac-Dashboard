@@ -33,7 +33,9 @@ export default async function DashboardPage() {
       {/* ── HEADER ── */}
       <header className="db-header">
         <div className="db-header-inner">
-          <div className="db-emblem">✈</div>
+          <div className="db-emblem">
+            <img src="/afcac_logo.png" alt="AFCAC Logo" style={{ height: 44, width: "auto", objectFit: "contain" }} />
+          </div>
           <div className="db-title-wrap">
             <div className="db-title">{t(locale, "dashboardTitle")}</div>
             <div className="db-sub">{t(locale, "dashboardSub")}</div>

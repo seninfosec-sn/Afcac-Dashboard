@@ -191,7 +191,9 @@ export default function AdminClient({
       {/* ── HEADER ── */}
       <header className="db-header" style={{ position: "sticky", top: 0, zIndex: 300, height: 60, display: "flex", alignItems: "center" }}>
         <div className="db-header-inner" style={{ width: "100%", height: "100%" }}>
-          <div className="db-emblem">✈</div>
+          <div className="db-emblem">
+            <img src="/afcac_logo.png" alt="AFCAC Logo" style={{ height: 44, width: "auto", objectFit: "contain" }} />
+          </div>
           <div className="db-title-wrap">
             <div className="db-title">AFCAC — Mise à Jour du Tableau de Bord</div>
             <div className="db-sub">{t("adminPanelSub")}</div>

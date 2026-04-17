@@ -18,7 +18,8 @@
       "Bash(node scripts/add-experts.mjs)",
       "Bash(cp -r \"d:/WEB/Dashboard/app/api/auth/heartbeat\" \"d:/WEB/Dashboard/afcac-dashboard/app/api/auth/\")",
       "Bash(cp -r \"d:/WEB/Dashboard/app/api/admin\" \"d:/WEB/Dashboard/afcac-dashboard/app/api/\")",
-      "Bash(node scripts/push-users.mjs)"
+      "Bash(node scripts/push-users.mjs)",
+      "Bash(ls d:/WEB/Dashboard/afcac-dashboard/*.png d:/WEB/Dashboard/afcac-dashboard/*.jpg d:/WEB/Dashboard/afcac-dashboard/*.svg)"
     ]
   }
 }
