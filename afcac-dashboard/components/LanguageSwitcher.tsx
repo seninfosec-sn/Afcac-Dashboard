@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 import type { Locale } from "@/lib/i18n";
 
@@ -10,13 +11,19 @@ const LANGS: { code: Locale; flag: string; label: string }[] = [
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
+  const router = useRouter();
+
+  function handleChange(code: Locale) {
+    setLocale(code);          // met à jour le context + cookie
+    router.refresh();         // force le re-rendu des composants serveur
+  }
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
       {LANGS.map(({ code, flag, label }) => (
         <button
           key={code}
-          onClick={() => setLocale(code)}
+          onClick={() => handleChange(code)}
           title={label}
           style={{
             display: "flex",
