@@ -1089,6 +1089,15 @@
     "country": ""
   },
   {
+    "username": "frankline.omondi",
+    "displayName": "Frankline OMONDI",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "FranklineO2024",
+    "email": "frankline.omondi@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
     "username": "ahmed.badr",
     "displayName": "Ahmed Badr",
     "devPassword": "AhmedB2025",
