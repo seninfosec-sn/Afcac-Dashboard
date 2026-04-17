@@ -3,11 +3,14 @@ import { useState, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import { useLanguage } from "@/components/LanguageProvider";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const redirect = params.get("redirect") ?? "/admin";
+  const { t } = useLanguage();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,13 +31,13 @@ function LoginForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Login failed");
+        setError(data.error ?? t("loginFailed"));
       } else {
         router.push(redirect);
         router.refresh();
       }
     } catch {
-      setError("Network error — please try again");
+      setError(t("networkError"));
     } finally {
       setLoading(false);
     }
@@ -43,28 +46,33 @@ function LoginForm() {
   return (
     <div className="login-page">
       <div className="login-card">
+        {/* Language switcher at the top */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <LanguageSwitcher />
+        </div>
+
         <div className="login-logo">✈</div>
-        <div className="login-title">AFCAC Dashboard</div>
-        <div className="login-sub">Administrator Access · Secure Login</div>
+        <div className="login-title">{t("loginTitle")}</div>
+        <div className="login-sub">{t("loginSub")}</div>
 
         {error && <div className="error-msg">⚠ {error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="username">Username</label>
+            <label className="form-label" htmlFor="username">{t("labelUsername")}</label>
             <input
               id="username"
               type="text"
               className="form-input"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="your.username"
+              placeholder={t("placeholderUsername")}
               autoComplete="username"
               required
             />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="password">{t("labelPassword")}</label>
             <input
               id="password"
               type="password"
@@ -77,18 +85,18 @@ function LoginForm() {
             />
           </div>
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Authenticating…" : "Sign In"}
+            {loading ? t("signingIn") : t("signIn")}
           </button>
         </form>
 
         <div style={{ marginTop: 20, textAlign: "center", fontSize: 11, color: "var(--ink3)" }}>
           <Link href="/" style={{ color: "var(--forest2)", textDecoration: "none" }}>
-            ← Back to Dashboard
+            {t("backToDashboard")}
           </Link>
         </div>
 
         <div style={{ marginTop: 16, padding: "10px 14px", background: "var(--snow)", borderRadius: 6, fontSize: 11, color: "var(--ink3)", borderLeft: "3px solid var(--gold)" }}>
-          <strong>Admin accounts :</strong>
+          <strong>{t("adminAccounts")}</strong>
           <ul style={{ margin: "6px 0 0 0", paddingLeft: 16, lineHeight: 1.8 }}>
             <li><code>admin</code> — password : <code>admin123</code></li>
             <li><code>agnes.aguma</code> — password : <code>Agnes2024</code></li>

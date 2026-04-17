@@ -3,20 +3,22 @@ import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
+import { useLanguage } from "./LanguageProvider";
 
 type SortKey = keyof CountryRow;
 
 export default function BreakdownTable({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
+  const { t } = useLanguage();
   const [sorted, setSorted] = useState<CountryRow[]>(countries);
   const [sortCol, setSortCol] = useState(-1);
   const [sortAsc, setSortAsc] = useState(true);
 
   const cols: { label: string; key: SortKey }[] = [
-    { label: "Country",        key: "country" },
-    { label: "Total Actions",  key: "actions" },
-    { label: "% Completed",    key: "completed" },
-    { label: "% In Progress",  key: "inprogress" },
-    { label: "Responsible",    key: "entity" },
+    { label: t("colCountry"),      key: "country" },
+    { label: t("colTotalActions"), key: "actions" },
+    { label: t("colPctCompleted"), key: "completed" },
+    { label: t("colPctInProgress"),key: "inprogress" },
+    { label: t("colResponsible"),  key: "entity" },
   ];
 
   function handleSort(idx: number, key: SortKey) {
@@ -31,22 +33,22 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
   }
 
   async function handleExcel() {
-    const headers = ["Country", "Total Actions", "% Completed", "% In Progress", "% Delayed", "% On Hold", "% Not Started", "Entity"];
+    const headers = [t("colCountry"), t("colTotalActions"), t("colPctCompleted"), t("colPctInProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity"];
     const rows = sorted.map(r => [r.country, r.actions, r.completed, r.inprogress, r.delayed, r.onhold, r.notstarted, r.entity]);
-    await exportExcel("AFCAC_Country_Breakdown", "Country Breakdown", headers, rows);
+    await exportExcel("AFCAC_Country_Breakdown", t("actionPlanBreakdown"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = ["Country", "Actions", "Completed", "In Progress", "Delayed", "On Hold", "Not Started", "Entity"];
+    const headers = [t("colCountry"), t("totalActions"), t("completed"), t("inProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity"];
     const rows = sorted.map(r => [r.country, r.actions, `${r.completed}%`, `${r.inprogress}%`, `${r.delayed}%`, `${r.onhold}%`, `${r.notstarted}%`, r.entity]);
-    await exportPdf("AFCAC_Country_Breakdown", "Action Plan Country Breakdown", headers, rows, `${sorted.length} African States`);
+    await exportPdf("AFCAC_Country_Breakdown", t("actionPlanBreakdown"), headers, rows, `${sorted.length} African States`);
   }
 
   return (
     <div className="card">
       <div className="card-head">
-        <span className="card-head-title">Action Plan Country Breakdown</span>
-        <span className="card-head-badge">{sorted.length} Countries</span>
+        <span className="card-head-title">{t("actionPlanBreakdown")}</span>
+        <span className="card-head-badge">{sorted.length} {t("countries")}</span>
         {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll" style={{ maxHeight: "none" }}>
@@ -58,7 +60,7 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
                   {c.label} {sortCol === i ? (sortAsc ? "↑" : "↓") : ""}
                 </th>
               ))}
-              <th>Progress Visual</th>
+              <th>{t("colProgressVisual")}</th>
             </tr>
           </thead>
           <tbody>
@@ -81,10 +83,10 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
                       { pct: row.delayed,    color: "var(--c-delayed)" },
                       { pct: row.onhold,     color: "var(--c-onhold)" },
                       { pct: row.notstarted, color: "var(--c-nostart)" },
-                    ].map((s, i) =>
+                    ].map((s, si) =>
                       s.pct > 0 ? (
                         <div
-                          key={i}
+                          key={si}
                           style={{ width: `${s.pct}%`, background: s.color, borderRadius: 2, minWidth: 3 }}
                           title={`${s.pct}%`}
                         />

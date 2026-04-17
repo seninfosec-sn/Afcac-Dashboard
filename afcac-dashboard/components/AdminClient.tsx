@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser } from "@/lib/types";
 import OnlineUsers from "@/components/OnlineUsers";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/components/LanguageProvider";
 
 /* ─── Types ──────────────────────────────────────── */
 type Tab = "kpis" | "targets" | "actions" | "countries" | "users" | "sessions";
@@ -64,6 +66,7 @@ export default function AdminClient({
   users?: AppUser[];
 }) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>(role === "admin" ? "targets" : "targets");
   const [kpis, setKpis] = useState<KpiData>(initialData.kpis);
   const [actions, setActions] = useState<ActionRow[]>(initialData.actions);
@@ -191,12 +194,13 @@ export default function AdminClient({
           <div className="db-emblem">✈</div>
           <div className="db-title-wrap">
             <div className="db-title">AFCAC — Mise à Jour du Tableau de Bord</div>
-            <div className="db-sub">AFCAC Dashboard · Données en temps réel · Révisées Abuja Safety Targets</div>
+            <div className="db-sub">{t("adminPanelSub")}</div>
           </div>
           <div className="db-controls">
+            <LanguageSwitcher />
             {/* Header progress */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Complété</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>{t("pctCompleted")}</span>
               <div style={{ width: 140, height: 8, background: "rgba(255,255,255,0.15)", borderRadius: 4, overflow: "hidden" }}>
                 <div style={{ height: "100%", background: "var(--gold)", borderRadius: 4, width: `${(answeredTargets / targets.length) * 100}%`, transition: "width .4s" }} />
               </div>
@@ -205,15 +209,15 @@ export default function AdminClient({
               </span>
             </div>
             <Link href="/" className="hbtn" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none" }}>
-              👁 Dashboard
+              👁 {t("dashboard")}
             </Link>
             <button
               onClick={handleLogout}
               className="hbtn"
               style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, cursor: "pointer", border: "1.5px solid rgba(255,100,100,0.5)", background: "rgba(200,50,50,0.15)", color: "#ffaaaa" }}
-              title="Se déconnecter"
+              title={t("disconnect")}
             >
-              ⏻ Log Out
+              {t("logOut")}
             </button>
           </div>
         </div>

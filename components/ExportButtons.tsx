@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useLanguage } from "./LanguageProvider";
 
 interface Props {
   onExcel: () => Promise<void>;
@@ -9,6 +10,7 @@ interface Props {
 export default function ExportButtons({ onExcel, onPdf }: Props) {
   const [loadingXls, setLoadingXls] = useState(false);
   const [loadingPdf, setLoadingPdf] = useState(false);
+  const { t } = useLanguage();
 
   async function handleExcel() {
     setLoadingXls(true);
@@ -32,7 +34,7 @@ export default function ExportButtons({ onExcel, onPdf }: Props) {
       <button
         onClick={handleExcel}
         disabled={loadingXls}
-        title="Download Excel"
+        title={t("downloadExcel")}
         style={{ ...btn, background: "#e6f4ea", borderColor: "#2d9d5e", color: "#1a6b3c", opacity: loadingXls ? .5 : 1 }}
       >
         {loadingXls ? "…" : "↓ XLS"}
@@ -40,7 +42,7 @@ export default function ExportButtons({ onExcel, onPdf }: Props) {
       <button
         onClick={handlePdf}
         disabled={loadingPdf}
-        title="Download PDF"
+        title={t("downloadPdf")}
         style={{ ...btn, background: "#fff0ee", borderColor: "#c0392b", color: "#9b1a1a", opacity: loadingPdf ? .5 : 1 }}
       >
         {loadingPdf ? "…" : "↓ PDF"}

@@ -2,8 +2,8 @@
 import type { TargetRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
+import { useLanguage } from "./LanguageProvider";
 
-/* ── Mapping : numéro de target → nom officiel RAST ── */
 const TARGET_NAMES: Record<number, string> = {
   1:  "Safety Trend Targets",
   2:  "Safety Oversight Enhancement",
@@ -22,7 +22,6 @@ const TARGET_NAMES: Record<number, string> = {
   15: "ANSP Peer Review & SMS Maturity",
 };
 
-/* ── Couleur selon score ── */
 function barColor(pct: number): string {
   if (pct >= 100) return "var(--c-complete)";
   if (pct >= 75)  return "var(--mint)";
@@ -31,64 +30,60 @@ function barColor(pct: number): string {
   return "var(--c-nostart)";
 }
 
-function statusLabel(pct: number): { label: string; cls: string } {
-  if (pct >= 100) return { label: "Completed",   cls: "s-completed" };
-  if (pct >= 75)  return { label: "In Progress", cls: "s-inprogress" };
-  if (pct >= 50)  return { label: "In Progress", cls: "s-inprogress" };
-  if (pct >= 25)  return { label: "Delayed",     cls: "s-delayed" };
-  return           { label: "Not Started",  cls: "s-notstarted" };
-}
-
-/* ── Extrait le numéro de groupe depuis l'ID (T1.1 → 1, T13 → 13) ── */
 function groupNum(id: string): number {
   return parseInt(id.replace(/^T/, "").split(".")[0], 10);
 }
 
 export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[]; isAdmin?: boolean }) {
-  /* Regrouper les sous-targets par numéro de target principal */
-  const grouped = targets.reduce<Record<number, TargetRow[]>>((acc, t) => {
-    const n = groupNum(t.id);
+  const { t } = useLanguage();
+
+  function statusInfo(pct: number): { label: string; cls: string } {
+    if (pct >= 100) return { label: t("completed"),   cls: "s-completed" };
+    if (pct >= 50)  return { label: t("inProgress"),  cls: "s-inprogress" };
+    if (pct >= 25)  return { label: t("delayed"),     cls: "s-delayed" };
+    return           { label: t("notStarted"),  cls: "s-notstarted" };
+  }
+
+  const grouped = targets.reduce<Record<number, TargetRow[]>>((acc, tRow) => {
+    const n = groupNum(tRow.id);
     if (!acc[n]) acc[n] = [];
-    acc[n].push(t);
+    acc[n].push(tRow);
     return acc;
   }, {});
 
-  /* Calculer le score continental moyen par groupe, trier 1 → 15 */
   const rows = Object.entries(grouped)
     .map(([n, ts]) => {
       const num    = Number(n);
-      const avgPct = Math.round(ts.reduce((s, t) => s + t.pct, 0) / ts.length);
-      const deadlines = [...new Set(ts.map(t => t.deadline))].join(" / ");
+      const avgPct = Math.round(ts.reduce((s, tRow) => s + tRow.pct, 0) / ts.length);
+      const deadlines = [...new Set(ts.map(tRow => tRow.deadline))].join(" / ");
       return { num, name: TARGET_NAMES[num] ?? ts[0].group, avgPct, count: ts.length, deadlines };
     })
     .sort((a, b) => a.num - b.num);
 
-  /* Score global continent (moyenne des 15 groupes) */
   const globalAvg = Math.round(rows.reduce((s, r) => s + r.avgPct, 0) / rows.length);
 
   async function handleExcel() {
-    const headers = ["#", "Target Name", "Avg Score (%)", "Status", "Deadlines", "Sub-targets"];
-    const tableRows = rows.map(r => [r.num, r.name, r.avgPct, statusLabel(r.avgPct).label, r.deadlines, r.count]);
-    tableRows.push(["", "Continental Average", globalAvg, "", "", ""]);
-    await exportExcel("AFCAC_Safety_Targets", "Safety Targets", headers, tableRows);
+    const headers = [t("colHash"), t("colTarget"), `${t("colScore")} (%)`, t("colStatus"), t("colDeadline"), "Sub-targets"];
+    const tableRows = rows.map(r => [r.num, r.name, r.avgPct, statusInfo(r.avgPct).label, r.deadlines, r.count]);
+    tableRows.push(["", t("continentalAvg"), globalAvg, "", "", ""] as (string | number)[]);
+    await exportExcel("AFCAC_Safety_Targets", t("targetAchievement"), headers, tableRows);
   }
 
   async function handlePdf() {
-    const headers = ["#", "Target Name", "Score", "Status", "Deadlines", "Sub-targets"];
-    const tableRows = rows.map(r => [r.num, r.name, `${r.avgPct}%`, statusLabel(r.avgPct).label, r.deadlines, r.count]);
-    await exportPdf("AFCAC_Safety_Targets", "Abuja Safety Targets — Achievement Progress", headers, tableRows, `Continental Average: ${globalAvg}%`);
+    const headers = [t("colHash"), t("colTarget"), t("colScore"), t("colStatus"), t("colDeadline"), "Sub"];
+    const tableRows = rows.map(r => [r.num, r.name, `${r.avgPct}%`, statusInfo(r.avgPct).label, r.deadlines, r.count]);
+    await exportPdf("AFCAC_Safety_Targets", t("targetAchievement"), headers, tableRows, `${t("continentalScore")}: ${globalAvg}%`);
   }
 
   return (
     <div className="card">
       <div className="card-head">
-        <span className="card-head-title">AFCAC / Abuja Safety Targets — Achievement Progress</span>
-        <span className="card-head-badge">Continental Score · {globalAvg}%</span>
+        <span className="card-head-title">{t("targetAchievement")}</span>
+        <span className="card-head-badge">{t("continentalScore")} · {globalAvg}%</span>
         {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
 
       <div className="card-body">
-        {/* ── En-tête colonnes ── */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "28px 1fr 180px 56px 80px",
@@ -96,18 +91,17 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
           borderBottom: "1px solid var(--border2)",
           marginBottom: 6,
         }}>
-          {["#", "Target", "Deadline", "Sub", "Score"].map(h => (
+          {[t("colHash"), t("colTarget"), t("colDeadline"), t("colSub"), t("colScore")].map(h => (
             <div key={h} style={{ fontSize: 9, fontWeight: 700, color: "var(--ink3)", textTransform: "uppercase", letterSpacing: ".08em" }}>
               {h}
             </div>
           ))}
         </div>
 
-        {/* ── Lignes ── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
           {rows.map(r => {
             const color = barColor(r.avgPct);
-            const { label, cls } = statusLabel(r.avgPct);
+            const { label, cls } = statusInfo(r.avgPct);
 
             return (
               <div
@@ -123,7 +117,6 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
                   transition: "box-shadow .15s",
                 }}
               >
-                {/* Numéro */}
                 <div style={{
                   width: 24, height: 24, borderRadius: 5,
                   background: color, color: "#fff",
@@ -134,7 +127,6 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
                   {r.num}
                 </div>
 
-                {/* Nom + barre */}
                 <div>
                   <div style={{ fontSize: 11, fontWeight: 600, color: "var(--ink)", marginBottom: 4, lineHeight: 1.3 }}>
                     {r.name}
@@ -148,17 +140,14 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
                   </div>
                 </div>
 
-                {/* Deadline */}
                 <div style={{ fontSize: 10, color: "var(--ink3)" }}>
                   🗓 {r.deadlines}
                 </div>
 
-                {/* Nb sous-targets */}
                 <div style={{ fontSize: 10, color: "var(--ink3)", textAlign: "center" }}>
-                  {r.count} target{r.count > 1 ? "s" : ""}
+                  {r.count} {r.count > 1 ? t("targetsPlural") : t("targets")}
                 </div>
 
-                {/* Score + badge */}
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
                   <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16, fontWeight: 800, color, lineHeight: 1 }}>
                     {r.avgPct}%
@@ -170,7 +159,6 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
           })}
         </div>
 
-        {/* ── Score global ── */}
         <div style={{
           marginTop: 16, padding: "12px 16px",
           background: "linear-gradient(135deg, var(--forest) 0%, var(--forest2) 100%)",
@@ -178,7 +166,7 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
         }}>
           <div>
             <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".1em", fontWeight: 700, marginBottom: 2 }}>
-              Continental Average — All 15 Targets
+              {t("continentalAvg")}
             </div>
             <div style={{ height: 8, width: 220, background: "rgba(255,255,255,.15)", borderRadius: 4, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${globalAvg}%`, background: "var(--gold)", borderRadius: 4, transition: "width .5s ease" }} />

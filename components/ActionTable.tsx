@@ -3,13 +3,14 @@ import { useState } from "react";
 import type { ActionRow, TargetRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
+import { useLanguage } from "./LanguageProvider";
 
-const SC: Record<string, { label: string; cls: string }> = {
-  completed:  { label: "Completed",   cls: "s-completed" },
-  inprogress: { label: "In Progress", cls: "s-inprogress" },
-  delayed:    { label: "Delayed",     cls: "s-delayed" },
-  onhold:     { label: "On Hold",     cls: "s-onhold" },
-  notstarted: { label: "Not Started", cls: "s-notstarted" },
+const SC: Record<string, { cls: string }> = {
+  completed:  { cls: "s-completed" },
+  inprogress: { cls: "s-inprogress" },
+  delayed:    { cls: "s-delayed" },
+  onhold:     { cls: "s-onhold" },
+  notstarted: { cls: "s-notstarted" },
 };
 
 const PCT_COLOR: Record<number, string> = {
@@ -27,6 +28,8 @@ export default function ActionTable({
   countryTargets?: Record<string, TargetRow[]>;
   isAdmin?: boolean;
 }) {
+  const { t } = useLanguage();
+
   const [sorted, setSorted] = useState<ActionRow[]>(
     [...actions].sort((a, b) => a.country.localeCompare(b.country))
   );
@@ -34,13 +37,21 @@ export default function ActionTable({
   const [sortAsc, setSortAsc] = useState(true);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
 
+  const statusLabel: Record<string, string> = {
+    completed: t("completed"),
+    inprogress: t("inProgress"),
+    delayed: t("delayed"),
+    onhold: t("onHold"),
+    notstarted: t("notStarted"),
+  };
+
   const cols: { label: string; key: keyof ActionRow }[] = [
-    { label: "Country",   key: "country" },
-    { label: "Target ID", key: "action" },
-    { label: "Section",   key: "section" },
-    { label: "Status",    key: "status" },
-    { label: "Start",     key: "start" },
-    { label: "End",       key: "end" },
+    { label: t("colCountry"),   key: "country" },
+    { label: t("colTargetId"),  key: "action" },
+    { label: t("colSection"),   key: "section" },
+    { label: t("colStatus"),    key: "status" },
+    { label: t("colStart"),     key: "start" },
+    { label: t("colEnd"),       key: "end" },
   ];
 
   function handleSort(idx: number, key: keyof ActionRow) {
@@ -63,28 +74,23 @@ export default function ActionTable({
     });
   }
 
-  const SC_LABEL: Record<string, string> = {
-    completed: "Completed", inprogress: "In Progress",
-    delayed: "Delayed", onhold: "On Hold", notstarted: "Not Started",
-  };
-
   async function handleExcel() {
-    const headers = ["Country", "Target ID", "Section", "Status", "Start", "End"];
-    const rows = sorted.map(r => [r.country, r.action, r.section, SC_LABEL[r.status] ?? r.status, r.start, r.end]);
-    await exportExcel("AFCAC_Action_Plan", "Action Plan", headers, rows);
+    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus"), t("colStart"), t("colEnd")];
+    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status, r.start, r.end]);
+    await exportExcel("AFCAC_Action_Plan", t("actionPlanDetail"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = ["Country", "Target ID", "Section", "Status", "Start", "End"];
-    const rows = sorted.map(r => [r.country, r.action, r.section, SC_LABEL[r.status] ?? r.status, r.start, r.end]);
-    await exportPdf("AFCAC_Action_Plan", "Action Plan — Detail", headers, rows, `${sorted.length} countries`);
+    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus"), t("colStart"), t("colEnd")];
+    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status, r.start, r.end]);
+    await exportPdf("AFCAC_Action_Plan", t("actionPlanDetail"), headers, rows, `${sorted.length} ${t("countries")}`);
   }
 
   return (
     <div className="card" style={{ height: "fit-content" }}>
       <div className="card-head">
-        <span className="card-head-title">Action Plan — Detail</span>
-        <span className="card-head-badge">{sorted.length} rows</span>
+        <span className="card-head-title">{t("actionPlanDetail")}</span>
+        <span className="card-head-badge">{sorted.length} {t("rows")}</span>
         {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll">
@@ -102,6 +108,7 @@ export default function ActionTable({
           <tbody>
             {sorted.map((row, i) => {
               const s = SC[row.status] ?? SC.notstarted;
+              const sLabel = statusLabel[row.status] ?? row.status;
               const isOpen = expanded.has(i);
               return (
                 <>
@@ -118,7 +125,7 @@ export default function ActionTable({
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontWeight: 700, transition: "all .15s",
                         }}
-                        title={isOpen ? "Masquer les targets" : "Voir les 15 targets"}
+                        title={isOpen ? t("hideTargets") : t("seeTargets")}
                       >
                         {isOpen ? "−" : "+"}
                       </button>
@@ -126,7 +133,7 @@ export default function ActionTable({
                     <td style={{ fontWeight: 600 }}>{row.country}</td>
                     <td style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 }}>{row.action}</td>
                     <td style={{ color: "var(--ink2)" }}>{row.section}</td>
-                    <td><span className={`badge ${s.cls}`}>{s.label}</span></td>
+                    <td><span className={`badge ${s.cls}`}>{sLabel}</span></td>
                     <td>{row.start}</td>
                     <td>{row.end}</td>
                   </tr>
@@ -136,38 +143,39 @@ export default function ActionTable({
                       <td colSpan={7} style={{ padding: 0, background: "var(--surface2)", borderBottom: "2px solid var(--border)" }}>
                         <div style={{ padding: "12px 16px" }}>
                           <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 8 }}>
-                            Abuja Safety Targets — {row.country}
+                            {t("abujaTargets")} — {row.country}
                           </div>
                           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
                             <thead>
                               <tr style={{ background: "var(--surface3, #eef0f3)" }}>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 60 }}>ID</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Target</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>Group</th>
-                                <th style={{ padding: "5px 8px", textAlign: "center", fontWeight: 700, color: "var(--ink2)", width: 60 }}>Progress</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 90 }}>Status</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>Deadline</th>
+                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colId")}</th>
+                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>{t("colTarget")}</th>
+                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colGroup")}</th>
+                                <th style={{ padding: "5px 8px", textAlign: "center", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colProgress")}</th>
+                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 90 }}>{t("colStatus")}</th>
+                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colDeadline")}</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {(countryTargets[row.country] ?? targets).map((t, ti) => {
-                                const pctColor = PCT_COLOR[t.pct] ?? PCT_COLOR[0];
-                                const ts = SC[t.status] ?? SC.notstarted;
+                              {(countryTargets[row.country] ?? targets).map((tRow, ti) => {
+                                const pctColor = PCT_COLOR[tRow.pct] ?? PCT_COLOR[0];
+                                const ts = SC[tRow.status] ?? SC.notstarted;
+                                const tsLabel = statusLabel[tRow.status] ?? tRow.status;
                                 return (
                                   <tr key={ti} style={{ borderTop: "1px solid var(--border2, #e8eaed)" }}>
-                                    <td style={{ padding: "5px 8px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: "var(--navy)" }}>{t.id}</td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink1)" }}>{t.title}</td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink3)", fontSize: 10 }}>{t.group}</td>
+                                    <td style={{ padding: "5px 8px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: "var(--navy)" }}>{tRow.id}</td>
+                                    <td style={{ padding: "5px 8px", color: "var(--ink1)" }}>{tRow.title}</td>
+                                    <td style={{ padding: "5px 8px", color: "var(--ink3)", fontSize: 10 }}>{tRow.group}</td>
                                     <td style={{ padding: "5px 8px", textAlign: "center" }}>
                                       <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "center" }}>
                                         <div style={{ width: 40, height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
-                                          <div style={{ width: `${t.pct}%`, height: "100%", background: pctColor, borderRadius: 3 }} />
+                                          <div style={{ width: `${tRow.pct}%`, height: "100%", background: pctColor, borderRadius: 3 }} />
                                         </div>
-                                        <span style={{ color: pctColor, fontWeight: 700, minWidth: 28 }}>{t.pct}%</span>
+                                        <span style={{ color: pctColor, fontWeight: 700, minWidth: 28 }}>{tRow.pct}%</span>
                                       </div>
                                     </td>
-                                    <td style={{ padding: "5px 8px" }}><span className={`badge ${ts.cls}`}>{ts.label}</span></td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink3)" }}>{t.deadline}</td>
+                                    <td style={{ padding: "5px 8px" }}><span className={`badge ${ts.cls}`}>{tsLabel}</span></td>
+                                    <td style={{ padding: "5px 8px", color: "var(--ink3)" }}>{tRow.deadline}</td>
                                   </tr>
                                 );
                               })}

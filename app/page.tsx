@@ -1,6 +1,10 @@
 import { getDashboardData, getTopExperts, getAllCountryTargets } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { t } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 import HeaderControls from "@/components/HeaderControls";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -12,6 +16,10 @@ import StatusDonut from "@/components/StatusDonut";
 export const dynamic = "force-dynamic"; // always fresh data
 
 export default async function DashboardPage() {
+  const cookieStore = await cookies();
+  const langCookie = cookieStore.get("lang")?.value;
+  const locale: Locale = langCookie === "fr" || langCookie === "pt" ? langCookie : "en";
+
   const [{ kpis, actions, countries, targets }, experts, countryTargets, session] = await Promise.all([
     getDashboardData(),
     getTopExperts(3),
@@ -27,19 +35,18 @@ export default async function DashboardPage() {
         <div className="db-header-inner">
           <div className="db-emblem">✈</div>
           <div className="db-title-wrap">
-            <div className="db-title">AFCAC Revised Abuja Safety Targets</div>
-            <div className="db-sub">
-              Multi-State Monitoring Dashboard · Revised Abuja Safety Targets
-            </div>
+            <div className="db-title">{t(locale, "dashboardTitle")}</div>
+            <div className="db-sub">{t(locale, "dashboardSub")}</div>
           </div>
           <div className="db-controls">
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <div className="status-dot" />
-              <span className="live-label">Live</span>
+              <span className="live-label">{t(locale, "live")}</span>
             </div>
             <div className="hctl">
               📅 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 11 }}>{kpis.reportPeriod}</span>
             </div>
+            <LanguageSwitcher />
             <HeaderControls session={session} />
           </div>
         </div>
@@ -49,29 +56,29 @@ export default async function DashboardPage() {
       <div className="canvas">
 
         {/* Section 1: KPI Summary */}
-        <div className="section-label">Executive Summary</div>
-        <KpiGrid kpis={kpis} experts={experts} />
+        <div className="section-label">{t(locale, "execSummary")}</div>
+        <KpiGrid kpis={kpis} experts={experts} locale={locale} />
 
         {/* Section 2: Status + Action Table */}
-        <div className="section-label">Status Overview</div>
+        <div className="section-label">{t(locale, "statusOverview")}</div>
         <div className="row-wide">
           <StatusDonut kpis={kpis} isAdmin={isAdmin} />
           <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
-        <div className="section-label">Geographic &amp; Status Overview</div>
+        <div className="section-label">{t(locale, "geoOverview")}</div>
         <div className="row-map">
           <AfricaMap countries={countries} isAdmin={isAdmin} />
           <StatusBar kpis={kpis} isAdmin={isAdmin} />
         </div>
 
         {/* Section 4: Country Breakdown */}
-        <div className="section-label">Action Plan Country Breakdown</div>
+        <div className="section-label">{t(locale, "countryBreakdown")}</div>
         <BreakdownTable countries={countries} isAdmin={isAdmin} />
 
         {/* Section 5: Safety Targets */}
-        <div className="section-label">AFCAC Safety Targets — Questionnaire Progress</div>
+        <div className="section-label">{t(locale, "questProgress")}</div>
         <TargetGrid targets={targets} isAdmin={isAdmin} />
 
       </div>
@@ -79,10 +86,10 @@ export default async function DashboardPage() {
       {/* ── FOOTER ── */}
       <footer className="db-footer">
         <span>
-          <strong>Revised Abuja Safety Targets Dashboard</strong> ·{" "}
-          Last updated: {kpis.lastUpdated}
+          <strong>{t(locale, "footerTitle")}</strong> ·{" "}
+          {t(locale, "lastUpdated")}: {kpis.lastUpdated}
         </span>
-        <span>Data source: AFCAC Safety Unit via Countries Focal Point · © AFCAC</span>
+        <span>{t(locale, "footerSource")}</span>
       </footer>
     </>
   );

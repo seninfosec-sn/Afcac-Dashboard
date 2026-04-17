@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
+import { useLanguage } from "./LanguageProvider";
 
 const STATUS_COLORS: Record<string, string> = {
   completed:  "#2d9d5e",
@@ -22,7 +23,6 @@ function getDominantStatus(row: CountryRow): string {
   ].reduce((a, b) => (b.v > a.v ? b : a)).k;
 }
 
-/** Compute hexagon points string for a given center and radius */
 function hex(cx: number, cy: number, r: number): string {
   const p = (x: number, y: number) => `${Math.round(x)},${Math.round(y)}`;
   return [
@@ -38,8 +38,17 @@ function hex(cx: number, cy: number, r: number): string {
 interface Tooltip { x: number; y: number; country: string; data: CountryRow | null }
 
 export default function AfricaMap({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
+  const { t } = useLanguage();
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const countryMap = Object.fromEntries(countries.map((c) => [c.country, c]));
+
+  const statusLabels: Record<string, string> = {
+    completed:  t("completed"),
+    inprogress: t("inProgress"),
+    delayed:    t("delayed"),
+    onhold:     t("onHold"),
+    notstarted: t("notStarted"),
+  };
 
   function getColor(name: string): string {
     const row = countryMap[name];
@@ -52,7 +61,6 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
     setTooltip({ x: e.clientX - rect.left + 10, y: e.clientY - rect.top - 10, country: name, data: countryMap[name] ?? null });
   }
 
-  /* ── 15 custom-outlined shapes (original 15 countries) ── */
   const customShapes: { name: string; points: string }[] = [
     { name: "Nigeria",      points: "188,202 222,198 236,208 233,228 216,240 194,232 180,219" },
     { name: "South Africa", points: "195,400 248,390 272,402 275,428 252,455 222,458 196,440 186,420" },
@@ -71,9 +79,6 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
     { name: "Zimbabwe",     points: "246,366 274,360 280,382 264,396 240,394 234,378" },
   ];
 
-  /* ── 39 remaining countries as hexagonal shapes ── */
-  /* Positions derived from equirectangular projection fitted to SVG viewBox 520×540
-     Scale: x ≈ 3.28*lon+184, y ≈ -5.69*lat+255  */
   const hexShapes: { name: string; cx: number; cy: number; r: number }[] = [
     { name: "Angola",                   cx: 243, cy: 319, r: 15 },
     { name: "Benin",                    cx: 192, cy: 202, r:  7 },
@@ -121,32 +126,27 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
     ...hexShapes.map((s) => ({ name: s.name, points: hex(s.cx, s.cy, s.r) })),
   ];
 
-  const STATUS_LABEL: Record<string, string> = {
-    completed: "Completed", inprogress: "In Progress",
-    delayed: "Delayed", onhold: "On Hold", notstarted: "Not Started",
-  };
-
   async function handleExcel() {
-    const headers = ["Country", "Region", "Total Actions", "% Completed", "% In Progress", "% Delayed", "% On Hold", "% Not Started", "Entity", "Dominant Status"];
+    const headers = [t("colCountry"), t("totalActions"), t("pctCompleted"), t("pctInProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity", t("colStatus")];
     const rows = [...countries]
       .sort((a, b) => a.country.localeCompare(b.country))
-      .map(c => [c.country, c.region ?? "", c.actions, c.completed, c.inprogress, c.delayed, c.onhold, c.notstarted, c.entity, STATUS_LABEL[getDominantStatus(c)]]);
-    await exportExcel("AFCAC_Africa_Map_Status", "Africa Map Status", headers, rows);
+      .map(c => [c.country, c.actions, c.completed, c.inprogress, c.delayed, c.onhold, c.notstarted, c.entity, statusLabels[getDominantStatus(c)]]);
+    await exportExcel("AFCAC_Africa_Map_Status", t("africaMap"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = ["Country", "Actions", "Completed", "In Progress", "Delayed", "Not Started", "Entity"];
+    const headers = [t("colCountry"), t("totalActions"), t("completed"), t("inProgress"), t("delayed"), t("notStarted"), "Entity"];
     const rows = [...countries]
       .sort((a, b) => a.country.localeCompare(b.country))
       .map(c => [c.country, c.actions, `${c.completed}%`, `${c.inprogress}%`, `${c.delayed}%`, `${c.notstarted}%`, c.entity]);
-    await exportPdf("AFCAC_Africa_Map_Status", "Africa — Action Status Map", headers, rows, `${countries.length} African States`);
+    await exportPdf("AFCAC_Africa_Map_Status", t("africaMap"), headers, rows, `${countries.length} African States`);
   }
 
   return (
     <div className="card" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div className="card-head">
-        <span className="card-head-title">Africa — Action Status Map</span>
-        <span className="card-head-badge">{countries.length} Countries</span>
+        <span className="card-head-title">{t("africaMap")}</span>
+        <span className="card-head-badge">{countries.length} {t("countries")}</span>
         {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "stretch", position: "relative" }}>
@@ -158,8 +158,6 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
             </linearGradient>
           </defs>
           <rect width="520" height="540" fill="url(#oceanG)" />
-
-          {/* Continent outline fill (background) */}
           <polygon points="144,74 252,74 306,72 315,100 312,136 306,136 302,76 252,78 242,100 248,130 272,144 306,136 316,164 352,214 370,198 395,214 404,248 416,295 378,265 350,256 348,220 340,240 338,195 292,200 278,212 286,232 272,200 250,185 246,156 260,136 244,132 210,138 208,138 190,162 168,114 164,148 134,110 122,140 112,188 120,200 124,178 158,175 163,193 142,204 130,240 148,272 166,260 160,238 155,235 160,250 180,257 196,244 192,222 188,202 180,219 194,232 216,240 233,228 236,208 222,198 188,202 180,219 194,232 216,240 233,228 234,238 218,252 198,245 216,254 200,276 210,314 192,318 170,296 180,260 200,276 210,314 242,330 272,320 284,282 272,248 284,270 302,262 298,240 302,262 298,296 325,288 336,260 322,242 330,310 315,336 288,340 278,292 268,318 274,360 270,366 284,344 274,320 232,328 218,350 240,370 252,370 226,340 230,362 246,366 234,378 240,394 264,396 280,382 274,360 275,428 252,455 222,458 196,440 186,420 195,400 248,390 272,402" fill="#d8e8d8" opacity="0.3" />
 
           {allShapes.map((s) => (
@@ -177,12 +175,10 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
             />
           ))}
 
-          {/* Country labels — only for larger shapes */}
           {allShapes.map((s) => {
             const pts = s.points.split(" ").map((p) => p.split(",").map(Number));
             const cx = pts.reduce((a, p) => a + p[0], 0) / pts.length;
             const cy = pts.reduce((a, p) => a + p[1], 0) / pts.length;
-            // Only show label if shape is big enough (derived from point spread)
             const xSpread = Math.max(...pts.map(p=>p[0])) - Math.min(...pts.map(p=>p[0]));
             if (xSpread < 10) return null;
             const short = s.name.length > 10 ? s.name.split(" ")[0] : s.name;
@@ -205,13 +201,13 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
             <div style={{ fontWeight: 700, marginBottom: 4 }}>{tooltip.country}</div>
             {tooltip.data ? (
               <>
-                <div>Targets: {tooltip.data.actions}</div>
-                <div style={{ color: "#52b788" }}>✓ {tooltip.data.completed}% completed</div>
-                <div style={{ color: "#f0a500" }}>⏳ {tooltip.data.inprogress}% in progress</div>
+                <div>{t("targetsLabel")} {tooltip.data.actions}</div>
+                <div style={{ color: "#52b788" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
+                <div style={{ color: "#f0a500" }}>⏳ {tooltip.data.inprogress}% {t("inProgress").toLowerCase()}</div>
                 <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data.entity}</div>
               </>
             ) : (
-              <div style={{ color: "rgba(255,255,255,0.5)" }}>No data</div>
+              <div style={{ color: "rgba(255,255,255,0.5)" }}>{t("noData")}</div>
             )}
           </div>
         )}
@@ -221,7 +217,7 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
           {Object.entries(STATUS_COLORS).map(([k, c]) => (
             <div key={k} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
-              <span style={{ color: "var(--ink2)", textTransform: "capitalize" }}>{k.replace("inprogress","In Progress").replace("notstarted","Not Started").replace("onhold","On Hold")}</span>
+              <span style={{ color: "var(--ink2)" }}>{statusLabels[k] ?? k}</span>
             </div>
           ))}
         </div>

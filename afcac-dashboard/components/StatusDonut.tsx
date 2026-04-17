@@ -3,35 +3,38 @@ import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import type { KpiData } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
+import { useLanguage } from "./LanguageProvider";
 
 export default function StatusDonut({ kpis, isAdmin }: { kpis: KpiData; isAdmin?: boolean }) {
+  const { t } = useLanguage();
+
   const data = [
-    { name: "Completed",   value: kpis.pctCompleted,  color: "#2d9d5e" },
-    { name: "In Progress", value: kpis.pctInProgress, color: "#f0a500" },
-    { name: "Delayed",     value: kpis.pctDelayed,    color: "#e07b39" },
-    { name: "On Hold",     value: kpis.pctOnHold,     color: "#c0392b" },
-    { name: "Not Started", value: kpis.pctNotStarted, color: "#95a5a6" },
+    { name: t("completed"),   value: kpis.pctCompleted,  color: "#2d9d5e" },
+    { name: t("inProgress"),  value: kpis.pctInProgress, color: "#f0a500" },
+    { name: t("delayed"),     value: kpis.pctDelayed,    color: "#e07b39" },
+    { name: t("onHold"),      value: kpis.pctOnHold,     color: "#c0392b" },
+    { name: t("notStarted"),  value: kpis.pctNotStarted, color: "#95a5a6" },
   ];
 
   async function handleExcel() {
-    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const headers = [t("colStatus"), `${t("pctCompleted").replace("% ", "")} (%)`, t("totalActions")];
     const rows = data.map(d => [d.name, d.value, Math.round(d.value * kpis.totalActions / 100)]);
     rows.push(["TOTAL", 100, kpis.totalActions]);
-    await exportExcel("AFCAC_Status_Distribution", "Status Distribution", headers, rows);
+    await exportExcel("AFCAC_Status_Distribution", t("statusDistTitle"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = ["Status", "Percentage (%)", "Actions Count"];
+    const headers = [t("colStatus"), `${t("pctCompleted").replace("% ", "")} (%)`, t("totalActions")];
     const rows = data.map(d => [d.name, `${d.value}%`, Math.round(d.value * kpis.totalActions / 100)]);
     rows.push(["TOTAL", "100%", kpis.totalActions]);
-    await exportPdf("AFCAC_Status_Distribution", "Status Distribution", headers, rows, `Total: ${kpis.totalActions} actions`);
+    await exportPdf("AFCAC_Status_Distribution", t("statusDistTitle"), headers, rows, `Total: ${kpis.totalActions} ${t("actions")}`);
   }
 
   return (
     <div className="card">
       <div className="card-head">
-        <span className="card-head-title">Status Distribution</span>
-        <span className="card-head-badge">{kpis.totalActions} Actions</span>
+        <span className="card-head-title">{t("statusDistTitle")}</span>
+        <span className="card-head-badge">{kpis.totalActions} {t("actions")}</span>
         {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="card-body">
