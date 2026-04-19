@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { QUESTIONS, AFRICAN_STATES, type Question } from '@/data/questions';
+import { getLocalizedQuestion } from '@/data/questions-i18n';
+import { useLanguage } from '@/components/LanguageProvider';
 
 interface Answer { pct: number; optIdx: number; label: string; }
 
@@ -13,6 +15,8 @@ const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 interface Props { formNum: 1 | 2; }
 
 export default function QuestionnaireForm({ formNum }: Props) {
+  const { locale, t } = useLanguage();
+
   const [answers, setAnswers]   = useState<Record<string, Answer>>({});
   const [comments, setComments] = useState<Record<string, string>>({});
   const [openComments, setOpenComments] = useState<Record<string, boolean>>({});
@@ -20,14 +24,17 @@ export default function QuestionnaireForm({ formNum }: Props) {
   const [showSummary, setShowSummary] = useState(false);
   const [toast, setToast]       = useState<{ msg: string; type: 'ok' | 'warn' } | null>(null);
 
+  // Localize all questions based on current language
+  const questions = QUESTIONS.map(q => getLocalizedQuestion(q, locale));
+
   const answered  = Object.keys(answers).length;
-  const total     = QUESTIONS.length;
+  const total     = questions.length;
   const pct       = Math.round((answered / total) * 100);
   const vals      = Object.values(answers).map(a => a.pct);
   const avg       = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
 
   // Group questions
-  const groups = QUESTIONS.reduce<Record<string, Question[]>>((acc, q) => {
+  const groups = questions.reduce<Record<string, Question[]>>((acc, q) => {
     if (!acc[q.group]) acc[q.group] = [];
     acc[q.group].push(q);
     return acc;
@@ -48,20 +55,20 @@ export default function QuestionnaireForm({ formNum }: Props) {
   }
 
   function clearAll() {
-    if (!confirm('Clear all answers for this form?')) return;
+    if (!confirm(t('qClearConfirm'))) return;
     setAnswers({});
     setComments({});
     setOpenComments({});
-    showToast('All answers cleared', 'warn');
+    showToast(t('qClearedMsg'), 'warn');
   }
 
   function handleSubmit() {
-    if (!state) { showToast('Please select a State first', 'warn'); return; }
+    if (!state) { showToast(t('qSelectStateFirst'), 'warn'); return; }
     if (answered < total) {
-      if (!confirm(`${total - answered} question(s) not yet answered. Submit anyway?`)) return;
+      if (!confirm(`${total - answered} ${t('qUnansweredMsg')}`)) return;
     }
     exportJSON();
-    showToast('Questionnaire submitted — JSON exported ✓', 'ok');
+    showToast(t('qSubmittedMsg'), 'ok');
     setShowSummary(false);
   }
 
@@ -70,7 +77,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
       form: `Formulaire ${formNum}`,
       state,
       submittedAt: new Date().toISOString(),
-      responses: QUESTIONS.map(q => ({
+      responses: questions.map(q => ({
         id: q.id, title: q.title, group: q.group, deadline: q.deadline,
         score: answers[q.id]?.pct ?? null,
         status: answers[q.id]?.label ?? null,
@@ -86,7 +93,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
 
   function exportCSV() {
     const rows = [['Form', 'State', 'Target ID', 'Title', 'Group', 'Deadline', 'Score (%)', 'Status', 'Comment']];
-    QUESTIONS.forEach(q => {
+    questions.forEach(q => {
       const a = answers[q.id];
       rows.push([
         `Formulaire ${formNum}`, state, q.id,
@@ -111,7 +118,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
     return 'p100';
   };
 
-  let qNum = 0;
+  const introText = t('qIntroText').replace('{total}', String(total));
 
   return (
     <>
@@ -119,19 +126,19 @@ export default function QuestionnaireForm({ formNum }: Props) {
       <header className="header">
         <div className="h-emblem">✈</div>
         <div>
-          <div className="h-title">AFCAC — Revised Abuja Safety Targets · Formulaire {formNum}</div>
-          <div className="h-sub">AFCAC · State Safety Questionnaire · {total} Questions</div>
+          <div className="h-title">{t('qFormTitle')} · Formulaire {formNum}</div>
+          <div className="h-sub">{t('qFormSub')} · {total} {total > 1 ? t('qQuestionsPlural') : t('qQuestions')}</div>
         </div>
         <div className="h-right">
           <div className="h-progress-wrap">
-            <span className="h-progress-label">Completion</span>
+            <span className="h-progress-label">{t('qCompletion')}</span>
             <div className="h-progress-bar">
               <div className="h-progress-fill" style={{ width: `${pct}%` }} />
             </div>
             <span className="h-pct">{pct}%</span>
           </div>
-          <button className="hbtn hbtn-ghost" onClick={() => setShowSummary(true)}>📋 Summary</button>
-          <button className="hbtn hbtn-gold" onClick={handleSubmit}>✔ Submit</button>
+          <button className="hbtn hbtn-ghost" onClick={() => setShowSummary(true)}>{t('qSummary')}</button>
+          <button className="hbtn hbtn-gold" onClick={handleSubmit}>{t('qSubmit')}</button>
         </div>
       </header>
 
@@ -139,9 +146,9 @@ export default function QuestionnaireForm({ formNum }: Props) {
         {/* ── SIDEBAR ── */}
         <nav className="sidebar">
           <div className="sb-info">
-            <div className="sb-state-label">State / Country</div>
+            <div className="sb-state-label">{t('qStateLabel')}</div>
             <select className="sb-state-select" value={state} onChange={e => setState(e.target.value)}>
-              <option value="">— Select State —</option>
+              <option value="">{t('qSelectState')}</option>
               {AFRICAN_STATES.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
@@ -150,8 +157,8 @@ export default function QuestionnaireForm({ formNum }: Props) {
             {Object.entries(groups).map(([grp, qs]) => (
               <div key={grp}>
                 <div className="sb-section">{grp}</div>
-                {qs.map((q, i) => {
-                  const globalIdx = QUESTIONS.indexOf(q);
+                {qs.map(q => {
+                  const globalIdx = QUESTIONS.findIndex(orig => orig.id === q.id);
                   const done = !!answers[q.id];
                   return (
                     <div
@@ -173,11 +180,11 @@ export default function QuestionnaireForm({ formNum }: Props) {
             <div className="sb-stats">
               <div className="sb-stat">
                 <div className="sb-stat-val">{answered}</div>
-                <div className="sb-stat-label">Answered</div>
+                <div className="sb-stat-label">{t('qAnswered')}</div>
               </div>
               <div className="sb-stat">
                 <div className="sb-stat-val">{total - answered}</div>
-                <div className="sb-stat-label">Remaining</div>
+                <div className="sb-stat-label">{t('qRemaining')}</div>
               </div>
             </div>
           </div>
@@ -188,14 +195,9 @@ export default function QuestionnaireForm({ formNum }: Props) {
           {/* Intro */}
           <div className="intro">
             <div className="intro-title">
-              AFCAC / ICAO — Revised Abuja Safety Targets · Formulaire {formNum}
+              {t('qFormTitle')} · Formulaire {formNum}
             </div>
-            <div className="intro-text">
-              This questionnaire covers <strong>{total} targets</strong> across safety oversight, State Safety Programmes,
-              infrastructure, air navigation, and environmental objectives. For each question, select the option that best
-              describes your State&apos;s current level of implementation. Each option is scored from{' '}
-              <strong>0% (Not Started)</strong> to <strong>100% (Fully Achieved)</strong>.
-            </div>
+            <div className="intro-text">{introText}</div>
           </div>
 
           {/* Questions */}
@@ -204,11 +206,11 @@ export default function QuestionnaireForm({ formNum }: Props) {
               <div key={grpName}>
                 <div className="group-header">
                   <span className="gh-title">📌 {grpName}</span>
-                  <span className="gh-count">{qs.length} question{qs.length > 1 ? 's' : ''}</span>
+                  <span className="gh-count">{qs.length} {qs.length > 1 ? t('qQuestionsPlural') : t('qQuestions')}</span>
                 </div>
 
                 {qs.map(q => {
-                  qNum++;
+                  const globalIdx = QUESTIONS.findIndex(orig => orig.id === q.id);
                   const ans = answers[q.id];
                   const color = ans ? (COLORS[ans.pct] || '#95a5a6') : undefined;
 
@@ -219,7 +221,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
                       className={`q-card${ans ? ' answered' : ''}`}
                     >
                       <div className="q-head">
-                        <span className="q-num">Q{QUESTIONS.indexOf(q) + 1}</span>
+                        <span className="q-num">Q{globalIdx + 1}</span>
                         <span className="q-target">{q.id}</span>
                         <span className="q-title">{q.title}</span>
                         <span className="q-deadline">🗓 {q.deadline}</span>
@@ -239,7 +241,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
                               if (idx >= 0) selectOption(q.id, idx, q);
                             }}
                           >
-                            <option value={0} disabled>— Select level of implementation —</option>
+                            <option value={0} disabled>{t('qSelectLevel')}</option>
                             {q.options.map((opt, oi) => (
                               <option key={oi} value={oi + 1}>
                                 {LETTERS[oi]})   {opt.pct}% – {opt.label} – {opt.text}
@@ -264,12 +266,12 @@ export default function QuestionnaireForm({ formNum }: Props) {
 
                       <div className="q-comment">
                         <div className="comment-toggle" onClick={() => toggleComment(q.id)}>
-                          💬 Add comment / observation
+                          {t('qAddComment')}
                         </div>
                         {openComments[q.id] && (
                           <textarea
                             className="comment-area open"
-                            placeholder="Optional: describe challenges, context, or supporting evidence..."
+                            placeholder={t('qCommentPlaceholder')}
                             value={comments[q.id] || ''}
                             onChange={e => setComments(prev => ({ ...prev, [q.id]: e.target.value }))}
                           />
@@ -287,12 +289,12 @@ export default function QuestionnaireForm({ formNum }: Props) {
       {/* ── BOTTOM ACTION BAR ── */}
       <div className="form-actions">
         <div className="fa-stats">
-          <strong>Formulaire {formNum}</strong> — <strong>{answered}</strong> / {total} questions answered
-          &nbsp;·&nbsp; Avg. score: <strong>{avg !== null ? `${avg}%` : '—'}</strong>
+          <strong>Formulaire {formNum}</strong> — <strong>{answered}</strong> / {total} {t('qQuestionsPlural')}
+          &nbsp;·&nbsp; {t('qAvgScore')}: <strong>{avg !== null ? `${avg}%` : '—'}</strong>
         </div>
-        <button className="btn btn-secondary" onClick={clearAll}>↺ Clear All</button>
-        <button className="btn btn-secondary" onClick={() => setShowSummary(true)}>📋 Review Summary</button>
-        <button className="btn btn-primary" onClick={handleSubmit}>✔ Submit to Dashboard</button>
+        <button className="btn btn-secondary" onClick={clearAll}>{t('qClearAll')}</button>
+        <button className="btn btn-secondary" onClick={() => setShowSummary(true)}>{t('qReviewSummary')}</button>
+        <button className="btn btn-primary" onClick={handleSubmit}>{t('qSubmitDashboard')}</button>
       </div>
 
       {/* ── SUMMARY MODAL ── */}
@@ -300,17 +302,17 @@ export default function QuestionnaireForm({ formNum }: Props) {
         <div className="summary-panel open">
           <div className="summary-box">
             <div className="summary-head">
-              <span className="summary-head-title">📋 Summary — Formulaire {formNum}</span>
+              <span className="summary-head-title">{t('qSummaryTitle')} — Formulaire {formNum}</span>
               <button className="summary-close" onClick={() => setShowSummary(false)}>✕</button>
             </div>
             <div className="summary-body">
               <div className="summary-kpis">
                 {[
                   { val: `F${formNum}`, label: 'Formulaire' },
-                  { val: answered,       label: 'Answered' },
-                  { val: total - answered, label: 'Remaining' },
-                  { val: avg !== null ? `${avg}%` : '—', label: 'Avg. Score' },
-                  { val: state || 'N/A', label: 'State', small: true },
+                  { val: answered,       label: t('qAnswered') },
+                  { val: total - answered, label: t('qRemaining') },
+                  { val: avg !== null ? `${avg}%` : '—', label: t('qAvgScore') },
+                  { val: state || 'N/A', label: t('qStateLabel'), small: true },
                 ].map(k => (
                   <div className="sum-kpi" key={k.label}>
                     <div className="sum-kpi-val" style={k.small ? { fontSize: 14 } : {}}>{k.val}</div>
@@ -321,10 +323,16 @@ export default function QuestionnaireForm({ formNum }: Props) {
 
               <table className="summary-table">
                 <thead>
-                  <tr><th>#</th><th>Target</th><th>Score</th><th>Status</th><th>Comments</th></tr>
+                  <tr>
+                    <th>{t('qColHash')}</th>
+                    <th>{t('qColTarget')}</th>
+                    <th>{t('qColScore')}</th>
+                    <th>{t('qColStatus')}</th>
+                    <th>{t('qColComments')}</th>
+                  </tr>
                 </thead>
                 <tbody>
-                  {QUESTIONS.map((q, i) => {
+                  {questions.map((q, i) => {
                     const a = answers[q.id];
                     const c = comments[q.id] || '';
                     return (
@@ -345,10 +353,10 @@ export default function QuestionnaireForm({ formNum }: Props) {
               </table>
             </div>
             <div className="summary-actions">
-              <button className="btn btn-primary" onClick={handleSubmit}>✔ Submit to Dashboard</button>
-              <button className="btn btn-secondary" onClick={exportJSON}>⬇ Export JSON</button>
-              <button className="btn btn-secondary" onClick={exportCSV}>⬇ Export CSV</button>
-              <button className="btn btn-ghost" onClick={() => setShowSummary(false)}>✕ Close</button>
+              <button className="btn btn-primary" onClick={handleSubmit}>{t('qSubmitDashboard')}</button>
+              <button className="btn btn-secondary" onClick={exportJSON}>{t('qExportJSON')}</button>
+              <button className="btn btn-secondary" onClick={exportCSV}>{t('qExportCSV')}</button>
+              <button className="btn btn-ghost" onClick={() => setShowSummary(false)}>{t('qClose')}</button>
             </div>
           </div>
         </div>
