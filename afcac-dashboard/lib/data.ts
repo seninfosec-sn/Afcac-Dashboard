@@ -1,7 +1,15 @@
 import fs from "fs";
 import path from "path";
-import { kvGet, kvSet } from "./db";
+import { kvGet, kvSet, setupSchema } from "./db";
 import type { KpiData, ActionRow, ActionStatus, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
+
+// Ensure schema exists on first DB access (idempotent)
+let schemaReady = false;
+async function ensureSchema() {
+  if (schemaReady) return;
+  await setupSchema();
+  schemaReady = true;
+}
 
 // JSON files are read-only seeds (bundled at build time — readable on Vercel too)
 const SOURCE_DIR = process.env.DATA_DIR
@@ -24,6 +32,7 @@ const K = {
 
 /** Read from DB; if missing, seed from the bundled JSON file and return. */
 async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
+  await ensureSchema();
   const cached = await kvGet<T>(key);
   if (cached !== null) return cached;
   const data = readJsonFile<T>(filename);
