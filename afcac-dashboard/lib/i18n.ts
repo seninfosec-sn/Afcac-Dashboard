@@ -171,6 +171,7 @@ export const translations = {
     qColComments: "Comments",
     qQuestions: "question",
     qQuestionsPlural: "questions",
+    qFormLabel: "Form",
 
     // Admin score options (targets dropdown)
     scoreOpt0:   "a)   0% — Not Started / Not Applicable",
@@ -369,6 +370,7 @@ export const translations = {
     qColComments: "Commentaires",
     qQuestions: "question",
     qQuestionsPlural: "questions",
+    qFormLabel: "Formulaire",
 
     // Admin score options (targets dropdown)
     scoreOpt0:   "a)   0% — Non démarré / Non applicable",
@@ -567,6 +569,7 @@ export const translations = {
     qColComments: "Comentários",
     qQuestions: "pergunta",
     qQuestionsPlural: "perguntas",
+    qFormLabel: "Formulário",
 
     // Admin score options (targets dropdown)
     scoreOpt0:   "a)   0% — Não iniciado / Não aplicável",

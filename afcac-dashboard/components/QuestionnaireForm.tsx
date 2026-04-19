@@ -74,7 +74,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
 
   function exportJSON() {
     const payload = {
-      form: `Formulaire ${formNum}`,
+      form: `${t('qFormLabel')} ${formNum}`,
       state,
       submittedAt: new Date().toISOString(),
       responses: questions.map(q => ({
@@ -92,11 +92,11 @@ export default function QuestionnaireForm({ formNum }: Props) {
   }
 
   function exportCSV() {
-    const rows = [['Form', 'State', 'Target ID', 'Title', 'Group', 'Deadline', 'Score (%)', 'Status', 'Comment']];
+    const rows = [[t('qFormLabel'), 'State', 'Target ID', 'Title', 'Group', 'Deadline', 'Score (%)', 'Status', 'Comment']];
     questions.forEach(q => {
       const a = answers[q.id];
       rows.push([
-        `Formulaire ${formNum}`, state, q.id,
+        `${t('qFormLabel')} ${formNum}`, state, q.id,
         `"${q.title.replace(/"/g, '""')}"`,
         `"${q.group}"`, q.deadline,
         String(a?.pct ?? ''),
@@ -124,7 +124,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
       <header className="header">
         <div className="h-emblem">✈</div>
         <div>
-          <div className="h-title">{t('qFormTitle')} · Formulaire {formNum}</div>
+          <div className="h-title">{t('qFormTitle')} · {t('qFormLabel')} {formNum}</div>
           <div className="h-sub">{t('qFormSub')} · {total} {total > 1 ? t('qQuestionsPlural') : t('qQuestions')}</div>
         </div>
         <div className="h-right">
@@ -193,7 +193,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
           {/* Intro */}
           <div className="intro">
             <div className="intro-title">
-              {t('qFormTitle')} · Formulaire {formNum}
+              {t('qFormTitle')} · {t('qFormLabel')} {formNum}
             </div>
             <div className="intro-text">
               {t('qIntroText').replace('{total}', String(total))}
@@ -289,7 +289,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
       {/* ── BOTTOM ACTION BAR ── */}
       <div className="form-actions">
         <div className="fa-stats">
-          <strong>Formulaire {formNum}</strong> — <strong>{answered}</strong> / {total} {t('qQuestionsPlural')} {t('qAnswered').toLowerCase()}
+          <strong>{t('qFormLabel')} {formNum}</strong> — <strong>{answered}</strong> / {total} {t('qQuestionsPlural')} {t('qAnswered').toLowerCase()}
           &nbsp;·&nbsp; {t('qAvgScore')}: <strong>{avg !== null ? `${avg}%` : '—'}</strong>
         </div>
         <button className="btn btn-secondary" onClick={clearAll}>{t('qClearAll')}</button>
@@ -302,13 +302,13 @@ export default function QuestionnaireForm({ formNum }: Props) {
         <div className="summary-panel open">
           <div className="summary-box">
             <div className="summary-head">
-              <span className="summary-head-title">{t('qSummaryTitle')} — Formulaire {formNum}</span>
+              <span className="summary-head-title">{t('qSummaryTitle')} — {t('qFormLabel')} {formNum}</span>
               <button className="summary-close" onClick={() => setShowSummary(false)}>{t('qClose')}</button>
             </div>
             <div className="summary-body">
               <div className="summary-kpis">
                 {[
-                  { val: `F${formNum}`, label: 'Formulaire' },
+                  { val: `F${formNum}`, label: t('qFormLabel') },
                   { val: answered,       label: t('qAnswered') },
                   { val: total - answered, label: t('qRemaining') },
                   { val: avg !== null ? `${avg}%` : '—', label: t('qAvgScore') },
