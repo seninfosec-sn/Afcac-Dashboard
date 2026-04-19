@@ -324,20 +324,20 @@ export default function AdminClient({
           {/* Intro */}
           <div className="intro">
             <div className="intro-title">
-              {tab === "kpis"      && "📊 KPI Overview — Indicateurs Globaux"}
-              {tab === "targets"   && "🎯 AFCAC — Revised Abuja Safety Targets · Mise à Jour des Progrès"}
-              {tab === "actions"   && "📋 Plan d'Actions — Statut par Pays"}
-              {tab === "countries" && "🌍 Données Pays — Répartition des Actions"}
-              {tab === "users"     && "🔑 Accès États — Identifiants des Points Focaux"}
-              {tab === "sessions"  && "🟢 Utilisateurs Connectés — Surveillance en Temps Réel"}
+              {tab === "kpis"      && t('adminTabKpisTitle')}
+              {tab === "targets"   && t('adminTabTargetsTitle')}
+              {tab === "actions"   && t('adminTabActionsTitle')}
+              {tab === "countries" && t('adminTabCountriesTitle')}
+              {tab === "users"     && t('adminTabUsersTitle')}
+              {tab === "sessions"  && t('adminTabSessionsTitle')}
             </div>
             <div className="intro-text">
-              {tab === "kpis"      && <>Modifiez les <strong>indicateurs clés de performance</strong> globaux du dashboard. Ces valeurs sont affichées sur la page principale dans la section Executive Summary.</>}
-              {tab === "targets"   && <>Ce formulaire couvre <strong>{targets.length} cibles</strong> AFCAC de sécurité réparties en {Object.keys(targetGroups).length} groupes. Pour chaque cible, sélectionnez le pourcentage de progression de <strong>0% (Non démarré)</strong> à <strong>100% (Pleinement atteint)</strong>. Les réponses mettront à jour la grille des cibles sur le dashboard.</>}
-              {tab === "actions"   && <>Mettez à jour le <strong>statut de chaque action</strong> par pays. Ces données alimentent le tableau de détail et la carte Afrique sur le dashboard principal.</>}
-              {tab === "countries" && <>Modifiez les <strong>données agrégées par pays</strong> : budget, actions totales, et répartition des statuts. Ces valeurs alimentent le tableau de ventilation pays.</>}
-              {tab === "users"     && <>Liste des <strong>{users.length} points focaux</strong> — un par état membre AFCAC. Ces identifiants permettent à chaque représentant national d'accéder au formulaire de mise à jour.</>}
-              {tab === "sessions"  && <>Visualisez en temps réel les <strong>utilisateurs connectés</strong> : heure de connexion, localisation (pays/ville) et adresse IP. Rafraîchissement automatique toutes les 30 secondes.</>}
+              {tab === "kpis"      && t('adminIntroKpis')}
+              {tab === "targets"   && t('adminIntroTargets').replace('{n}', String(targets.length)).replace('{g}', String(Object.keys(targetGroups).length))}
+              {tab === "actions"   && t('adminIntroActions')}
+              {tab === "countries" && t('adminIntroCountries')}
+              {tab === "users"     && t('adminIntroUsers').replace('{n}', String(users?.length ?? 0))}
+              {tab === "sessions"  && t('adminIntroSessions')}
             </div>
           </div>
 
@@ -511,40 +511,40 @@ export default function AdminClient({
                 <div key={group}>
                   <div className="group-header" style={gi === 0 ? { marginTop: 0 } : {}}>
                     <span className="gh-title">📌 {group}</span>
-                    <span className="gh-count">{groupTargets.length} cible{groupTargets.length > 1 ? "s" : ""}</span>
+                    <span className="gh-count">{groupTargets.length} {groupTargets.length > 1 ? t('adminTargetsPlural') : t('adminTargetsSingular')}</span>
                   </div>
-                  {groupTargets.map((t, qi) => {
+                  {groupTargets.map((tgt, qi) => {
                     const isLast = qi === groupTargets.length - 1;
                     return (
-                      <div key={t.id} className="q-card" style={isLast ? { borderRadius: "0 0 8px 8px" } : {}}>
+                      <div key={tgt.id} className="q-card" style={isLast ? { borderRadius: "0 0 8px 8px" } : {}}>
                         <div className="q-head">
                           <span className="q-num">T{gi + 1}.{qi + 1}</span>
-                          <span className="q-target">{t.id}</span>
-                          <span className="q-title">{t.title}</span>
-                          <span className="q-deadline">🗓 {t.deadline}</span>
-                          {t.question && (
+                          <span className="q-target">{tgt.id}</span>
+                          <span className="q-title">{tgt.title}</span>
+                          <span className="q-deadline">🗓 {tgt.deadline}</span>
+                          {tgt.question && (
                             <button
-                              onClick={() => toggleQuestion(t.id)}
-                              title="Voir la question complète"
+                              onClick={() => toggleQuestion(tgt.id)}
+                              title="?"
                               style={{
                                 marginLeft: 8, width: 22, height: 22, borderRadius: "50%",
-                                border: "1.5px solid var(--gold)", background: openQuestions.has(t.id) ? "var(--gold)" : "transparent",
-                                color: openQuestions.has(t.id) ? "#fff" : "var(--gold)",
+                                border: "1.5px solid var(--gold)", background: openQuestions.has(tgt.id) ? "var(--gold)" : "transparent",
+                                color: openQuestions.has(tgt.id) ? "#fff" : "var(--gold)",
                                 fontWeight: 700, fontSize: 12, cursor: "pointer",
                                 flexShrink: 0, lineHeight: 1,
                               }}
                             >?</button>
                           )}
                         </div>
-                        {t.question && openQuestions.has(t.id) && (
+                        {tgt.question && openQuestions.has(tgt.id) && (
                           <div style={{ margin: "0 20px 12px", padding: "12px 16px", background: "var(--surface2)", borderRadius: 6, borderLeft: "3px solid var(--gold)", fontSize: 12, color: "var(--ink2)", lineHeight: 1.65 }}>
-                            <div style={{ fontWeight: 700, color: "var(--ink1)", marginBottom: 8 }}>{t.question}</div>
-                            {t.options && (
+                            <div style={{ fontWeight: 700, color: "var(--ink1)", marginBottom: 8 }}>{tgt.question}</div>
+                            {tgt.options && (
                               <ul style={{ margin: "6px 0 0 0", paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
-                                {(["0","25","50","75","100"] as const).map((k) => t.options![k] && (
+                                {(["0","25","50","75","100"] as const).map((k) => tgt.options![k] && (
                                   <li key={k} style={{ fontSize: 11, color: "var(--ink2)" }}>
                                     <span style={{ fontWeight: 700, color: PCT_COLORS[Number(k)] ?? "var(--ink3)", marginRight: 4 }}>{k}%</span>
-                                    — {t.options![k]}
+                                    — {tgt.options![k]}
                                   </li>
                                 ))}
                               </ul>
@@ -553,48 +553,48 @@ export default function AdminClient({
                         )}
                         <div className="q-options">
                           <div className="q-select-wrap">
-                            <div className="q-swatch" style={{ background: PCT_COLORS[t.pct] ?? "var(--border)" }} />
+                            <div className="q-swatch" style={{ background: PCT_COLORS[tgt.pct] ?? "var(--border)" }} />
                             <select
                               className="q-select"
-                              value={t.pct}
-                              style={{ borderColor: PCT_COLORS[t.pct] ?? "var(--border)" }}
-                              onChange={(e) => updateTarget(t.id, Number(e.target.value))}
+                              value={tgt.pct}
+                              style={{ borderColor: PCT_COLORS[tgt.pct] ?? "var(--border)" }}
+                              onChange={(e) => updateTarget(tgt.id, Number(e.target.value))}
                             >
-                              <option value={0} data-pct="0">a)   0% — Non démarré / Non applicable</option>
-                              <option value={25} data-pct="25">b)  25% — Partiellement initié</option>
-                              <option value={50} data-pct="50">c)  50% — En cours / Partiellement atteint</option>
-                              <option value={75} data-pct="75">d)  75% — Avancé / En bonne voie</option>
-                              <option value={100} data-pct="100">e) 100% — Pleinement atteint</option>
+                              <option value={0}   data-pct="0">{t('scoreOpt0')}</option>
+                              <option value={25}  data-pct="25">{t('scoreOpt25')}</option>
+                              <option value={50}  data-pct="50">{t('scoreOpt50')}</option>
+                              <option value={75}  data-pct="75">{t('scoreOpt75')}</option>
+                              <option value={100} data-pct="100">{t('scoreOpt100')}</option>
                             </select>
-                            <div className={`q-score-badge sc-${t.pct}`}>
+                            <div className={`q-score-badge sc-${tgt.pct}`}>
                               <span style={{ fontSize: 11, opacity: 0.7 }}>
-                                {["a","b","c","d","e"][[0,25,50,75,100].indexOf(t.pct)] ?? "—"})
+                                {["a","b","c","d","e"][[0,25,50,75,100].indexOf(tgt.pct)] ?? "—"})
                               </span>
                               <br />
-                              {t.pct}%
+                              {tgt.pct}%
                             </div>
                           </div>
                           {/* Description */}
-                          {t.pct > 0 && (
-                            <div className={`q-desc-box dc-${t.pct}`} style={{ marginTop: 10 }}>
-                              <strong>{t.pct}%</strong> — {
-                                t.pct === 25  ? "Initié mais non finalisé" :
-                                t.pct === 50  ? "Partiellement implémenté, des lacunes subsistent" :
-                                t.pct === 75  ? "Implémentation avancée, quelques points en suspens" :
-                                t.pct === 100 ? "Pleinement implémenté et opérationnel" :
-                                               "Non démarré"
+                          {tgt.pct > 0 && (
+                            <div className={`q-desc-box dc-${tgt.pct}`} style={{ marginTop: 10 }}>
+                              <strong>{tgt.pct}%</strong> — {
+                                tgt.pct === 25  ? t('scoreDesc25') :
+                                tgt.pct === 50  ? t('scoreDesc50') :
+                                tgt.pct === 75  ? t('scoreDesc75') :
+                                tgt.pct === 100 ? t('scoreDesc100') :
+                                                  t('scoreDesc0')
                               }
                             </div>
                           )}
                         </div>
                         {/* Deadline field */}
                         <div style={{ padding: "0 20px 14px", display: "flex", alignItems: "center", gap: 10 }}>
-                          <span style={{ fontSize: 11, color: "var(--ink3)" }}>🗓 Échéance :</span>
+                          <span style={{ fontSize: 11, color: "var(--ink3)" }}>{t('adminDeadline')}</span>
                           <input
                             className="field-input"
                             type="text"
-                            value={t.deadline}
-                            onChange={(e) => updateTargetField(t.id, "deadline", e.target.value)}
+                            value={tgt.deadline}
+                            onChange={(e) => updateTargetField(tgt.id, "deadline", e.target.value)}
                             style={{ width: 140, fontSize: 11, padding: "5px 9px" }}
                           />
                         </div>
@@ -610,7 +610,7 @@ export default function AdminClient({
           {tab === "actions" && (
             <>
               <div className="group-header" style={{ marginTop: 0 }}>
-                <span className="gh-title">📌 Plan d'Actions — Détail par Pays</span>
+                <span className="gh-title">{t('adminActionsDetailTitle')}</span>
                 <span className="gh-count">{actions.length} actions</span>
               </div>
               {actions.map((row, idx) => {
