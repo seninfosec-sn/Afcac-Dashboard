@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AASAP Executive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — AASAP Executive Dashboard
+   Aesthetic: Institutional Authority · Deep forest greens
+   + sharp gold + precise data density
+═══════════════════════════════════════════════════════ */
+:root {
+  --forest:    #0d3b2b;
+  --forest2:   #1a5c42;
+  --forest3:   #2d7d5f;
+  --mint:      #52b788;
+  --gold:      #f0a500;
+  --amber:     #e07b39;
+  --crimson:   #c0392b;
+  --slate:     #7f8c8d;
+  --snow:      #f4f7f5;
+  --white:     #ffffff;
+  --ink:       #1a2e25;
+  --ink2:      #3d5a4d;
+  --ink3:      #6b8a7a;
+  --border:    #d0dfd8;
+  --border2:   #e5eeea;
+
+  --c-complete:   #2d9d5e;
+  --c-progress:   #f0a500;
+  --c-delayed:    #e07b39;
+  --c-onhold:     #c0392b;
+  --c-nostart:    #95a5a6;
+
+  --shadow-sm: 0 1px 4px rgba(13,59,43,0.08);
+  --shadow-md: 0 4px 16px rgba(13,59,43,0.12);
+  --shadow-lg: 0 8px 32px rgba(13,59,43,0.16);
+  --r: 8px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--snow);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  min-height: 100vh;
+}
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background: var(--border2); }
+::-webkit-scrollbar-thumb { background: var(--forest3); border-radius:3px; }
+
+/* ══════════════════════════════════════════════
+   HEADER BANNER
+══════════════════════════════════════════════ */
+.header {
+  background: linear-gradient(135deg, var(--forest) 0%, var(--forest2) 60%, var(--forest3) 100%);
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  height: 58px;
+  gap: 20px;
+}
+
+.header-emblem {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.header-text { flex:1; }
+.header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  line-height: 1;
+}
+.header-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hctl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.85);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hctl:hover { background: rgba(255,255,255,0.18); }
+.hctl select {
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.85);
+  font-family: inherit; font-size: 11px;
+  cursor: pointer; outline: none;
+}
+.hctl select option { color: #333; background: #fff; }
+
+.hbtn {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.hbtn:hover { background: rgba(255,255,255,0.2); color: white; }
+.hbtn.active { background: var(--gold); border-color: var(--gold); color: var(--forest); }
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--c-complete);
+  box-shadow: 0 0 6px var(--c-complete);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:0.4; }
+}
+.live-label { font-size:10px; color:rgba(255,255,255,0.6); }
+
+/* ══════════════════════════════════════════════
+   MAIN CANVAS
+══════════════════════════════════════════════ */
+.canvas {
+  padding: 20px 28px 32px;
+  display: grid;
+  gap: 16px;
+}
+
+/* ══════════════════════════════════════════════
+   SECTION LABELS
+══════════════════════════════════════════════ */
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: -4px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* ══════════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════════ */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-head {
+  background: var(--forest);
+  color: white;
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-head-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.card-head-badge {
+  font-size: 10px;
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.8);
+}
+.card-body { padding: 16px; }
+
+/* ══════════════════════════════════════════════
+   KPI ROW — Executive Summary
+══════════════════════════════════════════════ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-card.k-green::before  { background: var(--c-complete); }
+.kpi-card.k-gold::before   { background: var(--gold); }
+.kpi-card.k-amber::before  { background: var(--amber); }
+.kpi-card.k-teal::before   { background: var(--forest3); }
+.kpi-card.k-blue::before   { background: #2980b9; }
+
+.kpi-icon-wrap {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.kpi-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+}
+.kpi-label {
+  font-size: 10px;
+  color: var(--ink3);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-top: 3px;
+}
+.kpi-trend {
+  font-size: 10px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.trend-up   { color: var(--c-complete); }
+.trend-flat { color: var(--ink3); }
+
+/* ══════════════════════════════════════════════
+   LAYOUT HELPERS
+══════════════════════════════════════════════ */
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.row-wide { display: grid; grid-template-columns: 2fr 1.5fr; gap: 16px; }
+.row-map  { display: grid; grid-template-columns: 2.2fr 1fr; gap: 16px; }
+.row-budget { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+
+/* ══════════════════════════════════════════════
+   DONUT CHART
+══════════════════════════════════════════════ */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.donut-canvas-box {
+  position: relative;
+  width: 150px; height: 150px;
+  flex-shrink: 0;
+}
+.donut-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  pointer-events: none;
+}
+.donut-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+.donut-sub {
+  font-size: 9px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+.legend-swatch {
+  width: 11px; height: 11px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.legend-name { flex: 1; color: var(--ink2); }
+.legend-pct  {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ══════════════════════════════════════════════
+   HORIZONTAL BAR CHART
+══════════════════════════════════════════════ */
+.hbar-list { display:flex; flex-direction:column; gap:10px; }
+.hbar-row  { display:flex; align-items:center; gap:10px; }
+.hbar-lbl  { width:88px; font-size:11px; color:var(--ink2); text-align:right; flex-shrink:0; }
+.hbar-track {
+  flex: 1; height:20px;
+  background: var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.hbar-val {
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════
+   STATUS BADGES
+══════════════════════════════════════════════ */
+.sbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.04em;
+}
+.s-completed  { background:#d4f0e0; color:#0d6b3a; }
+.s-inprogress { background:#fff0cc; color:#7a5000; }
+.s-delayed    { background:#fde4d0; color:#8a3000; }
+.s-onhold     { background:#fddada; color:#8a0000; }
+.s-notstarted { background:#e8eaef; color:#4a5568; }
+
+/* ══════════════════════════════════════════════
+   DATA TABLES
+══════════════════════════════════════════════ */
+.dtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.dtable th {
+  background: var(--forest);
+  color: white;
+  padding: 8px 12px;
+  text-align: left;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.dtable th:hover { background: var(--forest2); }
+.dtable th.sort-asc::after  { content: ' ▲'; opacity:.7; }
+.dtable th.sort-desc::after { content: ' ▼'; opacity:.7; }
+
+.dtable td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--ink2);
+  white-space: nowrap;
+}
+.dtable tbody tr:nth-child(even) td { background: #f9fbfa; }
+.dtable tbody tr:hover td { background: #eef5f1; }
+.dtable tr:last-child td { border-bottom: none; }
+
+.tbl-scroll {
+  overflow-x: auto;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.sticky-th th { position: sticky; top:0; z-index:2; }
+
+/* ══════════════════════════════════════════════
+   MINI PROGRESS BARS
+══════════════════════════════════════════════ */
+.mini-track {
+  height: 5px;
+  background: var(--border2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.mini-fill { height: 100%; border-radius: 3px; }
+
+.pct-val { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; }
+
+/* ══════════════════════════════════════════════
+   STACKED PROGRESS BAR (global)
+══════════════════════════════════════════════ */
+.stack-bar {
+  height: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  margin: 10px 0 6px;
+}
+.stack-seg { height: 100%; transition: width .8s ease; }
+
+/* ══════════════════════════════════════════════
+   MAP SECTION
+══════════════════════════════════════════════ */
+.map-wrap {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+}
+.map-area {
+  background: #deeae5;
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.africa-svg { width: 100%; height: 340px; }
+
+.country-shape {
+  cursor: pointer;
+  transition: opacity 0.2s, stroke-width 0.2s;
+  stroke: white;
+  stroke-width: 1;
+}
+.country-shape:hover {
+  opacity: 0.7 !important;
+  stroke-width: 2;
+}
+
+.map-tooltip {
+  position: absolute;
+  background: var(--forest);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  pointer-events: none;
+  display: none;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+
+.map-legend-box {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.93);
+  border-radius: 6px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.map-leg-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: var(--ink2);
+}
+.map-leg-swatch {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+}
+
+.country-panel {
+  background: var(--forest);
+  color: white;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cp-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.cp-country {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+}
+.cp-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  display: inline-block;
+  margin-right: 6px;
+}
+.cp-select {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+}
+.cp-select option { color: #333; background: #fff; }
+.cp-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.cp-stat:last-child { border-bottom: none; }
+.cp-stat-label { font-size: 11px; color: rgba(255,255,255,0.55); }
+.cp-stat-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mint);
+}
+
+/* ══════════════════════════════════════════════
+   TARGET PROGRESS GRID
+══════════════════════════════════════════════ */
+.target-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.target-card {
+  background: var(--snow);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 12px;
+  border-left: 3px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.target-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); background: white; }
+.tc-id {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 800;
+  color: var(--forest2);
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+.tc-title {
+  font-size: 10px;
+  color: var(--ink3);
+  line-height: 1.35;
+  margin-bottom: 7px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 27px;
+}
+.tc-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* ══════════════════════════════════════════════
+   STATUS OVERVIEW BLOCK
+══════════════════════════════════════════════ */
+.status-overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.status-stat-card {
+  background: var(--snow);
+  border-radius: 7px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.status-stat-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.status-stat-pct {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+.status-stat-label { font-size: 10px; color: var(--ink3); margin-top: 1px; }
+
+/* ══════════════════════════════════════════════
+   ENTITY BADGE
+══════════════════════════════════════════════ */
+.ebadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--ink3);
+}
+.edot { width:7px; height:7px; border-radius:50%; background:var(--c-complete); }
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+.footer {
+  background: var(--forest);
+  color: rgba(255,255,255,0.45);
+  padding: 10px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.footer strong { color: rgba(255,255,255,0.7); }
+
+/* ══════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.kpi-card { animation: fadeUp 0.5s ease both; }
+.kpi-card:nth-child(1){animation-delay:.05s}
+.kpi-card:nth-child(2){animation-delay:.1s}
+.kpi-card:nth-child(3){animation-delay:.15s}
+.kpi-card:nth-child(4){animation-delay:.2s}
+.kpi-card:nth-child(5){animation-delay:.25s}
+.kpi-card:nth-child(6){animation-delay:.3s}
+.kpi-card:nth-child(7){animation-delay:.35s}
+
+.card { animation: fadeUp 0.5s ease both; animation-delay: .1s; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 1400px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+  .target-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1100px) {
+  .row-wide, .row-map, .row-budget { grid-template-columns: 1fr; }
+  .map-wrap { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-emblem">✈</div>
+    <div class="header-text">
+      <div class="header-title">African Aerodrome Safety Action Plan Overview</div>
+      <div class="header-sub">AFCAC Global Aviation Safety Plan · Multi-State Monitoring Dashboard · Revised Abuja Safety Targets</div>
+    </div>
+    <div class="header-controls">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="status-dot"></div>
+        <span class="live-label">Live</span>
+      </div>
+      <div class="hctl">
+        📅
+        <select id="yearFilter" onchange="applyFilter()">
+          <option value="all">All Years</option>
+          <option value="2024" selected>2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <div class="hctl">
+        🌍
+        <select id="regionFilter" onchange="applyFilter()">
+          <option value="all">All Regions</option>
+          <option value="North">North Africa</option>
+          <option value="West">West Africa</option>
+          <option value="East">East Africa</option>
+          <option value="South">Southern Africa</option>
+          <option value="Central">Central Africa</option>
+        </select>
+      </div>
+      <button class="hbtn active" id="btnGrid" onclick="setView('grid')" title="Grid View">⊞</button>
+      <button class="hbtn" id="btnList" onclick="setView('list')" title="List View">☰</button>
+      <button class="hbtn" onclick="window.print()" title="Export">⬇</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CANVAS
+══════════════════════════════════════════════ -->
+<div class="canvas">
+
+  <!-- ── SECTION 1: EXECUTIVE SUMMARY KPIs ── -->
+  <div class="section-label">Executive Summary</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card k-teal">
+      <div class="kpi-icon-wrap" style="background:#e8f5ee">🌍</div>
+      <div class="kpi-val">54</div>
+      <div class="kpi-label">Total Countries</div>
+      <div class="kpi-trend trend-up">▲ +2 since 2023</div>
+    </div>
+    <div class="kpi-card k-blue">
+      <div class="kpi-icon-wrap" style="background:#e8f0f8">📋</div>
+      <div class="kpi-val">312</div>
+      <div class="kpi-label">Total Actions</div>
+      <div class="kpi-trend trend-up">▲ +18 this quarter</div>
+    </div>
+    <div class="kpi-card k-gold">
+      <div class="kpi-icon-wrap" style="background:#fff8e6">💰</div>
+      <div class="kpi-val">$19.5M</div>
+      <div class="kpi-label">Total Budget (USD)</div>
+      <div class="kpi-trend trend-flat">● Budget allocated</div>
+    </div>
+    <div class="kpi-card k-green">
+      <div class="kpi-icon-wrap" style="background:#d4f0e0">✅</div>
+      <div class="kpi-val" style="color:var(--c-complete)">26%</div>
+      <div class="kpi-label">% Completed</div>
+      <div class="kpi-trend trend-up">▲ +4% this month</div>
+    </div>
+    <div class="kpi-card k-amber">
+      <div class="kpi-icon-wrap" style="background:#fff0e0">⏳</div>
+      <div class="kpi-val" style="color:var(--c-progress)">44%</div>
+      <div class="kpi-label">% In Progress</div>
+      <div class="kpi-trend trend-up">▲ On track</div>
+    </div>
+    <div class="kpi-card k-teal">
+      <div class="kpi-icon-wrap" style="background:#e8f2f8">⏱</div>
+      <div class="kpi-val">14</div>
+      <div class="kpi-label">Avg Duration (wks)</div>
+      <div class="kpi-trend trend-flat">● 3.5 months avg.</div>
+    </div>
+    <div class="kpi-card k-blue">
+      <div class="kpi-icon-wrap" style="background:#eee8f8">👥</div>
+      <div class="kpi-val">14</div>
+      <div class="kpi-label">Users Planned</div>
+      <div class="kpi-trend trend-flat">● AFCAC Experts</div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: BUDGET VISUALISATIONS + ACTION TABLE ── -->
+  <div class="section-label">Budget Allocation</div>
+
+  <div class="row-wide">
+
+    <!-- Budget charts stacked -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- Donut + Bar side by side -->
+      <div class="row-budget">
+        <div class="card">
+          <div class="card-head">
+            <span class="card-head-title">Budget Allocation by Section</span>
+            <span class="card-head-badge">$19.5M</span>
+          </div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <div class="donut-canvas-box">
+                <canvas id="donutSection" width="150" height="150"></canvas>
+                <div class="donut-center">
+                  <div class="donut-val">$19.5M</div>
+                  <div class="donut-sub">Total</div>
+                </div>
+              </div>
+              <div class="legend-list">
+                <div class="legend-item">
+                  <div class="legend-swatch" style="background:#0d3b2b"></div>
+                  <span class="legend-name">Strategic Alignment</span>
+                  <span class="legend-pct" style="color:#0d3b2b">30%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-swatch" style="background:#2d7d5f"></div>
+                  <span class="legend-name">Safety Oversight</span>
+                  <span class="legend-pct" style="color:#2d7d5f">28%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-swatch" style="background:#f0a500"></div>
+                  <span class="legend-name">Infrastructure & Innov.</span>
+                  <span class="legend-pct" style="color:#f0a500">12%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-swatch" style="background:#52b788"></div>
+                  <span class="legend-name">Capacity Building</span>
+                  <span class="legend-pct" style="color:#52b788">26%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-swatch" style="background:#95a5a6"></div>
+                  <span class="legend-name">Legislative & Reg. Fwk.</span>
+                  <span class="legend-pct" style="color:#95a5a6">12%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <span class="card-head-title">Budget Allocation by Country</span>
+            <span class="card-head-badge">Top 5</span>
+          </div>
+          <div class="card-body">
+            <div class="hbar-list" id="countryBars"></div>
+            <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border2);font-size:10px;color:var(--ink3);display:flex;gap:14px">
+              <span>🟢 Allocated: $19.5M</span>
+              <span>🟡 Disbursed: 62%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status overview bar -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-head-title">Global Status Distribution</span>
+          <span class="card-head-badge">312 Actions</span>
+        </div>
+        <div class="card-body">
+          <div class="stack-bar">
+            <div class="stack-seg" style="width:26%;background:var(--c-complete)" title="Completed 26%"></div>
+            <div class="stack-seg" style="width:44%;background:var(--c-progress)" title="In Progress 44%"></div>
+            <div class="stack-seg" style="width:7%;background:var(--c-delayed)" title="Delayed 7%"></div>
+            <div class="stack-seg" style="width:4%;background:var(--c-onhold)" title="On Hold 4%"></div>
+            <div class="stack-seg" style="width:19%;background:var(--c-nostart)" title="Not Started 19%"></div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:6px">
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-complete);display:inline-block"></span>Completed 26%</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-progress);display:inline-block"></span>In Progress 44%</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-delayed);display:inline-block"></span>Delayed 7%</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-onhold);display:inline-block"></span>On Hold 4%</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-nostart);display:inline-block"></span>Not Started 19%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Plan Table -->
+    <div class="card" style="height:fit-content">
+      <div class="card-head">
+        <span class="card-head-title">Action Plan — Detail</span>
+        <span class="card-head-badge">15 rows</span>
+      </div>
+      <div class="tbl-scroll">
+        <table class="dtable sticky-th" id="actionTable">
+          <thead>
+            <tr>
+              <th onclick="sortTbl('actionTable',0,this)">Country</th>
+              <th onclick="sortTbl('actionTable',1,this)">Action ID</th>
+              <th onclick="sortTbl('actionTable',2,this)">Section</th>
+              <th onclick="sortTbl('actionTable',3,this)">Status</th>
+              <th onclick="sortTbl('actionTable',4,this)">Start</th>
+              <th onclick="sortTbl('actionTable',5,this)">End</th>
+              <th onclick="sortTbl('actionTable',6,this)">Budget</th>
+            </tr>
+          </thead>
+          <tbody id="actionTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: STATUS DONUT + MAP ── -->
+  <div class="section-label">Geographic & Status Overview</div>
+
+  <div class="row-map">
+
+    <!-- Africa Map -->
+    <div class="card" style="overflow:hidden">
+      <div class="card-head">
+        <span class="card-head-title">Africa — Action Status Map</span>
+        <span class="card-head-badge">Click country for details</span>
+      </div>
+      <div class="map-wrap">
+        <div class="map-area">
+          <svg class="africa-svg" viewBox="0 0 520 540" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="oceanG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#c8e0ea"/>
+                <stop offset="100%" stop-color="#a8ccd8"/>
+              </linearGradient>
+            </defs>
+            <rect width="520" height="540" fill="url(#oceanG)"/>
+            <!-- Countries with data -->
+            <polygon class="country-shape" data-country="Nigeria"       points="188,202 222,198 236,208 233,228 216,240 194,232 180,219" fill="#2d9d5e" opacity="0.88"/>
+            <polygon class="country-shape" data-country="South Africa"  points="195,400 248,390 272,402 275,428 252,455 222,458 196,440 186,420" fill="#2d9d5e" opacity="0.88"/>
+            <polygon class="country-shape" data-country="Egypt"         points="252,78 302,76 312,102 306,136 272,144 248,130 242,100" fill="#f0a500" opacity="0.88"/>
+            <polygon class="country-shape" data-country="Kenya"         points="288,248 322,242 336,260 325,288 298,296 280,275" fill="#2d9d5e" opacity="0.88"/>
+            <polygon class="country-shape" data-country="Ethiopia"      points="292,200 338,195 352,214 340,240 312,248 286,232 278,212" fill="#f0a500" opacity="0.88"/>
+            <polygon class="country-shape" data-country="Algeria"       points="182,78 252,74 258,100 244,132 210,138 176,126 168,98" fill="#f0a500" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Morocco"       points="144,74 182,72 182,98 168,114 144,110 130,94" fill="#2d9d5e" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Ghana"         points="166,226 192,222 196,244 180,257 160,250 155,235" fill="#2d9d5e" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Tanzania"      points="278,292 318,286 330,310 315,336 288,340 268,318" fill="#f0a500" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Senegal"       points="124,178 158,175 163,193 142,204 120,200 112,188" fill="#e07b39" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Uganda"        points="272,244 298,240 302,262 284,270 266,262" fill="#f0a500" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Cameroon"      points="202,220 228,216 234,238 218,252 198,245 193,228" fill="#e07b39" opacity="0.8"/>
+            <polygon class="country-shape" data-country="DRC"           points="216,254 272,248 284,282 272,320 242,330 210,314 200,276" fill="#c0392b" opacity="0.8"/>
+            <polygon class="country-shape" data-country="Zambia"        points="232,328 274,320 284,344 270,366 240,370 218,350" fill="#f0a500" opacity="0.85"/>
+            <polygon class="country-shape" data-country="Zimbabwe"      points="246,366 274,360 280,382 264,396 240,394 234,378" fill="#95a5a6" opacity="0.85"/>
+            <!-- Passive countries -->
+            <polygon points="246,78 306,72 315,100 304,134 259,140 248,130 242,100" fill="#b8c8c0" opacity="0.5"/><!-- Libya -->
+            <polygon points="260,136 305,130 316,164 300,195 272,200 250,185 246,156" fill="#b8c8c0" opacity="0.5"/><!-- Sudan -->
+            <polygon points="352,188 390,185 400,220 385,240 360,245 340,228" fill="#b8c8c0" opacity="0.4"/><!-- Somalia -->
+            <polygon points="158,126 182,122 192,150 176,172 155,168 144,148" fill="#b8c8c0" opacity="0.5"/><!-- Mali area -->
+            <polygon points="192,148 218,144 228,168 210,184 190,178 180,160" fill="#b8c8c0" opacity="0.4"/>
+            <polygon points="144,110 168,114 175,140 158,156 136,148 130,128" fill="#b8c8c0" opacity="0.5"/>
+
+            <!-- Country labels -->
+            <text x="208" y="220" font-size="7" fill="white" font-weight="800" text-anchor="middle">NGR</text>
+            <text x="232" y="425" font-size="7" fill="white" font-weight="800" text-anchor="middle">ZAF</text>
+            <text x="276" y="110" font-size="7" fill="white" font-weight="800" text-anchor="middle">EGY</text>
+            <text x="305" y="270" font-size="7" fill="white" font-weight="800" text-anchor="middle">KEN</text>
+            <text x="316" y="220" font-size="7" fill="white" font-weight="800" text-anchor="middle">ETH</text>
+            <text x="212" y="108" font-size="7" fill="white" font-weight="800" text-anchor="middle">DZA</text>
+            <text x="155" y="94" font-size="7" fill="white" font-weight="800" text-anchor="middle">MAR</text>
+            <text x="174" y="240" font-size="7" fill="white" font-weight="800" text-anchor="middle">GHA</text>
+            <text x="298" y="314" font-size="7" fill="white" font-weight="800" text-anchor="middle">TZA</text>
+            <text x="138" y="190" font-size="7" fill="white" font-weight="800" text-anchor="middle">SEN</text>
+            <text x="284" y="256" font-size="7" fill="white" font-weight="800" text-anchor="middle">UGA</text>
+            <text x="241" y="290" font-size="6" fill="white" font-weight="800" text-anchor="middle">DRC</text>
+          </svg>
+
+          <!-- Map legend -->
+          <div class="map-legend-box">
+            <div class="map-leg-item"><div class="map-leg-swatch" style="background:#2d9d5e"></div>Completed</div>
+            <div class="map-leg-item"><div class="map-leg-swatch" style="background:#f0a500"></div>In Progress</div>
+            <div class="map-leg-item"><div class="map-leg-swatch" style="background:#e07b39"></div>Delayed</div>
+            <div class="map-leg-item"><div class="map-leg-swatch" style="background:#c0392b"></div>On Hold</div>
+            <div class="map-leg-item"><div class="map-leg-swatch" style="background:#95a5a6"></div>Not Started</div>
+          </div>
+
+          <div class="map-tooltip" id="mapTooltip"></div>
+        </div>
+
+        <!-- Country Detail Panel -->
+        <div class="country-panel">
+          <div>
+            <div class="cp-title">Selected Country</div>
+            <div class="cp-country"><span class="cp-dot"></span><span id="cpName">Algeria</span></div>
+          </div>
+          <select class="cp-select" id="cpSelect" onchange="updateCP(this.value)">
+            <option>Algeria</option>
+            <option>Nigeria</option>
+            <option>South Africa</option>
+            <option>Egypt</option>
+            <option>Kenya</option>
+            <option>Ethiopia</option>
+            <option>Morocco</option>
+            <option>Ghana</option>
+            <option>Tanzania</option>
+            <option>Senegal</option>
+            <option>Uganda</option>
+            <option>Cameroon</option>
+            <option>DRC</option>
+            <option>Zambia</option>
+            <option>Zimbabwe</option>
+          </select>
+          <div>
+            <div class="cp-stat"><span class="cp-stat-label">Total Actions</span><span class="cp-stat-val" id="cpActions">31</span></div>
+            <div class="cp-stat"><span class="cp-stat-label">Total Budget</span><span class="cp-stat-val" id="cpBudget">$1.115M</span></div>
+            <div class="cp-stat"><span class="cp-stat-label">Starting Year</span><span class="cp-stat-val" id="cpYear">2024</span></div>
+            <div class="cp-stat"><span class="cp-stat-label">Responsible Entity</span><span class="cp-stat-val" id="cpEntity">CAA</span></div>
+            <div class="cp-stat"><span class="cp-stat-label">% Completed</span><span class="cp-stat-val" id="cpCompleted" style="color:#52b788">35%</span></div>
+            <div class="cp-stat"><span class="cp-stat-label">% In Progress</span><span class="cp-stat-val" id="cpInProg" style="color:#f0a500">55%</span></div>
+          </div>
+          <!-- Mini progress bars -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px">
+              <span>Completed</span><span id="cpBar1Lbl">35%</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden">
+              <div id="cpBar1" style="height:100%;background:#52b788;border-radius:3px;width:35%;transition:width .8s ease"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.5);margin-top:6px;margin-bottom:4px">
+              <span>In Progress</span><span id="cpBar2Lbl">55%</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden">
+              <div id="cpBar2" style="height:100%;background:#f0a500;border-radius:3px;width:55%;transition:width .8s ease"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Donut -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">Status — Global Overview</span>
+        <span class="card-head-badge">All Actions</span>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;justify-content:center;margin-bottom:16px">
+          <div class="donut-canvas-box" style="width:160px;height:160px">
+            <canvas id="donutStatus" width="160" height="160"></canvas>
+            <div class="donut-center">
+              <div class="donut-val" style="color:var(--c-complete)">26%</div>
+              <div class="donut-sub">Done</div>
+            </div>
+          </div>
+        </div>
+        <div class="legend-list">
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--c-complete)"></div>
+            <span class="legend-name">Completed</span>
+            <span class="legend-pct" style="color:var(--c-complete)">26%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--c-progress)"></div>
+            <span class="legend-name">In Progress</span>
+            <span class="legend-pct" style="color:var(--c-progress)">44%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--c-delayed)"></div>
+            <span class="legend-name">Delayed</span>
+            <span class="legend-pct" style="color:var(--c-delayed)">7%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--c-onhold)"></div>
+            <span class="legend-name">On Hold</span>
+            <span class="legend-pct" style="color:var(--c-onhold)">4%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--c-nostart)"></div>
+            <span class="legend-name">Not Started</span>
+            <span class="legend-pct" style="color:var(--c-nostart)">19%</span>
+          </div>
+        </div>
+
+        <!-- Status stat cards -->
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border2)">
+          <div style="font-size:10px;font-weight:700;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Detailed Distribution</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span>Completed</span><span class="pct-val" style="color:var(--c-complete)">26%</span>
+              </div>
+              <div class="mini-track"><div class="mini-fill" style="width:26%;background:var(--c-complete)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span>In Progress</span><span class="pct-val" style="color:var(--c-progress)">44%</span>
+              </div>
+              <div class="mini-track"><div class="mini-fill" style="width:44%;background:var(--c-progress)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span>Delayed</span><span class="pct-val" style="color:var(--c-delayed)">7%</span>
+              </div>
+              <div class="mini-track"><div class="mini-fill" style="width:7%;background:var(--c-delayed)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span>On Hold</span><span class="pct-val" style="color:var(--c-onhold)">4%</span>
+              </div>
+              <div class="mini-track"><div class="mini-fill" style="width:4%;background:var(--c-onhold)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+                <span>Not Started</span><span class="pct-val" style="color:var(--c-nostart)">19%</span>
+              </div>
+              <div class="mini-track"><div class="mini-fill" style="width:19%;background:var(--c-nostart)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: COUNTRY BREAKDOWN TABLE ── -->
+  <div class="section-label">Action Plan Country Breakdown</div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-title">Action Plan Country Breakdown</span>
+      <span class="card-head-badge">15 Countries</span>
+    </div>
+    <div class="tbl-scroll" style="max-height:none">
+      <table class="dtable sticky-th" id="breakdownTable">
+        <thead>
+          <tr>
+            <th onclick="sortTbl('breakdownTable',0,this)">Country</th>
+            <th onclick="sortTbl('breakdownTable',1,this)">Total Actions</th>
+            <th onclick="sortTbl('breakdownTable',2,this)">% Completed</th>
+            <th onclick="sortTbl('breakdownTable',3,this)">% In Progress</th>
+            <th onclick="sortTbl('breakdownTable',4,this)">Budget (USD)</th>
+            <th>Responsible Entity</th>
+            <th>Progress Visual</th>
+          </tr>
+        </thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 5: AFCAC SAFETY TARGETS ── -->
+  <div class="section-label">AFCAC Safety Targets — Questionnaire Progress</div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="card-head-title">AFCAC / Abuja Safety Targets — Achievement Progress</span>
+      <span class="card-head-badge">Revised Abuja Safety Targets</span>
+    </div>
+    <div class="card-body">
+      <div class="target-grid" id="targetGrid"></div>
+    </div>
+  </div>
+
+</div><!-- /canvas -->
+
+<footer class="footer">
+  <span><strong>AFCAC Global Aviation Safety Plan</strong> · African Aerodrome Safety Dashboard · Last updated: 2024-02-13</span>
+  <span>Data source: AST Questionnaire · All figures in USD · © AFCAC / AFCAC</span>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════ -->
+<script>
+/* ─── DATA ─────────────────────────────────────────────── */
+const actionData = [
+  { country:'Nigeria',      action:'1.1.1.1', section:'Strategic Alignment & Planning',    status:'completed',  start:2024, end:2024, duration:30, budget:150000 },
+  { country:'South Africa', action:'1.1.1.1', section:'Safety Oversight Enhancement',      status:'inprogress', start:2024, end:2024, duration:18, budget:139000 },
+  { country:'Egypt',        action:'1.1.1.1', section:'Infrastructure & Innovation',       status:'inprogress', start:2024, end:2024, duration:20, budget:191000 },
+  { country:'Kenya',        action:'1.1.1.1', section:'Capacity Building',                 status:'inprogress', start:2024, end:2024, duration:18, budget:130000 },
+  { country:'Ethiopia',     action:'1.1.1.1', section:'Legislative & Regulatory Framework',status:'inprogress', start:2024, end:2024, duration:18, budget:130000 },
+  { country:'Algeria',      action:'1.1.1.2', section:'Strategic Alignment & Planning',    status:'completed',  start:2024, end:2024, duration:30, budget:130000 },
+  { country:'Morocco',      action:'1.1.1.2', section:'Capacity Building',                 status:'inprogress', start:2024, end:2024, duration:18, budget:130000 },
+  { country:'Ghana',        action:'1.1.1.2', section:'Safety Oversight Enhancement',      status:'inprogress', start:2024, end:2024, duration:18, budget:130000 },
+  { country:'Tanzania',     action:'1.1.1.3', section:'Infrastructure & Innovation',       status:'delayed',    start:2024, end:2024, duration:18, budget:190000 },
+  { country:'Senegal',      action:'1.1.1.3', section:'Capacity Building',                 status:'delayed',    start:2024, end:2024, duration:17, budget:150000 },
+  { country:'Uganda',       action:'1.1.1.4', section:'Safety Oversight Enhancement',      status:'inprogress', start:2024, end:2025, duration:22, budget:145000 },
+  { country:'Cameroon',     action:'1.1.1.4', section:'Legislative & Regulatory Framework',status:'notstarted', start:2024, end:2025, duration:16, budget:120000 },
+  { country:'DRC',          action:'1.1.2.1', section:'Strategic Alignment & Planning',    status:'onhold',     start:2024, end:2025, duration:14, budget:110000 },
+  { country:'Zambia',       action:'1.1.2.1', section:'Capacity Building',                 status:'inprogress', start:2024, end:2024, duration:12, budget:135000 },
+  { country:'Zimbabwe',     action:'1.1.2.2', section:'Safety Oversight Enhancement',      status:'notstarted', start:2024, end:2025, duration:20, budget:125000 },
+];
+
+const breakdownData = [
+  { country:'Nigeria',      actions:20, completed:40, inprogress:46, budget:2025000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'South Africa', actions:20, completed:40, inprogress:45, budget:2025000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Egypt',        actions:20, completed:44, inprogress:47, budget:1695000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Kenya',        actions:20, completed:59, inprogress:72, budget:1395000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Ethiopia',     actions:26, completed:49, inprogress:27, budget:1125000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Algeria',      actions:31, completed:35, inprogress:55, budget:1115000, entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Morocco',      actions:30, completed:40, inprogress:37, budget:996000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Ghana',        actions:29, completed:43, inprogress:27, budget:995000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Tanzania',     actions:20, completed:40, inprogress:36, budget:996000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Uganda',       actions:21, completed:35, inprogress:57, budget:995000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Senegal',      actions:18, completed:28, inprogress:44, budget:875000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Cameroon',     actions:16, completed:19, inprogress:38, budget:820000,  entity:'CAA, AFCAC & REC' },
+  { country:'DRC',          actions:24, completed:8,  inprogress:25, budget:750000,  entity:'CAA, AFCAC & REC' },
+  { country:'Zambia',       actions:19, completed:32, inprogress:48, budget:810000,  entity:'CAA, Airport Op., AFCAC & REC' },
+  { country:'Zimbabwe',     actions:15, completed:20, inprogress:33, budget:680000,  entity:'CAA, AFCAC & REC' },
+];
+
+const cpData = {
+  'Algeria':      {actions:31, budget:'$1.115M', year:2024, entity:'CAA',        completed:'35%', inprogress:'55%'},
+  'Nigeria':      {actions:20, budget:'$2.025M', year:2024, entity:'CAA / FAAN', completed:'40%', inprogress:'46%'},
+  'South Africa': {actions:20, budget:'$2.025M', year:2024, entity:'SACAA',      completed:'40%', inprogress:'45%'},
+  'Egypt':        {actions:20, budget:'$1.695M', year:2024, entity:'ECAA',       completed:'44%', inprogress:'47%'},
+  'Kenya':        {actions:20, budget:'$1.395M', year:2024, entity:'KCAA',       completed:'59%', inprogress:'72%'},
+  'Ethiopia':     {actions:26, budget:'$1.125M', year:2024, entity:'ECAA',       completed:'49%', inprogress:'27%'},
+  'Morocco':      {actions:30, budget:'$996K',   year:2024, entity:'ANAC',       completed:'40%', inprogress:'37%'},
+  'Ghana':        {actions:29, budget:'$995K',   year:2024, entity:'GCAA',       completed:'43%', inprogress:'27%'},
+  'Tanzania':     {actions:20, budget:'$996K',   year:2024, entity:'TCAA',       completed:'40%', inprogress:'36%'},
+  'Senegal':      {actions:18, budget:'$875K',   year:2024, entity:'ANACIM',     completed:'28%', inprogress:'44%'},
+  'Uganda':       {actions:21, budget:'$995K',   year:2024, entity:'UCAA',       completed:'35%', inprogress:'57%'},
+  'Cameroon':     {actions:16, budget:'$820K',   year:2024, entity:'CAA',        completed:'19%', inprogress:'38%'},
+  'DRC':          {actions:24, budget:'$750K',   year:2024, entity:'CAA',        completed:'8%',  inprogress:'25%'},
+  'Zambia':       {actions:19, budget:'$810K',   year:2024, entity:'CAA',        completed:'32%', inprogress:'48%'},
+  'Zimbabwe':     {actions:15, budget:'$680K',   year:2024, entity:'CAA',        completed:'20%', inprogress:'33%'},
+};
+
+// AFCAC targets from questionnaire docx
+const targetData = [
+  { id:'T1.1', title:'Decreasing Accident Rate Trend',        pct:50,  status:'inprogress', deadline:'Ongoing' },
+  { id:'T1.2', title:'Loss of Separation Reduction ≥50%',    pct:25,  status:'delayed',    deadline:'Ongoing' },
+  { id:'T2.1', title:'Autonomous CAA Established',           pct:75,  status:'inprogress', deadline:'2027' },
+  { id:'T2.2', title:'Safety Oversight EI Score (CEs/PQs)',  pct:50,  status:'inprogress', deadline:'2030' },
+  { id:'T2.3', title:'Independent Investigation Body',        pct:25,  status:'delayed',    deadline:'2028' },
+  { id:'T2.4', title:'Support Dept. (Met/Comm/Rad.)',        pct:50,  status:'inprogress', deadline:'Ongoing' },
+  { id:'T3.1', title:'SSP Foundation Implemented',           pct:25,  status:'delayed',    deadline:'Dec 2026' },
+  { id:'T3.2', title:'NASP Published',                       pct:0,   status:'notstarted', deadline:'Dec 2026' },
+  { id:'T3.3', title:'SSP Effective Implementation',         pct:25,  status:'delayed',    deadline:'2028' },
+  { id:'T4.1', title:'Assistance Sought (Goals 2&3)',        pct:50,  status:'inprogress', deadline:'Dec 2026' },
+  { id:'T4.2', title:'Updated RASP Published',               pct:25,  status:'delayed',    deadline:'Dec 2026' },
+  { id:'T12.1', title:'PBN Implementation',                  pct:50,  status:'inprogress', deadline:'Dec 2030' },
+  { id:'T13.1', title:'National ASBU Plan Developed',        pct:25,  status:'delayed',    deadline:'Dec 2026' },
+  { id:'T14.1', title:'CO2 Reduction Action Plan',           pct:25,  status:'delayed',    deadline:'Dec 2026' },
+  { id:'T15.1', title:'ANSPs Join Peer Review Programme',    pct:50,  status:'inprogress', deadline:'Dec 2026' },
+];
+
+/* ─── STATUS CONFIG ─────────────────────────────────────── */
+const SC = {
+  completed:  { label:'Completed',   cls:'s-completed',  color:'#2d9d5e' },
+  inprogress: { label:'In Progress', cls:'s-inprogress', color:'#f0a500' },
+  delayed:    { label:'Delayed',     cls:'s-delayed',    color:'#e07b39' },
+  onhold:     { label:'On Hold',     cls:'s-onhold',     color:'#c0392b' },
+  notstarted: { label:'Not Started', cls:'s-notstarted', color:'#95a5a6' },
+};
+
+function badge(s) {
+  const c = SC[s];
+  return `<span class="sbadge ${c.cls}">● ${c.label}</span>`;
+}
+
+function fmtB(v) {
+  if(v>=1e6) return `$${(v/1e6).toFixed(2)}M`;
+  if(v>=1e3) return `$${Math.round(v/1e3)}K`;
+  return `$${v}`;
+}
+
+/* ─── RENDER ACTION TABLE ───────────────────────────────── */
+function renderActionTable() {
+  document.getElementById('actionTableBody').innerHTML = actionData.map(r => `
+    <tr>
+      <td style="font-weight:600;color:var(--ink)">${r.country}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--forest2);font-weight:600">${r.action}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)">${r.section}</td>
+      <td>${badge(r.status)}</td>
+      <td>${r.start}</td>
+      <td>${r.end}</td>
+      <td style="font-weight:700;font-family:monospace">${fmtB(r.budget)}</td>
+    </tr>
+  `).join('');
+}
+
+/* ─── RENDER BREAKDOWN TABLE ────────────────────────────── */
+function renderBreakdown() {
+  document.getElementById('breakdownBody').innerHTML = breakdownData.map(r => `
+    <tr>
+      <td style="font-weight:600;color:var(--ink)">${r.country}</td>
+      <td style="text-align:center;font-weight:800;font-family:monospace;color:var(--forest2)">${r.actions}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="pct-val" style="color:var(--c-complete);width:34px">${r.completed}%</div>
+          <div class="mini-track" style="flex:1"><div class="mini-fill" style="width:${r.completed}%;background:var(--c-complete)"></div></div>
+        </div>
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="pct-val" style="color:var(--c-progress);width:34px">${r.inprogress}%</div>
+          <div class="mini-track" style="flex:1"><div class="mini-fill" style="width:${Math.min(r.inprogress,100)}%;background:var(--c-progress)"></div></div>
+        </div>
+      </td>
+      <td style="font-weight:700;font-family:monospace">${fmtB(r.budget)}</td>
+      <td><span class="ebadge"><span class="edot"></span>${r.entity.substring(0,22)}…</span></td>
+      <td>
+        <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:var(--border2)">
+          <div style="width:${r.completed}%;background:var(--c-complete)"></div>
+          <div style="width:${Math.min(r.inprogress,100-r.completed)}%;background:var(--c-progress)"></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ─── RENDER TARGET GRID ────────────────────────────────── */
+function renderTargets() {
+  document.getElementById('targetGrid').innerHTML = targetData.map(t => {
+    const c = t.pct===0?'#95a5a6':t.pct>=75?'#2d9d5e':t.pct>=50?'#f0a500':'#e07b39';
+    return `
+      <div class="target-card" style="border-left-color:${SC[t.status].color}">
+        <div class="tc-id">${t.id} <span style="font-size:9px;font-weight:400;color:var(--ink3)">· ${t.deadline}</span></div>
+        <div class="tc-title">${t.title}</div>
+        <div class="tc-pct" style="color:${c}">${t.pct}%</div>
+        <div class="mini-track"><div class="mini-fill" style="width:${t.pct||3}%;background:${c}"></div></div>
+        <div style="margin-top:5px">${badge(t.status)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ─── RENDER COUNTRY BARS ───────────────────────────────── */
+function renderBars() {
+  const data = [
+    {label:'Nigeria',      val:2.025, c:'#0d3b2b'},
+    {label:'South Africa', val:2.025, c:'#1a5c42'},
+    {label:'Egypt',        val:1.695, c:'#2d7d5f'},
+    {label:'Kenya',        val:1.395, c:'#f0a500'},
+    {label:'Ethiopia',     val:1.125, c:'#e07b39'},
+  ];
+  const mx=2.025;
+  document.getElementById('countryBars').innerHTML = data.map(d=>`
+    <div class="hbar-row">
+      <div class="hbar-lbl">${d.label}</div>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${d.val/mx*100}%;background:${d.c}">
+          <span class="hbar-val">$${d.val.toFixed(2)}M</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ─── CHARTS ────────────────────────────────────────────── */
+function initCharts() {
+  new Chart(document.getElementById('donutSection'), {
+    type:'doughnut',
+    data:{datasets:[{
+      data:[30,28,12,26,12],
+      backgroundColor:['#0d3b2b','#2d7d5f','#f0a500','#52b788','#95a5a6'],
+      borderWidth:2, borderColor:'#fff', hoverOffset:6
+    }]},
+    options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed}%`}}},animation:{duration:900}}
+  });
+  new Chart(document.getElementById('donutStatus'), {
+    type:'doughnut',
+    data:{datasets:[{
+      data:[26,44,7,4,19],
+      backgroundColor:['#2d9d5e','#f0a500','#e07b39','#c0392b','#95a5a6'],
+      borderWidth:2, borderColor:'#fff', hoverOffset:6
+    }]},
+    options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed}%`}}},animation:{duration:1100,delay:200}}
+  });
+}
+
+/* ─── COUNTRY PANEL ─────────────────────────────────────── */
+function updateCP(country) {
+  const d = cpData[country] || cpData['Algeria'];
+  document.getElementById('cpName').textContent = country;
+  document.getElementById('cpActions').textContent = d.actions;
+  document.getElementById('cpBudget').textContent = d.budget;
+  document.getElementById('cpYear').textContent = d.year;
+  document.getElementById('cpEntity').textContent = d.entity;
+  document.getElementById('cpCompleted').textContent = d.completed;
+  document.getElementById('cpInProg').textContent = d.inprogress;
+  const cp = parseInt(d.completed);
+  const ip = parseInt(d.inprogress);
+  document.getElementById('cpBar1').style.width = cp+'%';
+  document.getElementById('cpBar2').style.width = ip+'%';
+  document.getElementById('cpBar1Lbl').textContent = d.completed;
+  document.getElementById('cpBar2Lbl').textContent = d.inprogress;
+}
+
+/* ─── MAP INTERACTIONS ──────────────────────────────────── */
+function initMap() {
+  const tip = document.getElementById('mapTooltip');
+  document.querySelectorAll('.country-shape').forEach(el => {
+    const c = el.getAttribute('data-country');
+    el.addEventListener('mouseenter', e => {
+      tip.style.display='block';
+      const d = cpData[c];
+      tip.innerHTML = d ? `<strong>${c}</strong><br>${d.actions} actions · ${d.completed} done` : c;
+    });
+    el.addEventListener('mousemove', e => {
+      const rect = el.closest('svg').getBoundingClientRect();
+      tip.style.left = (e.clientX - rect.left + 10)+'px';
+      tip.style.top  = (e.clientY - rect.top  - 30)+'px';
+    });
+    el.addEventListener('mouseleave', () => tip.style.display='none');
+    el.addEventListener('click', () => {
+      if(cpData[c]) {
+        document.getElementById('cpSelect').value = c;
+        updateCP(c);
+      }
+    });
+  });
+}
+
+/* ─── TABLE SORT ────────────────────────────────────────── */
+let sortState = {};
+function sortTbl(tableId, col, th) {
+  const tbody = document.getElementById(tableId).querySelector ? 
+    document.getElementById(tableId==='actionTable'?'actionTableBody':'breakdownBody') : null;
+  const rows = Array.from(document.getElementById(tableId==='actionTable'?'actionTableBody':'breakdownBody').rows);
+  
+  document.querySelectorAll(`#${tableId} th`).forEach(t => t.className='');
+  const key = tableId+col;
+  const asc = sortState[key] !== true;
+  sortState[key] = asc;
+  th.className = asc ? 'sort-asc' : 'sort-desc';
+
+  rows.sort((a,b) => {
+    const va = a.cells[col]?.textContent.trim()||'';
+    const vb = b.cells[col]?.textContent.trim()||'';
+    const na = parseFloat(va.replace(/[$%MK,]/g,''));
+    const nb = parseFloat(vb.replace(/[$%MK,]/g,''));
+    if(!isNaN(na)&&!isNaN(nb)) return asc? na-nb : nb-na;
+    return asc? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  const tb = document.getElementById(tableId==='actionTable'?'actionTableBody':'breakdownBody');
+  rows.forEach(r => tb.appendChild(r));
+}
+
+/* ─── FILTER (stub) ─────────────────────────────────────── */
+function applyFilter() {
+  // Could filter table rows by year/region — stub for interactivity
+}
+
+/* ─── VIEW TOGGLE ───────────────────────────────────────── */
+function setView(v) {
+  document.getElementById('btnGrid').classList.toggle('active', v==='grid');
+  document.getElementById('btnList').classList.toggle('active', v==='list');
+}
+
+/* ─── INIT ──────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  renderBars();
+  renderActionTable();
+  renderBreakdown();
+  renderTargets();
+  updateCP('Algeria');
+  initMap();
+});
+</script>
+</body>
+</html>

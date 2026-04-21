@@ -1,0 +1,41 @@
+{
+  "name": "AFCAC AASAP Theme",
+  "dataColors": [
+    "#2d9d5e",
+    "#f0a500",
+    "#e07b39",
+    "#c0392b",
+    "#95a5a6",
+    "#0d3b2b",
+    "#1a5c42",
+    "#52b788"
+  ],
+  "background": "#f4f7f5",
+  "foreground": "#1a2e25",
+  "tableAccent": "#0d3b2b",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "fontFamily": [{ "value": "Segoe UI" }],
+        "fontSize": [{ "value": 12 }]
+      }
+    },
+    "card": {
+      "*": {
+        "calloutValue": [{ "fontSize": { "value": 28 }, "fontBold": { "value": true } }],
+        "label": [{ "color": { "value": "#6b8a7a" }, "fontSize": { "value": 11 } }],
+        "background": [{ "color": { "value": "#ffffff" }, "transparency": { "value": 0 } }]
+      }
+    },
+    "columnChart": {
+      "*": {
+        "dataPoint": [{ "defaultColor": { "value": "#1a5c42" } }]
+      }
+    },
+    "donutChart": {
+      "*": {
+        "legend": [{ "show": { "value": true }, "position": { "value": "Right" } }]
+      }
+    }
+  }
+}

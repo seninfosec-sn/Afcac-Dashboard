@@ -1,0 +1,542 @@
+[
+  {
+    "country": "Algeria",
+    "action": "T6.1",
+    "section": "Infrastructure (ANS)",
+    "status": "completed",
+    "start": 2024,
+    "end": 2024,
+    "duration": 30,
+    "budget": 130000
+  },
+  {
+    "country": "Cameroon",
+    "action": "T12.1",
+    "section": "Seamless ANS",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 16,
+    "budget": 120000
+  },
+  {
+    "country": "DR Congo",
+    "action": "T13.1",
+    "section": "ASBU",
+    "status": "onhold",
+    "start": 2024,
+    "end": 2025,
+    "duration": 14,
+    "budget": 110000
+  },
+  {
+    "country": "Egypt",
+    "action": "T3.1",
+    "section": "State Safety Programme",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 20,
+    "budget": 191000
+  },
+  {
+    "country": "Ethiopia",
+    "action": "T5.1",
+    "section": "Industry Standards",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 130000
+  },
+  {
+    "country": "Ghana",
+    "action": "T8",
+    "section": "Aerodrome Certification",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 130000
+  },
+  {
+    "country": "Kenya",
+    "action": "T4.1",
+    "section": "Assistance & RASP",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 130000
+  },
+  {
+    "country": "Morocco",
+    "action": "T7.1",
+    "section": "Infrastructure (Aerodrome)",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 130000
+  },
+  {
+    "country": "Nigeria",
+    "action": "T1.1",
+    "section": "Safety Trend",
+    "status": "completed",
+    "start": 2024,
+    "end": 2024,
+    "duration": 30,
+    "budget": 150000
+  },
+  {
+    "country": "Senegal",
+    "action": "T10.1",
+    "section": "AIS to AIM",
+    "status": "delayed",
+    "start": 2024,
+    "end": 2024,
+    "duration": 17,
+    "budget": 150000
+  },
+  {
+    "country": "South Africa",
+    "action": "T2.1",
+    "section": "Safety Oversight",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 139000
+  },
+  {
+    "country": "Tanzania",
+    "action": "T9.1",
+    "section": "Search & Rescue",
+    "status": "delayed",
+    "start": 2024,
+    "end": 2024,
+    "duration": 18,
+    "budget": 190000
+  },
+  {
+    "country": "Uganda",
+    "action": "T11.1",
+    "section": "PBN",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2025,
+    "duration": 22,
+    "budget": 145000
+  },
+  {
+    "country": "Zambia",
+    "action": "T14.1",
+    "section": "CO2 Emissions",
+    "status": "inprogress",
+    "start": 2024,
+    "end": 2024,
+    "duration": 12,
+    "budget": 135000
+  },
+  {
+    "country": "Zimbabwe",
+    "action": "T15.3",
+    "section": "ANSP Peer Review",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 20,
+    "budget": 125000
+  },
+  {
+    "country": "Angola",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Benin",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Botswana",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Burkina Faso",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Burundi",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Cabo Verde",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Central African Republic",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Chad",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Comoros",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Congo (Republic)",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Djibouti",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Equatorial Guinea",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Eritrea",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Eswatini",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Gabon",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Gambia",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Guinea",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Guinea-Bissau",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Ivory Coast",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Lesotho",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Liberia",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Libya",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Madagascar",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Malawi",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Mali",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Mauritania",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Mauritius",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Mozambique",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Namibia",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Niger",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Rwanda",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "São Tomé & Príncipe",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Seychelles",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Sierra Leone",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Somalia",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "South Sudan",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Sudan",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Togo",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  },
+  {
+    "country": "Tunisia",
+    "action": "AST",
+    "section": "Safety Targets Questionnaire",
+    "status": "notstarted",
+    "start": 2024,
+    "end": 2025,
+    "duration": 0,
+    "budget": 0
+  }
+]

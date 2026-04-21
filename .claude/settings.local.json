@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(node -e \"const u = require\\(''./data/users.json''\\); console.log\\(''Total users:'', u.length, ''| Experts:'', u.filter\\(x=>x.role===''expert''\\).length\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(node -e ':*)",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H \"Content-Type: application/json\" -d '{\"username\":\"agnes.aguma\",\"password\":\"Agnes2024\"}')",
+      "Bash(vercel --version)",
+      "Bash(vercel env *)",
+      "Bash(vercel ls *)",
+      "Bash(vercel inspect *)",
+      "Bash(vercel project *)",
+      "Bash(cp -r \"d:/WEB/Dashboard/afcac-dashboard/components/\"* \"d:/WEB/Dashboard/components/\")",
+      "Bash(cp -r \"d:/WEB/Dashboard/afcac-dashboard/lib/\"* \"d:/WEB/Dashboard/lib/\")",
+      "Bash(node -e \"require\\('xlsx'\\); require\\('jspdf'\\); require\\('jspdf-autotable'\\); console.log\\('OK'\\)\")",
+      "Bash(node scripts/add-experts.mjs)",
+      "Bash(cp -r \"d:/WEB/Dashboard/app/api/auth/heartbeat\" \"d:/WEB/Dashboard/afcac-dashboard/app/api/auth/\")",
+      "Bash(cp -r \"d:/WEB/Dashboard/app/api/admin\" \"d:/WEB/Dashboard/afcac-dashboard/app/api/\")",
+      "Bash(node scripts/push-users.mjs)",
+      "Bash(ls d:/WEB/Dashboard/afcac-dashboard/*.png d:/WEB/Dashboard/afcac-dashboard/*.jpg d:/WEB/Dashboard/afcac-dashboard/*.svg)",
+      "Bash(npx next *)",
+      "Bash(read key *)"
+    ]
+  }
+}

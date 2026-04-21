@@ -1,0 +1,21 @@
+{
+  "totalCountries": 54,
+  "totalCountriesTrend": "+2 since 2023",
+  "totalActions": 312,
+  "totalActionsTrend": "+18 this quarter",
+  "totalBudget": 19500000,
+  "pctCompleted": 26,
+  "pctCompletedTrend": "+4% this month",
+  "pctInProgress": 44,
+  "pctInProgressTrend": "On track",
+  "pctDelayed": 7,
+  "pctDelayedTrend": "Watch",
+  "pctOnHold": 4,
+  "pctOnHoldTrend": "Critical",
+  "pctNotStarted": 19,
+  "pctNotStartedTrend": "Pending",
+  "avgDurationWeeks": 14,
+  "expertsPlanned": 14,
+  "reportPeriod": "Q4 2024",
+  "lastUpdated": "2024-02-13"
+}

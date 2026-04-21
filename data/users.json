@@ -1,0 +1,1118 @@
+[
+  {
+    "username": "admin",
+    "displayName": "Administrator",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "admin123",
+    "email": "admin@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "agnes.aguma",
+    "displayName": "Agnes Aguma",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Agnes2024",
+    "email": "agnes.aguma@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "james",
+    "displayName": "James",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "James2024",
+    "email": "james@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "faraji",
+    "displayName": "Faraji",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Faraji2024",
+    "email": "faraji@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "henry",
+    "displayName": "Henry",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Henry2024",
+    "email": "henry@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "loise",
+    "displayName": "Loise",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Loise2024",
+    "email": "loise@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "ebenezer",
+    "displayName": "Ebenezer",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "Ebenezer2024",
+    "email": "ebenezer@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "algeria",
+    "displayName": "Focal Point — Algeria",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "algeria@afcac2024",
+    "email": "fp.algeria@afcac.org",
+    "country": "Algeria"
+  },
+  {
+    "username": "angola",
+    "displayName": "Focal Point — Angola",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "angola@afcac2024",
+    "email": "fp.angola@afcac.org",
+    "country": "Angola"
+  },
+  {
+    "username": "benin",
+    "displayName": "Focal Point — Benin",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "benin@afcac2024",
+    "email": "fp.benin@afcac.org",
+    "country": "Benin"
+  },
+  {
+    "username": "botswana",
+    "displayName": "Focal Point — Botswana",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "botswana@afcac2024",
+    "email": "fp.botswana@afcac.org",
+    "country": "Botswana"
+  },
+  {
+    "username": "burkina_faso",
+    "displayName": "Focal Point — Burkina Faso",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "burkinafaso@afcac2024",
+    "email": "fp.burkinafaso@afcac.org",
+    "country": "Burkina Faso"
+  },
+  {
+    "username": "burundi",
+    "displayName": "Focal Point — Burundi",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "burundi@afcac2024",
+    "email": "fp.burundi@afcac.org",
+    "country": "Burundi"
+  },
+  {
+    "username": "cabo_verde",
+    "displayName": "Focal Point — Cabo Verde",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "caboverde@afcac2024",
+    "email": "fp.caboverde@afcac.org",
+    "country": "Cabo Verde"
+  },
+  {
+    "username": "cameroon",
+    "displayName": "Focal Point — Cameroon",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "cameroon@afcac2024",
+    "email": "fp.cameroon@afcac.org",
+    "country": "Cameroon"
+  },
+  {
+    "username": "car",
+    "displayName": "Focal Point — Central African Republic",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "car@afcac2024",
+    "email": "fp.car@afcac.org",
+    "country": "Central African Republic"
+  },
+  {
+    "username": "chad",
+    "displayName": "Focal Point — Chad",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "chad@afcac2024",
+    "email": "fp.chad@afcac.org",
+    "country": "Chad"
+  },
+  {
+    "username": "comoros",
+    "displayName": "Focal Point — Comoros",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "comoros@afcac2024",
+    "email": "fp.comoros@afcac.org",
+    "country": "Comoros"
+  },
+  {
+    "username": "congo",
+    "displayName": "Focal Point — Congo (Republic)",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "congo@afcac2024",
+    "email": "fp.congo@afcac.org",
+    "country": "Congo (Republic)"
+  },
+  {
+    "username": "drc",
+    "displayName": "Focal Point — DR Congo",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "drc@afcac2024",
+    "email": "fp.drc@afcac.org",
+    "country": "DR Congo"
+  },
+  {
+    "username": "djibouti",
+    "displayName": "Focal Point — Djibouti",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "djibouti@afcac2024",
+    "email": "fp.djibouti@afcac.org",
+    "country": "Djibouti"
+  },
+  {
+    "username": "egypt",
+    "displayName": "Focal Point — Egypt",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "egypt@afcac2024",
+    "email": "fp.egypt@afcac.org",
+    "country": "Egypt"
+  },
+  {
+    "username": "eq_guinea",
+    "displayName": "Focal Point — Equatorial Guinea",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "eqguinea@afcac2024",
+    "email": "fp.eqguinea@afcac.org",
+    "country": "Equatorial Guinea"
+  },
+  {
+    "username": "eritrea",
+    "displayName": "Focal Point — Eritrea",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "eritrea@afcac2024",
+    "email": "fp.eritrea@afcac.org",
+    "country": "Eritrea"
+  },
+  {
+    "username": "eswatini",
+    "displayName": "Focal Point — Eswatini",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "eswatini@afcac2024",
+    "email": "fp.eswatini@afcac.org",
+    "country": "Eswatini"
+  },
+  {
+    "username": "ethiopia",
+    "displayName": "Focal Point — Ethiopia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "ethiopia@afcac2024",
+    "email": "fp.ethiopia@afcac.org",
+    "country": "Ethiopia"
+  },
+  {
+    "username": "gabon",
+    "displayName": "Focal Point — Gabon",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "gabon@afcac2024",
+    "email": "fp.gabon@afcac.org",
+    "country": "Gabon"
+  },
+  {
+    "username": "gambia",
+    "displayName": "Focal Point — Gambia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "gambia@afcac2024",
+    "email": "fp.gambia@afcac.org",
+    "country": "Gambia"
+  },
+  {
+    "username": "ghana",
+    "displayName": "Focal Point — Ghana",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "ghana@afcac2024",
+    "email": "fp.ghana@afcac.org",
+    "country": "Ghana"
+  },
+  {
+    "username": "guinea",
+    "displayName": "Focal Point — Guinea",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "guinea@afcac2024",
+    "email": "fp.guinea@afcac.org",
+    "country": "Guinea"
+  },
+  {
+    "username": "guinea_bissau",
+    "displayName": "Focal Point — Guinea-Bissau",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "guineabissau@afcac2024",
+    "email": "fp.guineabissau@afcac.org",
+    "country": "Guinea-Bissau"
+  },
+  {
+    "username": "ivory_coast",
+    "displayName": "Focal Point — Ivory Coast",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "ivorycoast@afcac2024",
+    "email": "fp.ivorycoast@afcac.org",
+    "country": "Ivory Coast"
+  },
+  {
+    "username": "kenya",
+    "displayName": "Focal Point — Kenya",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "kenya@afcac2024",
+    "email": "fp.kenya@afcac.org",
+    "country": "Kenya"
+  },
+  {
+    "username": "lesotho",
+    "displayName": "Focal Point — Lesotho",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "lesotho@afcac2024",
+    "email": "fp.lesotho@afcac.org",
+    "country": "Lesotho"
+  },
+  {
+    "username": "liberia",
+    "displayName": "Focal Point — Liberia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "liberia@afcac2024",
+    "email": "fp.liberia@afcac.org",
+    "country": "Liberia"
+  },
+  {
+    "username": "libya",
+    "displayName": "Focal Point — Libya",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "libya@afcac2024",
+    "email": "fp.libya@afcac.org",
+    "country": "Libya"
+  },
+  {
+    "username": "madagascar",
+    "displayName": "Focal Point — Madagascar",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "madagascar@afcac2024",
+    "email": "fp.madagascar@afcac.org",
+    "country": "Madagascar"
+  },
+  {
+    "username": "malawi",
+    "displayName": "Focal Point — Malawi",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "malawi@afcac2024",
+    "email": "fp.malawi@afcac.org",
+    "country": "Malawi"
+  },
+  {
+    "username": "mali",
+    "displayName": "Focal Point — Mali",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "mali@afcac2024",
+    "email": "fp.mali@afcac.org",
+    "country": "Mali"
+  },
+  {
+    "username": "mauritania",
+    "displayName": "Focal Point — Mauritania",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "mauritania@afcac2024",
+    "email": "fp.mauritania@afcac.org",
+    "country": "Mauritania"
+  },
+  {
+    "username": "mauritius",
+    "displayName": "Focal Point — Mauritius",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "mauritius@afcac2024",
+    "email": "fp.mauritius@afcac.org",
+    "country": "Mauritius"
+  },
+  {
+    "username": "morocco",
+    "displayName": "Focal Point — Morocco",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "morocco@afcac2024",
+    "email": "fp.morocco@afcac.org",
+    "country": "Morocco"
+  },
+  {
+    "username": "mozambique",
+    "displayName": "Focal Point — Mozambique",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "mozambique@afcac2024",
+    "email": "fp.mozambique@afcac.org",
+    "country": "Mozambique"
+  },
+  {
+    "username": "namibia",
+    "displayName": "Focal Point — Namibia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "namibia@afcac2024",
+    "email": "fp.namibia@afcac.org",
+    "country": "Namibia"
+  },
+  {
+    "username": "niger",
+    "displayName": "Focal Point — Niger",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "niger@afcac2024",
+    "email": "fp.niger@afcac.org",
+    "country": "Niger"
+  },
+  {
+    "username": "nigeria",
+    "displayName": "Focal Point — Nigeria",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "nigeria@afcac2024",
+    "email": "fp.nigeria@afcac.org",
+    "country": "Nigeria"
+  },
+  {
+    "username": "rwanda",
+    "displayName": "Focal Point — Rwanda",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "rwanda@afcac2024",
+    "email": "fp.rwanda@afcac.org",
+    "country": "Rwanda"
+  },
+  {
+    "username": "sao_tome",
+    "displayName": "Focal Point — São Tomé & Príncipe",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "saotome@afcac2024",
+    "email": "fp.saotome@afcac.org",
+    "country": "São Tomé & Príncipe"
+  },
+  {
+    "username": "senegal",
+    "displayName": "Focal Point — Senegal",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "senegal@afcac2024",
+    "email": "fp.senegal@afcac.org",
+    "country": "Senegal"
+  },
+  {
+    "username": "seychelles",
+    "displayName": "Focal Point — Seychelles",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "seychelles@afcac2024",
+    "email": "fp.seychelles@afcac.org",
+    "country": "Seychelles"
+  },
+  {
+    "username": "sierra_leone",
+    "displayName": "Focal Point — Sierra Leone",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "sierraleone@afcac2024",
+    "email": "fp.sierraleone@afcac.org",
+    "country": "Sierra Leone"
+  },
+  {
+    "username": "somalia",
+    "displayName": "Focal Point — Somalia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "somalia@afcac2024",
+    "email": "fp.somalia@afcac.org",
+    "country": "Somalia"
+  },
+  {
+    "username": "south_africa",
+    "displayName": "Focal Point — South Africa",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "southafrica@afcac2024",
+    "email": "fp.southafrica@afcac.org",
+    "country": "South Africa"
+  },
+  {
+    "username": "south_sudan",
+    "displayName": "Focal Point — South Sudan",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "southsudan@afcac2024",
+    "email": "fp.southsudan@afcac.org",
+    "country": "South Sudan"
+  },
+  {
+    "username": "sudan",
+    "displayName": "Focal Point — Sudan",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "sudan@afcac2024",
+    "email": "fp.sudan@afcac.org",
+    "country": "Sudan"
+  },
+  {
+    "username": "tanzania",
+    "displayName": "Focal Point — Tanzania",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "tanzania@afcac2024",
+    "email": "fp.tanzania@afcac.org",
+    "country": "Tanzania"
+  },
+  {
+    "username": "togo",
+    "displayName": "Focal Point — Togo",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "togo@afcac2024",
+    "email": "fp.togo@afcac.org",
+    "country": "Togo"
+  },
+  {
+    "username": "tunisia",
+    "displayName": "Focal Point — Tunisia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "tunisia@afcac2024",
+    "email": "fp.tunisia@afcac.org",
+    "country": "Tunisia"
+  },
+  {
+    "username": "uganda",
+    "displayName": "Focal Point — Uganda",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "uganda@afcac2024",
+    "email": "fp.uganda@afcac.org",
+    "country": "Uganda"
+  },
+  {
+    "username": "zambia",
+    "displayName": "Focal Point — Zambia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "zambia@afcac2024",
+    "email": "fp.zambia@afcac.org",
+    "country": "Zambia"
+  },
+  {
+    "username": "zimbabwe",
+    "displayName": "Focal Point — Zimbabwe",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "zimbabwe@afcac2024",
+    "email": "fp.zimbabwe@afcac.org",
+    "country": "Zimbabwe"
+  },
+  {
+    "username": "henrique.cahanda",
+    "displayName": "Henrique Cahanda",
+    "devPassword": "Henrique2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "henrique.cahanda@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "bernardino.carlos",
+    "displayName": "Bernardino Carlos",
+    "devPassword": "Bernardino2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "bernardino.carlos@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "dansou.elysee",
+    "displayName": "DANSOU Elysee",
+    "devPassword": "Dansou2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "dansou.elysee@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "hounsa.firmin",
+    "displayName": "HOUNSA Firmin",
+    "devPassword": "Hounsa2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "hounsa.firmin@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "sia.lawankilia",
+    "displayName": "Sia Lawankilia",
+    "devPassword": "Sia2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "sia.lawankilia@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "kabore.alexandre",
+    "displayName": "Kabore Nebnoma Alexandre",
+    "devPassword": "Kabore2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "kabore.alexandre@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "bizimana.jeandedieu",
+    "displayName": "BIZIMANA Jean de Dieu",
+    "devPassword": "Bizimana2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "bizimana.jeandedieu@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mugabe.dieudonne",
+    "displayName": "MUGABE Dieudonne",
+    "devPassword": "Mugabe2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mugabe.dieudonne@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "nguie.disraely",
+    "displayName": "NGUIE Nietche Disraely",
+    "devPassword": "Nguie2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "nguie.disraely@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "nguimby.nsemi",
+    "displayName": "NGUIMBY NSEMI Loubyen Charem",
+    "devPassword": "Nguimby2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "nguimby.nsemi@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "coulibaly.siramane",
+    "displayName": "Mrs Coulibaly Siramane",
+    "devPassword": "Coulibaly2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "coulibaly.siramane@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "koffi.konan",
+    "displayName": "Mr. KOFFI Konan",
+    "devPassword": "Koffi2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "koffi.konan@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "tanele.sukati",
+    "displayName": "Tanele Sukati",
+    "devPassword": "Tanele2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "tanele.sukati@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "sipho.tsabedze",
+    "displayName": "Sipho Tsabedze",
+    "devPassword": "Sipho2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "sipho.tsabedze@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "tadesse.hundie",
+    "displayName": "Tadesse Hundie",
+    "devPassword": "Tadesse2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "tadesse.hundie@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "misrak.tilahun",
+    "displayName": "Misrak Tilahun",
+    "devPassword": "Misrak2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "misrak.tilahun@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "aguilar.biahute",
+    "displayName": "Aguilar BIAHUTE Nemesio",
+    "devPassword": "Aguilar2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "aguilar.biahute@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "owono.nchama",
+    "displayName": "OWONO NCHAMA Ajehandro Ona",
+    "devPassword": "Owono2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "owono.nchama@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mvola.ndong",
+    "displayName": "MVOLA NDONG Toussaint",
+    "devPassword": "Mvola2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mvola.ndong@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "maguendji.else",
+    "displayName": "MAGUENDJI Else Laurianne",
+    "devPassword": "Maguendji2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "maguendji.else@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "samuel.thompson",
+    "displayName": "Samuel Thompson",
+    "devPassword": "SamuelT2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "samuel.thompson@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "samuel.zormelo",
+    "displayName": "Samuel Kojo Zormelo",
+    "devPassword": "SamuelZ2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "samuel.zormelo@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "loise.mwangi",
+    "displayName": "Loise Wambui Mwangi",
+    "devPassword": "Loise2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "loise.mwangi@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "lawrence.amukono",
+    "displayName": "Lawrence Amukono",
+    "devPassword": "LawrenceA2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "lawrence.amukono@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "philip.whoewieh",
+    "displayName": "Philip K. Whoewieh",
+    "devPassword": "Philip2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "philip.whoewieh@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "varney.matthews",
+    "displayName": "Varney Matthews",
+    "devPassword": "Varney2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "varney.matthews@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "jaonarifetra.rabenandrasana",
+    "displayName": "Jaonarifetra RABENANDRASANA",
+    "devPassword": "Jaonarifetra2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "jaonarifetra.rabenandrasana@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mamiarisoa.randriamanana",
+    "displayName": "Mamiarisoa Andry RANDRIAMANANA",
+    "devPassword": "Mamiarisoa2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mamiarisoa.randriamanana@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "fredrick.chisepeya",
+    "displayName": "Fredrick Chisepeya",
+    "devPassword": "Fredrick2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "fredrick.chisepeya@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "michael.mononga",
+    "displayName": "Michael Mononga",
+    "devPassword": "Michael2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "michael.mononga@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "ousmane.guindo",
+    "displayName": "Ousmane Guindo",
+    "devPassword": "Ousmane2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "ousmane.guindo@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "nouhoun.diony",
+    "displayName": "Nouhoun Bakary Diony",
+    "devPassword": "Nouhoun2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "nouhoun.diony@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mohamed.ahmedheye",
+    "displayName": "Mohamed Abdallahi Ahmedheye",
+    "devPassword": "Mohamed2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mohamed.ahmedheye@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "chamessdine.vadel",
+    "displayName": "Chamessdine Cheikh Mohamed Vadel",
+    "devPassword": "Chamessdine2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "chamessdine.vadel@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "celia.langa",
+    "displayName": "Celia Balate Langa",
+    "devPassword": "Celia2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "celia.langa@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "arlindo.soto",
+    "displayName": "Arlindo Soto",
+    "devPassword": "Arlindo2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "arlindo.soto@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "george.matroos",
+    "displayName": "George Matroos",
+    "devPassword": "George2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "george.matroos@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "victor.kaurimuje",
+    "displayName": "Victor Kaurimuje",
+    "devPassword": "Victor2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "victor.kaurimuje@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "miko.chaibou",
+    "displayName": "MIKO Chaibou",
+    "devPassword": "Miko2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "miko.chaibou@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mahaman.kanta",
+    "displayName": "MAHAMAN KANTA Kanta",
+    "devPassword": "Mahaman2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mahaman.kanta@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "leopoldo.nascimento",
+    "displayName": "Leopoldo do Nascimento",
+    "devPassword": "Leopoldo2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "leopoldo.nascimento@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "madelayne.veracruz",
+    "displayName": "Madelayne Vera Cruz",
+    "devPassword": "Madelayne2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "madelayne.veracruz@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "john.mbembe",
+    "displayName": "John Foday Mbembe",
+    "devPassword": "John2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "john.mbembe@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "prince.fillie",
+    "displayName": "Prince Fillie",
+    "devPassword": "Prince2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "prince.fillie@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mamadou.niang",
+    "displayName": "Mamadou Niang",
+    "devPassword": "Mamadou2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mamadou.niang@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "thioune.niang",
+    "displayName": "Thioune Ndoumbe Niang",
+    "devPassword": "Thioune2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "thioune.niang@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "patience.mabasa",
+    "displayName": "Patience Mabasa",
+    "devPassword": "Patience2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "patience.mabasa@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "sandile.maphanga",
+    "displayName": "Sandile Maphanga",
+    "devPassword": "Sandile2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "sandile.maphanga@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "gcinokuhle.mkhonza",
+    "displayName": "Gcinokuhle Mkhonza",
+    "devPassword": "Gcinokuhle2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "gcinokuhle.mkhonza@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "johnson.telar",
+    "displayName": "Johnson Marun Telar",
+    "devPassword": "Johnson2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "johnson.telar@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mayuen.ajuk",
+    "displayName": "Mayuen Kol Ajuk",
+    "devPassword": "Mayuen2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mayuen.ajuk@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "dossa.luhindi",
+    "displayName": "Dossa Luhindi",
+    "devPassword": "Dossa2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "dossa.luhindi@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mwanaisha.salum",
+    "displayName": "Mwanaisha Salum",
+    "devPassword": "Mwanaisha2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mwanaisha.salum@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "kelewou.gnimdou",
+    "displayName": "Kelewou Gnimdou",
+    "devPassword": "Kelewou2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "kelewou.gnimdou@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "tiassou.kossi",
+    "displayName": "Tiassou Kossi",
+    "devPassword": "Tiassou2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "tiassou.kossi@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "edgar.guma",
+    "displayName": "Edgar Guma",
+    "devPassword": "Edgar2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "edgar.guma@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "lillian.lungu",
+    "displayName": "Lillian Lungu",
+    "devPassword": "Lillian2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "lillian.lungu@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "william.mfune",
+    "displayName": "William Mfune",
+    "devPassword": "William2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "william.mfune@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "lawrence.vudzijena",
+    "displayName": "Lawrence Vudzijena",
+    "devPassword": "LawrenceV2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "lawrence.vudzijena@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "jacob.sibanda",
+    "displayName": "Jacob Sibanda",
+    "devPassword": "Jacob2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "jacob.sibanda@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "frankline.omondi",
+    "displayName": "Frankline OMONDI",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "FranklineO2024",
+    "email": "frankline.omondi@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
+    "username": "ahmed.badr",
+    "displayName": "Ahmed Badr",
+    "devPassword": "AhmedB2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "ahmed.badr@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "mohamed.ali",
+    "displayName": "Mohamed Ali",
+    "devPassword": "MohamedA2025",
+    "role": "expert",
+    "passwordHash": "",
+    "email": "mohamed.ali@afcac.org",
+    "country": ""
+  }
+]

@@ -1,0 +1,626 @@
+[
+  {
+    "id": "T1.1",
+    "group": "Safety Trend",
+    "title": "Decreasing Accident Rate Trend",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State established mechanisms to monitor, analyze, and report on accident and serious incident occurrences, and confirms that the national accident/serious incident rate demonstrates a consistent decreasing trend over the past three years in alignment with the Revised Abuja Safety Targets Action Plan.",
+    "options": {
+      "0": "Not Started – Data unavailable or monitoring not yet established.",
+      "25": "Not Achieved – No decreasing trend observed.",
+      "50": "Partially Achieved – Decreasing trend observed but not consistently sustained.",
+      "75": "In Progress – Monitoring systems established but decreasing trend not yet evident.",
+      "100": "Fully Achieved – Sustained decreasing trend observed over the past three years."
+    }
+  },
+  {
+    "id": "T1.2",
+    "group": "Safety Trend",
+    "title": "Loss of Separation Reduction ≥50%",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "Has the State implemented monitoring and mitigation measures to reduce loss of separation occurrences, and confirms that national data demonstrates a continuous reduction trend of at least 50% in alignment with the Revised Abuja Safety Targets Action Plan.",
+    "options": {
+      "0": "Not Applicable – Data unavailable or monitoring not yet established.",
+      "25": "Not Achieved – No reduction trend observed.",
+      "50": "In Progress – Measures implemented but reduction not yet evident.",
+      "75": "Partially Achieved – Reduction trend observed but not yet reaching 50%.",
+      "100": "Fully Achieved – Continuous reduction of ≥50% attained and sustained."
+    }
+  },
+  {
+    "id": "T2.1",
+    "group": "Safety Oversight",
+    "title": "Autonomous CAA Established",
+    "pct": 75,
+    "status": "inprogress",
+    "deadline": "2027",
+    "question": "Has the State established and strengthened an autonomous Civil Aviation Authority (CAA) with independent regulatory oversight, sustainable sources of funding, and adequate resources to effectively carry out safety oversight and regulation of the aviation industry?",
+    "options": {
+      "0": "Not yet implemented.",
+      "25": "Started implementing (Beginning).",
+      "50": "Partially Implemented (In progress).",
+      "75": "Advanced Implementation.",
+      "100": "Fully implemented."
+    }
+  },
+  {
+    "id": "T2.2",
+    "group": "Safety Oversight",
+    "title": "Safety Oversight EI Score (CEs/PQs)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "2030",
+    "question": "What is the current status of your State's Effective Implementation (EI) score for the Critical Elements (CEs) of the safety oversight system, with particular focus on priority Protocol Questions (PQs)?",
+    "options": {
+      "0": "EI score: 0% – 25%.",
+      "25": "EI score: 26% – 50%.",
+      "50": "EI score: 51% – 74%.",
+      "75": "EI score: 75% – 84%.",
+      "100": "EI score: 85% – 100%."
+    }
+  },
+  {
+    "id": "T2.3",
+    "group": "Safety Oversight",
+    "title": "Independent Investigation Body",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2028",
+    "question": "Has the State established and strengthened an independent aircraft accident and incident investigation organization/unit, with sustainable sources of funding and adequate resources, to effectively carry out investigations into aircraft accidents and serious incidents, in alignment with the Revised Abuja Safety Targets Action Plan, with full implementation planned by 2028?",
+    "options": {
+      "0": "Not Yet Implemented – No independent investigation organization/unit has been established, but discussions or initial steps are underway.",
+      "25": "Planned for Implementation – Formal plans or commitments exist to establish and strengthen the organization/unit before 2028, but implementation has not yet started.",
+      "50": "Partially Implemented – The organization/unit exists but requires further strengthening (e.g., independence, funding, staffing, or resources are not yet fully sustainable).",
+      "75": "Implemented – The independent investigation organization/unit is established but not yet fully sustainable.",
+      "100": "Fully Implemented – The independent investigation organization/unit is established, operational, and sustainably funded with adequate resources."
+    }
+  },
+  {
+    "id": "T2.4",
+    "group": "Safety Oversight",
+    "title": "Support Departments Established",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "Has the State established and/or strengthened relevant departments or units (e.g., Meteorological services, Radioactive Materials regulatory entities, Communications authorities) that directly support State Safety functions, and are these entities provided with sustainable sources of funding and adequate resources to effectively carry out their respective functions?",
+    "options": {
+      "0": "Not Implemented – No relevant departments/units exist OR existing ones do not support State Safety functions. No evidence of sustainable funding/resources.",
+      "25": "Initiated – Some departments/units exist but are weak, fragmented, or lack clear mandates. Funding/resources are ad hoc or insufficient.",
+      "50": "Ongoing Implementation – Departments/units exist with defined mandates supporting State Safety functions. Funding/resources are available but not sustainable or consistently allocated.",
+      "75": "Implemented – All relevant departments/units are established and functional, with mandates aligned to State Safety functions. Sustainable funding and adequate resources are in place.",
+      "100": "Fully Implemented, Sustained and Strengthened – Departments/units are fully operational, continuously strengthened, and integrated into national safety oversight."
+    }
+  },
+  {
+    "id": "T3.1",
+    "group": "State Safety Programme",
+    "title": "SSP Foundation Implemented",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State established and implemented a State Safety Programme (SSP), including the designation of a responsible authority, development of an SSP framework aligned with ICAO Annex 19, and initiation of processes for safety risk management, safety assurance, and safety promotion?",
+    "options": {
+      "0": "Not yet initiated.",
+      "25": "Planning stage – framework under development.",
+      "50": "Partially implemented – some elements in place.",
+      "75": "Implemented.",
+      "100": "Fully Implemented, sustained and fully operational."
+    }
+  },
+  {
+    "id": "T3.2",
+    "group": "State Safety Programme",
+    "title": "NASP Published",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed, published, and formally communicated a National Aviation Safety Plan (NASP) in alignment with ICAO guidance, with publication completed by 31st December 2026?",
+    "options": {
+      "0": "No – NASP development not started.",
+      "25": "In progress – Draft NASP development started but not completed.",
+      "50": "Yes – NASP completed but not published.",
+      "75": "NASP published but not aligned to current GASP.",
+      "100": "NASP published and aligned with current GASP."
+    }
+  },
+  {
+    "id": "T3.3",
+    "group": "State Safety Programme",
+    "title": "SSP Effective Implementation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2028",
+    "question": "Has the State developed and implemented a State Safety Program (SSP) in line with ICAO requirements, and is it progressing toward effectiveness as per the Revised Abuja Safety Targets (A: by 2026 – Present; B: by 2028 – Present and effective)?",
+    "options": {
+      "0": "No SSP has been initiated.",
+      "25": "SSP framework drafted but not yet formally adopted or implemented.",
+      "50": "SSP formally established and partially implemented.",
+      "75": "SSP implemented with most components functional; evidence of monitoring and improvement, but not yet fully effective.",
+      "100": "SSP fully implemented, effective, and aligned with ICAO requirements; continuous improvement mechanisms in place."
+    }
+  },
+  {
+    "id": "T4.1",
+    "group": "Assistance & RASP",
+    "title": "Assistance Sought (Goals 2&3)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "If the State does not expect to meet Goals 2 (establishment of effective safety oversight system) and 3 (implementation of SSP) by December 2026, has your State formally sought assistance to strengthen its safety oversight capabilities?",
+    "options": {
+      "0": "No recognition of inability to meet Goals 2 and 3; no assistance sought.",
+      "25": "State has acknowledged challenges but has not yet initiated formal requests for assistance.",
+      "50": "State has submitted initial requests for assistance to AFCAC, ICAO, RSOOs or partners, but limited follow-up or engagement.",
+      "75": "State has actively sought assistance, with ongoing support programs or partnerships established, but not yet fully addressing oversight gaps.",
+      "100": "State has fully engaged with assistance mechanisms, implementing capacity-building measures, and demonstrably strengthening safety oversight capabilities."
+    }
+  },
+  {
+    "id": "T4.2",
+    "group": "Assistance & RASP",
+    "title": "Updated RASP Published",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State contributed to the publication of an updated Regional Aviation Safety Plan (RASP) for RASG-AFI, RASG-MID, or EUR RASG by the end of 2026, ensuring alignment with the latest edition of the ICAO Global Aviation Safety Plan (GASP)?",
+    "options": {
+      "0": "No contribution through NASP and no active participation in relevant AASPG activities.",
+      "25": "No contribution through NASP but moderate participation in relevant AASPG activities.",
+      "50": "No contribution through NASP but active participation in relevant AASPG activities.",
+      "75": "Yes, contribution through NASP but no active participation in relevant AASPG activities.",
+      "100": "Yes, contribution through NASP and active participation in relevant AASPG activities."
+    }
+  },
+  {
+    "id": "T5.1",
+    "group": "Industry Standards",
+    "title": "Safety Information Sharing",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "To what extent has the industry maintained an increasing trend in contributing safety information to regional and global safety information-sharing networks, in support of the development of National Aviation Safety Plans (NASPs) and Regional Aviation Safety Plans (RASPs)?",
+    "options": {
+      "0": "No contribution to safety information-sharing networks; no evidence of participation or data exchange.",
+      "25": "Limited contribution; occasional or ad-hoc sharing of safety information with minimal impact on NASPs/RASPs development.",
+      "50": "Moderate contribution; regular but incomplete sharing of safety information, with partial integration into NASPs/RASPs.",
+      "75": "Significant contribution; consistent and structured sharing of safety information, actively supporting NASPs/RASPs development.",
+      "100": "Full contribution; sustained and increasing trend of safety information sharing, fully integrated into NASPs/RASPs and regional safety frameworks."
+    }
+  },
+  {
+    "id": "T5.2",
+    "group": "Industry Standards",
+    "title": "IOSA/ISSA/ISAGO Participation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "To what extent have your industry service providers (airlines, ground handlers, etc.) participated in attending ICAO-recognized industry assessment programmes such as IOSA, ISSA, ISAGO, or equivalent?",
+    "options": {
+      "0": "Not Started – No service providers are enrolled in ICAO-recognized industry assessment programmes.",
+      "25": "Initial Implementation – A small proportion (up to one-quarter) of service providers are enrolled.",
+      "50": "Moderate Implementation – About half of service providers are enrolled.",
+      "75": "Advanced Implementation – A majority (three-quarters) of service providers are enrolled.",
+      "100": "Fully implemented – All eligible service providers are enrolled in ICAO-recognized industry assessment programmes."
+    }
+  },
+  {
+    "id": "T5.3",
+    "group": "Industry Standards",
+    "title": "Airlines IOSA/ISSA Registration",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "To what extent have eligible African airlines under the State's oversight attained acceptable operational safety standards through the globally recognized IATA IOSA/ISSA program, and sustained recurrent registration?",
+    "options": {
+      "0": "No eligible airline has attained IOSA/ISSA registration.",
+      "25": "Initial steps taken; some airlines are preparing for IOSA/ISSA audits but none have achieved registration.",
+      "50": "At least one eligible airline has successfully attained IOSA/ISSA registration, but recurrent registration is not yet sustained.",
+      "75": "Majority of eligible airlines have attained IOSA/ISSA registration, with some sustaining recurrent registration.",
+      "100": "All eligible airlines have attained IOSA/ISSA registration and are sustaining recurrent registration in line with global standards."
+    }
+  },
+  {
+    "id": "T5.4",
+    "group": "Industry Standards",
+    "title": "GSP ISAGO Certification",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Ongoing",
+    "question": "To what extent has the State ensured that eligible Ground Handling Service Providers (GSPs) attain and maintain acceptable operational safety standards through certification and ongoing compliance with the globally recognized IATA ISAGO program?",
+    "options": {
+      "0": "No eligible GSPs have been identified or engaged in ISAGO certification.",
+      "25": "Initial steps taken: some GSPs identified, awareness created, but no certification achieved yet.",
+      "50": "Partial implementation: at least one eligible GSP certified under ISAGO, but coverage is limited.",
+      "75": "Majority of eligible GSPs certified and maintaining compliance, with structured monitoring in place.",
+      "100": "Full implementation: all eligible GSPs certified under ISAGO, with continuous oversight and sustained compliance mechanisms."
+    }
+  },
+  {
+    "id": "T6.1",
+    "group": "Infrastructure",
+    "title": "ANS & Aerodrome Infrastructure ICAO Compliant",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Ongoing",
+    "question": "To what extent has the State established and maintained an increasing trend of air navigation infrastructure, interoperable systems, and aerodrome infrastructure that meet relevant ICAO Standards?",
+    "options": {
+      "0": "No evidence of implementation. No infrastructure development or alignment with ICAO Standards has been initiated.",
+      "25": "Initial steps taken. Limited infrastructure upgrades or planning activities are underway, but systems are not yet interoperable or ICAO-compliant.",
+      "50": "Moderate implementation. Some infrastructure and systems meet ICAO Standards, but coverage is partial and interoperability is inconsistent.",
+      "75": "Significant implementation. Most infrastructure and systems are ICAO-compliant, with interoperability achieved in key areas, though gaps remain.",
+      "100": "Full implementation. All air navigation and aerodrome infrastructure meet ICAO Standards, with sustained interoperability and continuous improvement trends."
+    }
+  },
+  {
+    "id": "T7.1",
+    "group": "Infrastructure",
+    "title": "Aerodrome Infrastructure Gap Analysis",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State identified and documented gaps in existing international aerodrome infrastructure in line with ICAO standards and the Revised Abuja Safety Targets, with a clear plan for addressing them by 2026?",
+    "options": {
+      "0": "No action taken. No assessment or documentation of infrastructure gaps has been initiated.",
+      "25": "Preliminary steps taken. Some gaps have been informally identified, but no comprehensive assessment or documentation exists.",
+      "50": "Partial progress. A formal assessment has been conducted, but documentation is incomplete or lacks alignment with ICAO standards.",
+      "75": "Significant progress. Gaps are fully identified and documented, with draft action plans developed, though not yet fully implemented.",
+      "100": "Full compliance. All gaps have been identified, documented, and integrated into a national action plan aligned with ICAO standards, with implementation underway."
+    }
+  },
+  {
+    "id": "T7.2",
+    "group": "Infrastructure",
+    "title": "ANS Infrastructure Gap Analysis",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State conducted a comprehensive assessment to identify gaps in existing air navigation services (ANS) infrastructure, and documented these findings in line with ICAO standards and the Revised Abuja Safety Targets by 2026?",
+    "options": {
+      "0": "No assessment initiated; no evidence of gap identification in ANS infrastructure.",
+      "25": "Preliminary steps taken (e.g., planning, partial data collection), but no formal gap analysis completed.",
+      "50": "Gap analysis conducted for some ANS infrastructure elements, but incomplete or not aligned with ICAO guidance.",
+      "75": "Comprehensive gap analysis completed and documented, covering most ANS infrastructure areas, with partial alignment to ICAO standards.",
+      "100": "Full gap analysis completed, documented, and validated; all ANS infrastructure gaps identified in accordance with ICAO standards and Abuja Safety Targets."
+    }
+  },
+  {
+    "id": "T8",
+    "group": "Aerodrome Certification",
+    "title": "All International Aerodromes Certified",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "2030",
+    "question": "To what extent has your State achieved certification of all international aerodromes in line with the Revised Abuja Safety Target requiring completion by 2030?",
+    "options": {
+      "0": "No international aerodrome certified.",
+      "25": "Initial steps taken; less than one-quarter of international aerodromes certified.",
+      "50": "Half of international aerodromes certified; certification program partially implemented.",
+      "75": "Majority of international aerodromes certified; nearing full compliance.",
+      "100": "All international aerodromes certified in accordance with ICAO requirements."
+    }
+  },
+  {
+    "id": "T9.1",
+    "group": "Search & Rescue",
+    "title": "SAR Organization Established",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "To what extent has the State established an effective and operational Search and Rescue (SAR) organization in line with the Revised Abuja Safety Target 9.1, including: National SAR Coordination Committee, National SAR Plan, SAR Agreements/MoUs with neighbours, multi-agency SAR exercises, cooperative link to GADSS, and ELT database integrated with COSPAS-SARSAT?",
+    "options": {
+      "0": "No action taken on any of the SAR requirements.",
+      "25": "Initial steps taken (e.g., SAR Committee established OR SAR Plan drafted), but most requirements remain incomplete.",
+      "50": "Partial implementation (e.g., SAR Committee and Plan in place, some agreements initiated, but regional exercises and GADSS/ELT database not yet operational).",
+      "75": "Advanced implementation (SAR Committee, Plan, and agreements completed; initial SAR exercises conducted; ELT database partially operational).",
+      "100": "Full compliance: All SAR requirements completed, operational, and tested, with cooperative links established and ELT database integrated with COSPAS-SARSAT."
+    }
+  },
+  {
+    "id": "T10.1",
+    "group": "AIS to AIM",
+    "title": "AIS-AIM Transition Plan",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed and implemented a national action plan for the transition from Aeronautical Information Services (AIS) to Aeronautical Information Management (AIM), including the effective implementation of Basic Building Blocks (BBBs) and the ASBU DAIM-B1 Elements applicable in the region, as per the eANP Volume III, to support AIS to AIM transition by December 2026?",
+    "options": {
+      "0": "No progress: No national action plan developed; no implementation of BBBs or ASBU DAIM-B1 elements.",
+      "25": "Initial progress: Draft national action plan exists; limited or pilot implementation of BBBs/ASBU DAIM-B1 elements.",
+      "50": "Partial implementation: National action plan formally adopted; moderate implementation of BBBs and some ASBU DAIM-B1 elements.",
+      "75": "Advanced implementation: National action plan operational; substantial implementation of BBBs and most ASBU DAIM-B1 elements.",
+      "100": "Full implementation: National action plan fully executed; complete and effective implementation of BBBs and all applicable ASBU DAIM-B1 elements in line with eANP Volume III."
+    }
+  },
+  {
+    "id": "T10.2",
+    "group": "AIS to AIM",
+    "title": "ASBU Block 0 D-AIM Implementation",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed and implemented a National Action Plan for the transition from Aeronautical Information Services (AIS) to Aeronautical Information Management (AIM), in alignment with ASBU Block 0 D-AIM, and is it on track for completion by the end of 2026?",
+    "options": {
+      "0": "No National Action Plan has been developed.",
+      "25": "Draft National Action Plan exists but has not been formally adopted or initiated.",
+      "50": "National Action Plan formally adopted; partial implementation underway (initial activities started, but not yet system-wide).",
+      "75": "National Action Plan implementation well advanced; majority of activities completed, with only final steps pending.",
+      "100": "National Action Plan fully implemented in accordance with ASBU Block 0 D-AIM requirements, operational by end of 2026."
+    }
+  },
+  {
+    "id": "T10.3",
+    "group": "AIS to AIM",
+    "title": "Central Aeronautical Database",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2028",
+    "question": "Has the State developed and initiated the implementation of a central Aeronautical Database program, aligned with continental harmonization objectives, to be operational by the end of 2028?",
+    "options": {
+      "0": "No action taken; no plans or initiatives in place.",
+      "25": "Initial planning stage; concept note or feasibility study developed, but no formal program launched.",
+      "50": "Program design completed; resources allocated and pilot activities initiated, but not yet operational.",
+      "75": "Database program partially implemented; operational in limited scope or within select domains, awaiting full integration.",
+      "100": "Fully implemented and operational central Aeronautical Database program harmonized and accessible across the continent."
+    }
+  },
+  {
+    "id": "T11.1",
+    "group": "PBN",
+    "title": "75% Instrument Runways with PBN",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "To what extent has the State implemented Performance-Based Navigation (PBN) procedures on instrument runways, in line with the Abuja Safety Target 11.1 requiring 75% implementation by 31st December 2026?",
+    "options": {
+      "0": "No instrument runways have implemented PBN procedures.",
+      "25": "PBN procedures implemented on up to 25% of instrument runways.",
+      "50": "PBN procedures implemented on up to 50% of instrument runways.",
+      "75": "PBN procedures implemented on at least 75% of instrument runways (minimum target compliance).",
+      "100": "PBN procedures implemented on all instrument runways."
+    }
+  },
+  {
+    "id": "T11.2",
+    "group": "PBN",
+    "title": "100% Instrument Runways with PBN",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State ensured the implementation of Performance-Based Navigation (PBN) procedures on 100% of instrument runways, in line with the Revised Abuja Safety Target 11.2, to be achieved by 31st December 2026?",
+    "options": {
+      "0": "No instrument runways have implemented PBN procedures.",
+      "25": "PBN procedures implemented on up to one-quarter of instrument runways.",
+      "50": "PBN procedures implemented on half of instrument runways.",
+      "75": "PBN procedures implemented on three-quarters of instrument runways.",
+      "100": "PBN procedures implemented on all instrument runways."
+    }
+  },
+  {
+    "id": "T12.1",
+    "group": "Seamless ANS",
+    "title": "ANS Infrastructure Gap Analysis",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State conducted a comprehensive ANS infrastructure gap analysis, in line with ICAO guidance, to identify deficiencies and requirements for the establishment of seamless Air Navigation Services in the AFI Region, with completion targeted by December 2026?",
+    "options": {
+      "0": "No action initiated; no plan or activity toward conducting the gap analysis.",
+      "25": "Preliminary steps taken (e.g., planning, stakeholder engagement, or partial data collection), but analysis not yet completed.",
+      "50": "Gap analysis partially conducted; some infrastructure areas assessed but not comprehensive.",
+      "75": "Gap analysis substantially completed; most infrastructure areas assessed, with draft findings available.",
+      "100": "Gap analysis fully completed, documented, validated, and formally reported to ICAO/AFCAC."
+    }
+  },
+  {
+    "id": "T12.2",
+    "group": "Seamless ANS",
+    "title": "Seamless Airspace Masterplan Support",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "To what extent has the State supported the development and implementation of the Seamless Airspace Masterplan, in line with the Revised Abuja Safety Target 12.2 (deadline: December 2026)?",
+    "options": {
+      "0": "No Action: No steps taken to engage with, support, or align national frameworks with the Seamless Airspace Masterplan.",
+      "25": "Initial Engagement: Preliminary discussions or awareness activities conducted; focal points identified but no formal commitment or documented plan in place.",
+      "50": "Partial Development: National action plan drafted or initial technical/operational measures underway; limited alignment with regional Seamless Airspace objectives.",
+      "75": "Advanced Implementation: Significant progress made; national frameworks, procedures, and infrastructure largely aligned with the Seamless Airspace Masterplan.",
+      "100": "Full Implementation: Seamless Airspace Masterplan fully integrated into national systems; operational procedures harmonized; State actively contributing to regional implementation."
+    }
+  },
+  {
+    "id": "T12.3",
+    "group": "Seamless ANS",
+    "title": "Harmonized ANS Provision",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "To what extent has the State implemented measures to ensure the provision of harmonized Air Navigation Services (ANS) in line with ICAO standards and regional agreements, with the goal of full compliance by December 2028?",
+    "options": {
+      "0": "No action taken. No national plan, framework, or commitment toward harmonized ANS provision.",
+      "25": "Initial steps taken. Draft policies, preliminary stakeholder consultations, or partial alignment with ICAO guidance exist, but no operational implementation yet.",
+      "50": "Moderate progress. National ANS framework established, some harmonization measures implemented, but significant gaps remain.",
+      "75": "Advanced implementation. Most harmonization measures in place, systems largely interoperable, coordination with regional partners ongoing, though minor gaps still exist.",
+      "100": "Full compliance achieved. Harmonized ANS fully operational, interoperable across regional boundaries, aligned with ICAO standards, and subject to continuous monitoring."
+    }
+  },
+  {
+    "id": "T12.4",
+    "group": "Seamless ANS",
+    "title": "RECs & ANSPs Initiatives Harmonized",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "To what extent has the State ensured that all initiatives formulated by the Regional Economic Communities (RECs) and Air Navigation Service Providers (ANSPs) within the AFI Region are harmonized in line with the December 31, 2028 deadline?",
+    "options": {
+      "0": "No action has been taken to harmonize REC and ANSP initiatives.",
+      "25": "Initial steps have been taken (e.g., consultations, draft frameworks), but harmonization is not yet operationalized.",
+      "50": "Partial harmonization achieved; some REC and ANSP initiatives are aligned, but gaps remain in coverage or implementation.",
+      "75": "Most initiatives are harmonized, with only minor outstanding issues requiring resolution.",
+      "100": "Full harmonization achieved; all REC and ANSP initiatives within the AFI Region are aligned and operational by the set deadline."
+    }
+  },
+  {
+    "id": "T13.1",
+    "group": "ASBU",
+    "title": "National ASBU Plan Developed",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has your State developed and formally adopted a National Aviation System Block Upgrade (ASBU) Plan in alignment with ICAO standards, and what is the current status of its implementation toward the 2036 completion target?",
+    "options": {
+      "0": "No National ASBU Plan has been initiated or documented.",
+      "25": "Draft National ASBU Plan exists but has not been formally adopted or approved by the State.",
+      "50": "National ASBU Plan formally adopted, with initial implementation steps underway (e.g., stakeholder engagement, resource allocation).",
+      "75": "National ASBU Plan under active implementation, with measurable progress across multiple ASBU modules and reporting mechanisms in place.",
+      "100": "National ASBU Plan fully developed, adopted, and implementation substantially completed, with monitoring and evaluation aligned to ICAO standards."
+    }
+  },
+  {
+    "id": "T13.2",
+    "group": "ASBU",
+    "title": "ASBU Block 0 (B0) Implemented",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2025",
+    "question": "To what extent has your State implemented the National ASBU Block 0 (B0) elements in alignment with the Regional Air Navigation Plan (ANP), with the goal of full implementation by 31st December 2025?",
+    "options": {
+      "0": "No ASBU B0 elements have been initiated or aligned with the Regional ANP.",
+      "25": "Initial steps taken: planning documents or partial adoption of ASBU B0 elements, but limited operational implementation.",
+      "50": "Moderate progress: several ASBU B0 elements implemented, with partial alignment to the Regional ANP.",
+      "75": "Significant progress: most ASBU B0 elements implemented and largely aligned with the Regional ANP, with minor gaps remaining.",
+      "100": "Full implementation: all ASBU B0 elements are operational and fully aligned with the Regional ANP by the target date."
+    }
+  },
+  {
+    "id": "T13.3",
+    "group": "ASBU",
+    "title": "ASBU Block 1 (B1) Implemented",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2028",
+    "question": "To what extent has your State implemented the Aviation System Block Upgrade (ASBU) Block 1 (B1) elements in line with the Regional Air Navigation Plan (ANP), with the goal of full implementation by 31 December 2028?",
+    "options": {
+      "0": "No implementation initiated; ASBU B1 elements not addressed in national plans.",
+      "25": "Initial steps taken; some elements identified in national planning but limited practical implementation.",
+      "50": "Partial implementation; several ASBU B1 elements operational, but gaps remain in alignment with the Regional ANP.",
+      "75": "Advanced implementation; most ASBU B1 elements operational and largely aligned with the Regional ANP, with minor outstanding actions.",
+      "100": "Full implementation achieved; all ASBU B1 elements operational and fully aligned with the Regional ANP by the target date."
+    }
+  },
+  {
+    "id": "T13.4",
+    "group": "ASBU",
+    "title": "ASBU Block 2 (B2) Implemented",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2030",
+    "question": "To what extent has the State implemented the Aviation System Block Upgrade (ASBU) Block 2 (B2) elements in alignment with the Regional Air Navigation Plan (ANP), with the goal of full implementation by 31st December 2030?",
+    "options": {
+      "0": "No ASBU B2 elements have been initiated or planned.",
+      "25": "Initial planning and limited implementation of ASBU B2 elements have begun, but progress is minimal and not yet aligned with the Regional ANP.",
+      "50": "Partial implementation achieved; several ASBU B2 elements are operational, though gaps remain in alignment with the Regional ANP.",
+      "75": "Majority of ASBU B2 elements implemented and largely aligned with the Regional ANP, with only minor outstanding actions required.",
+      "100": "Full implementation of all ASBU B2 elements completed and fully aligned with the Regional ANP."
+    }
+  },
+  {
+    "id": "T13.5",
+    "group": "ASBU",
+    "title": "ASBU Block 3 (B3) Implemented",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "Dec 2036",
+    "question": "To what extent has the State implemented the ICAO Aviation System Block Upgrade (ASBU) Block 3 (B3) Modules in alignment with the Regional Air Navigation Plan (ANP), with the goal of full implementation by 31 December 2036?",
+    "options": {
+      "0": "No action taken. No planning, policy, or initial steps toward ASBU B3 implementation.",
+      "25": "Initial planning stage. National roadmap drafted or partial alignment with Regional ANP identified, but limited practical implementation.",
+      "50": "Moderate progress. Some ASBU B3 modules implemented, with partial integration into national systems and ongoing capacity-building activities.",
+      "75": "Advanced implementation. Majority of ASBU B3 modules operational, aligned with Regional ANP, with monitoring and reporting mechanisms in place.",
+      "100": "Full implementation. All ASBU B3 modules operational, fully aligned with Regional ANP, with sustainable oversight and continuous improvement mechanisms."
+    }
+  },
+  {
+    "id": "T14.1",
+    "group": "CO2 Emissions",
+    "title": "CO2 Reduction Action Plan",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2026",
+    "question": "Has the State developed, updated, or reviewed its State Action Plan for CO₂ Emissions Reduction Activities within the last three years, in line with ICAO guidance, and is it on track to meet the deadline of 31st December 2026?",
+    "options": {
+      "0": "No State Action Plan has been developed, updated, or reviewed in the last three years.",
+      "25": "Initial steps taken (e.g., draft prepared, consultations initiated), but the Action Plan is not yet finalized or submitted.",
+      "50": "Action Plan has been developed or updated, but not fully aligned with ICAO guidance or pending formal approval/submission.",
+      "75": "Action Plan has been developed, updated, and submitted, with partial implementation of CO₂ reduction activities underway.",
+      "100": "Action Plan fully developed, updated/reviewed within the last three years, submitted to ICAO, and implementation of CO₂ reduction activities is actively monitored and reported."
+    }
+  },
+  {
+    "id": "T14.2",
+    "group": "CO2 Emissions",
+    "title": "CO2 Reduction Measures & Roadmap",
+    "pct": 0,
+    "status": "notstarted",
+    "deadline": "From 2026",
+    "question": "Does the State Action Plan quantify CO₂ reduction potential and develop a roadmap for implementing CO₂ reduction measures, with reviews conducted every three years?",
+    "options": {
+      "0": "No quantification of CO₂ reduction potential; no roadmap or review mechanism in place.",
+      "25": "Initial steps taken: CO₂ reduction potential quantified once, but no established roadmap or review cycle.",
+      "50": "CO₂ reduction potential quantified at least once; a draft roadmap exists, but reviews are irregular or incomplete.",
+      "75": "CO₂ reduction potential quantified every 3 years; roadmap developed and partially implemented; reviews conducted but not fully comprehensive.",
+      "100": "Full compliance: CO₂ reduction potential quantified every 3 years; roadmap fully developed and implemented; reviews systematically conducted every 3 years with documented actions."
+    }
+  },
+  {
+    "id": "T15.1",
+    "group": "ANSP Peer Review",
+    "title": "ANSPs Join Peer Review Programme",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2026",
+    "question": "Has the State ensured that all Air Navigation Service Providers (ANSPs) have formally joined and are actively participating in the African ANSP Peer Review Programme, in line with the requirement to achieve certification by 31st December 2026?",
+    "options": {
+      "0": "No ANSP has joined the Peer Review Program.",
+      "25": "Initial engagement: ANSP(s) have expressed intent or submitted preliminary documentation, but formal enrolment is incomplete.",
+      "50": "Partial implementation: At least half of ANSPs have formally joined the Peer Review Programme, but participation is not yet consistent.",
+      "75": "Advanced implementation: Majority of ANSPs are enrolled and actively participating in peer review activities, with certification processes underway.",
+      "100": "Full implementation: All ANSPs have joined and are actively participating in the Peer Review Programme, with certification achieved or in final stages."
+    }
+  },
+  {
+    "id": "T15.2",
+    "group": "ANSP Peer Review",
+    "title": "ANSP SMS Maturity (50% by 2026)",
+    "pct": 50,
+    "status": "inprogress",
+    "deadline": "Dec 2028",
+    "question": "To what extent has the Air Navigation Service Provider (ANSP) achieved SMS (Safety Management System) maturity in line with Target 15.2, which requires at least 50% maturity by 31 December 2026, and full (100%) maturity by 31 December 2028?",
+    "options": {
+      "0": "No SMS maturity achieved; implementation has not started.",
+      "25": "Initial steps taken; partial documentation or fragmented processes exist, but SMS is not yet functional.",
+      "50": "SMS is established and functional; meets minimum maturity requirements expected by December 2026.",
+      "75": "SMS is well-integrated; proactive safety management practices are in place, with measurable improvements.",
+      "100": "SMS fully matured; comprehensive, sustainable, and continuously improved in line with ICAO standards and Abuja Targets."
+    }
+  },
+  {
+    "id": "T15.3",
+    "group": "ANSP Peer Review",
+    "title": "ANSP Certification",
+    "pct": 25,
+    "status": "delayed",
+    "deadline": "Dec 2036",
+    "question": "Has the Air Navigation Service Provider (ANSP) attained formal certification in accordance with ICAO standards and national regulatory requirements, as part of the commitment to achieve full certification by 31st December 2036?",
+    "options": {
+      "0": "No progress initiated; ANSP has not begun certification process.",
+      "25": "Initial steps taken; certification framework or preparatory activities (e.g., gap analysis, documentation review) have commenced.",
+      "50": "Certification process is underway; partial compliance achieved, with audits or assessments in progress.",
+      "75": "Significant progress; ANSP has met most certification requirements and is in final stages of approval.",
+      "100": "Full certification attained and formally recognized by the national regulatory authority."
+    }
+  }
+]
