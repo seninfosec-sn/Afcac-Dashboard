@@ -9,7 +9,9 @@ type SortKey = keyof CountryRow;
 
 export default function BreakdownTable({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
   const { t } = useLanguage();
-  const [sorted, setSorted] = useState<CountryRow[]>(countries);
+  const [sorted, setSorted] = useState<CountryRow[]>(
+    [...countries].sort((a, b) => a.country.localeCompare(b.country))
+  );
   const [sortCol, setSortCol] = useState(-1);
   const [sortAsc, setSortAsc] = useState(true);
 
