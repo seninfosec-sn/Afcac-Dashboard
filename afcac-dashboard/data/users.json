@@ -1195,5 +1195,14 @@
     "devPassword": "Shettima2024",
     "email": "babazau.shettima@afcac.org",
     "country": ""
+  },
+  {
+    "username": "mayun",
+    "displayName": "Mayun",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Mayun2024",
+    "email": "mayun@afcac.org",
+    "country": ""
   }
 ]
