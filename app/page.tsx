@@ -12,6 +12,7 @@ import BreakdownTable from "@/components/BreakdownTable";
 import TargetGrid from "@/components/TargetGrid";
 import AfricaMap from "@/components/AfricaMap";
 import StatusDonut from "@/components/StatusDonut";
+import CountryReportCard from "@/components/CountryReportCard";
 
 export const dynamic = "force-dynamic"; // always fresh data
 
@@ -98,6 +99,20 @@ export default async function DashboardPage() {
         {/* Section 5: Safety Targets */}
         <div className="section-label">{t(locale, "questProgress")}</div>
         <TargetGrid targets={targets} isAdmin={isAdmin} />
+
+        {/* Section 6: Download Reports (all authenticated users) */}
+        {session && (
+          <>
+            <div className="section-label">{t(locale, "reportSection")}</div>
+            <CountryReportCard
+              kpis={kpis}
+              actions={actions}
+              countries={countries}
+              targets={targets}
+              userCountry={userCountry}
+            />
+          </>
+        )}
 
       </div>
 

@@ -112,6 +112,16 @@ export const translations = {
     downloadExcel: "Download Excel",
     downloadPdf: "Download PDF",
 
+    // Country Report Card
+    reportSection: "Download Country Report",
+    reportDownload: "Download My Report",
+    reportGenerating: "Generating…",
+    reportExcelDesc: "Multi-sheet Excel: KPIs · Targets · Actions",
+    reportPdfDesc: "Formatted PDF report with all sections",
+    reportPeriodLabel: "Report Period",
+    reportCountryLabel: "Country",
+    reportAllCountries: "All Countries (Aggregate)",
+
     // Login
     loginTitle: "AFCAC Dashboard",
     loginSub: "Secure Access · Login",
@@ -333,6 +343,16 @@ export const translations = {
     downloadExcel: "Télécharger Excel",
     downloadPdf: "Télécharger PDF",
 
+    // Country Report Card
+    reportSection: "Télécharger le Rapport Pays",
+    reportDownload: "Télécharger Mon Rapport",
+    reportGenerating: "Génération…",
+    reportExcelDesc: "Excel multi-feuilles : KPI · Objectifs · Actions",
+    reportPdfDesc: "Rapport PDF formaté avec toutes les sections",
+    reportPeriodLabel: "Période du rapport",
+    reportCountryLabel: "Pays",
+    reportAllCountries: "Tous les pays (Agrégat)",
+
     // Login
     loginTitle: "AFCAC Dashboard",
     loginSub: "Accès Sécurisé · Connexion",
@@ -553,6 +573,16 @@ export const translations = {
     // ExportButtons
     downloadExcel: "Baixar Excel",
     downloadPdf: "Baixar PDF",
+
+    // Country Report Card
+    reportSection: "Baixar Relatório do País",
+    reportDownload: "Baixar Meu Relatório",
+    reportGenerating: "A gerar…",
+    reportExcelDesc: "Excel multi-folhas: KPI · Metas · Ações",
+    reportPdfDesc: "Relatório PDF formatado com todas as secções",
+    reportPeriodLabel: "Período do relatório",
+    reportCountryLabel: "País",
+    reportAllCountries: "Todos os países (Agregado)",
 
     // Login
     loginTitle: "AFCAC Dashboard",
