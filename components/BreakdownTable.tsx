@@ -7,7 +7,7 @@ import { useLanguage } from "./LanguageProvider";
 
 type SortKey = keyof CountryRow;
 
-export default function BreakdownTable({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
+export default function BreakdownTable({ countries, isAdmin, canExport }: { countries: CountryRow[]; isAdmin?: boolean; canExport?: boolean }) {
   const { t } = useLanguage();
   const [sorted, setSorted] = useState<CountryRow[]>(
     [...countries].sort((a, b) => a.country.localeCompare(b.country))
@@ -51,7 +51,7 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
       <div className="card-head">
         <span className="card-head-title">{t("actionPlanBreakdown")}</span>
         <span className="card-head-badge">{sorted.length} {t("countries")}</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll" style={{ maxHeight: "none" }}>
         <table className="dtable">

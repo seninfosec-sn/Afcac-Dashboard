@@ -4,7 +4,7 @@ import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
 import { useLanguage } from "./LanguageProvider";
 
-export default function StatusBar({ kpis, isAdmin }: { kpis: KpiData; isAdmin?: boolean }) {
+export default function StatusBar({ kpis, isAdmin, canExport }: { kpis: KpiData; isAdmin?: boolean; canExport?: boolean }) {
   const { t } = useLanguage();
 
   const segs = [
@@ -34,7 +34,7 @@ export default function StatusBar({ kpis, isAdmin }: { kpis: KpiData; isAdmin?: 
       <div className="card-head">
         <span className="card-head-title">{t("statusDistribution")}</span>
         <span className="card-head-badge">{kpis.totalActions} {t("actions")}</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="card-body" style={{ flex: 1 }}>
         {/* Stacked bar */}

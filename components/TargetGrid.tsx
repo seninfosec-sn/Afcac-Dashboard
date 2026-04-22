@@ -34,7 +34,7 @@ function groupNum(id: string): number {
   return parseInt(id.replace(/^T/, "").split(".")[0], 10);
 }
 
-export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[]; isAdmin?: boolean }) {
+export default function TargetGrid({ targets, isAdmin, canExport }: { targets: TargetRow[]; isAdmin?: boolean; canExport?: boolean }) {
   const { t } = useLanguage();
 
   function statusInfo(pct: number): { label: string; cls: string } {
@@ -80,7 +80,7 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
       <div className="card-head">
         <span className="card-head-title">{t("targetAchievement")}</span>
         <span className="card-head-badge">{t("continentalScore")} · {globalAvg}%</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
 
       <div className="card-body">

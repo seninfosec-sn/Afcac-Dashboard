@@ -82,23 +82,23 @@ export default async function DashboardPage() {
         <div className="section-label">{t(locale, "statusOverview")}</div>
         <div className="row-wide">
           <StatusDonut kpis={kpis} isAdmin={isAdmin} />
-          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} />
+          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} canExport={!!session} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
         <div className="section-label">{t(locale, "geoOverview")}</div>
         <div className="row-map">
           <AfricaMap countries={countries} isAdmin={isAdmin} />
-          <StatusBar kpis={kpis} isAdmin={isAdmin} />
+          <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} />
         </div>
 
         {/* Section 4: Country Breakdown */}
         <div className="section-label">{t(locale, "countryBreakdown")}</div>
-        <BreakdownTable countries={countries} isAdmin={isAdmin} />
+        <BreakdownTable countries={countries} isAdmin={isAdmin} canExport={!!session} />
 
         {/* Section 5: Safety Targets */}
         <div className="section-label">{t(locale, "questProgress")}</div>
-        <TargetGrid targets={targets} isAdmin={isAdmin} />
+        <TargetGrid targets={targets} isAdmin={isAdmin} canExport={!!session} />
 
         {/* Section 6: Download Reports (all authenticated users) */}
         {session && (

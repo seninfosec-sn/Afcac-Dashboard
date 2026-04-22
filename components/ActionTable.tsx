@@ -22,11 +22,13 @@ export default function ActionTable({
   targets = [],
   countryTargets = {},
   isAdmin,
+  canExport,
 }: {
   actions: ActionRow[];
   targets?: TargetRow[];
   countryTargets?: Record<string, TargetRow[]>;
   isAdmin?: boolean;
+  canExport?: boolean;
 }) {
   const { t } = useLanguage();
 
@@ -91,7 +93,7 @@ export default function ActionTable({
       <div className="card-head">
         <span className="card-head-title">{t("actionPlanDetail")}</span>
         <span className="card-head-badge">{sorted.length} {t("rows")}</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll">
         <table className="dtable">
