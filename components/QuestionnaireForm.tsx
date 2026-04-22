@@ -12,9 +12,11 @@ const COLORS: Record<number, string> = {
 };
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 
-interface Props { formNum: 1 | 2; }
+const ADMIN_ONLY_TARGETS = ['T4.2', 'T10.3', 'T12.4'];
 
-export default function QuestionnaireForm({ formNum }: Props) {
+interface Props { formNum: 1 | 2; isAdmin?: boolean; }
+
+export default function QuestionnaireForm({ formNum, isAdmin = false }: Props) {
   const { locale, t } = useLanguage();
 
   const [answers, setAnswers]   = useState<Record<string, Answer>>({});
@@ -24,8 +26,10 @@ export default function QuestionnaireForm({ formNum }: Props) {
   const [showSummary, setShowSummary] = useState(false);
   const [toast, setToast]       = useState<{ msg: string; type: 'ok' | 'warn' } | null>(null);
 
-  // Localize all questions based on current language
-  const questions = QUESTIONS.map(q => getLocalizedQuestion(q, locale));
+  // Localize all questions and filter restricted targets for non-admin users
+  const questions = QUESTIONS
+    .filter(q => isAdmin || !ADMIN_ONLY_TARGETS.includes(q.id))
+    .map(q => getLocalizedQuestion(q, locale));
 
   const answered  = Object.keys(answers).length;
   const total     = questions.length;
