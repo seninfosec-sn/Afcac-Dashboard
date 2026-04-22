@@ -1114,5 +1114,86 @@
     "passwordHash": "",
     "email": "mohamed.ali@afcac.org",
     "country": ""
+  },
+  {
+    "username": "paul.rwegasha",
+    "displayName": "Paul Rwegasha",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Rwegasha2024",
+    "email": "paul.rwegasha@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "vivien.malack",
+    "displayName": "Vivien Malack",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Malack2024",
+    "email": "vivien.malack@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "oche.victor-elias",
+    "displayName": "Oche Victor-Elias",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Victor2024",
+    "email": "oche.victor-elias@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "jackline.kwagala",
+    "displayName": "Jackline Kwagala",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Kwagala2024",
+    "email": "jackline.kwagala@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "sylvestre.sinarinzi",
+    "displayName": "Sylvestre Sinarinzi",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Sinarinzi2024",
+    "email": "sylvestre.sinarinzi@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "beloved.mupfurururwa",
+    "displayName": "Beloved Mupfurururwa",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Beloved2024",
+    "email": "beloved.mupfurururwa@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "edgar.dupont",
+    "displayName": "Edgar Dupont",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Dupont2024",
+    "email": "edgar.dupont@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "katchienne.silue",
+    "displayName": "Katchienne Silue",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Silue2024",
+    "email": "katchienne.silue@afcac.org",
+    "country": ""
+  },
+  {
+    "username": "babazau.shettima",
+    "displayName": "Babazau Shettima",
+    "role": "focal_point",
+    "passwordHash": "",
+    "devPassword": "Shettima2024",
+    "email": "babazau.shettima@afcac.org",
+    "country": ""
   }
 ]
