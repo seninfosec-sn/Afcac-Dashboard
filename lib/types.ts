@@ -79,7 +79,7 @@ export interface ExpertStat {
   avgTargetsPerUpdate: number;
 }
 
-export type UserRole = "admin" | "expert";
+export type UserRole = "admin" | "focal_point" | "expert";
 
 export interface SessionEntry {
   sessionId: string;

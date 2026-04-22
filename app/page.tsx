@@ -1,4 +1,4 @@
-import { getDashboardData, getTopExperts, getAllCountryTargets } from "@/lib/data";
+import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { t } from "@/lib/i18n";
@@ -20,13 +20,29 @@ export default async function DashboardPage() {
   const langCookie = cookieStore.get("lang")?.value;
   const locale: Locale = langCookie === "fr" || langCookie === "pt" ? langCookie : "en";
 
-  const [{ kpis, actions, countries, targets }, experts, countryTargets, session] = await Promise.all([
+  const [rawData, experts, allCountryTargets, session] = await Promise.all([
     getDashboardData(),
     getTopExperts(3),
     getAllCountryTargets(),
     getServerSession(),
   ]);
+
   const isAdmin = session?.role === "admin";
+
+  // Determine user country for focal_point filtering
+  let userCountry: string | null = null;
+  if (session && !isAdmin) {
+    const appUser = await findUser(session.username);
+    userCountry = appUser?.country?.trim() || null;
+  }
+
+  // Apply country filter for non-admin users with an assigned country
+  const filtered = (!isAdmin && userCountry)
+    ? filterDashboardForCountry(rawData, allCountryTargets, userCountry)
+    : null;
+
+  const { kpis, actions, countries, targets } = filtered ?? rawData;
+  const countryTargets = filtered?.countryTargets ?? allCountryTargets;
 
   return (
     <>

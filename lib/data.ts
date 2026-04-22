@@ -199,6 +199,40 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   await saveCountries(countries);
 }
 
+/* ── Country-filtered dashboard ─────────────────── */
+
+export function filterDashboardForCountry(
+  data: DashboardData,
+  countryTargets: Record<string, TargetRow[]>,
+  country: string
+): DashboardData & { countryTargets: Record<string, TargetRow[]> } {
+  const actions   = data.actions.filter((a) => a.country === country);
+  const countries = data.countries.filter((c) => c.country === country);
+  const targets   = countryTargets[country] ?? data.targets.map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
+
+  const total = actions.length || 1;
+  const count = (status: string) => actions.filter((a) => a.status === status).length;
+
+  const kpis: KpiData = {
+    ...data.kpis,
+    totalCountries:     1,
+    totalActions:       actions.length,
+    pctCompleted:       Math.round((count("completed")  / total) * 100),
+    pctInProgress:      Math.round((count("inprogress") / total) * 100),
+    pctDelayed:         Math.round((count("delayed")    / total) * 100),
+    pctOnHold:          Math.round((count("onhold")     / total) * 100),
+    pctNotStarted:      Math.round((count("notstarted") / total) * 100),
+  };
+
+  return {
+    kpis,
+    actions,
+    countries,
+    targets,
+    countryTargets: { [country]: targets },
+  };
+}
+
 /* ── Users (Neon DB primary, JSON file fallback) ─── */
 
 export async function getUsers(): Promise<AppUser[]> {
