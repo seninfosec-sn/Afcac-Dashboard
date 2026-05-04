@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { QUESTIONS, AFRICAN_STATES, type Question } from '@/data/questions';
 import { getLocalizedQuestion } from '@/data/questions-i18n';
 import { useLanguage } from '@/components/LanguageProvider';
+import DocsDropdown from '@/components/DocsDropdown';
 
 interface Answer { pct: number; optIdx: number; label: string; }
 
@@ -141,6 +142,7 @@ export default function QuestionnaireForm({ formNum, isAdmin = false }: Props) {
             </div>
             <span className="h-pct">{pct}%</span>
           </div>
+          <DocsDropdown show={true} />
           <button className="hbtn hbtn-ghost" onClick={() => setShowSummary(true)}>{t('qSummary')}</button>
           <button className="hbtn hbtn-gold" onClick={handleSubmit}>{t('qSubmit')}</button>
         </div>

@@ -5,6 +5,7 @@ import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import HeaderControls from "@/components/HeaderControls";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DocsDropdown from "@/components/DocsDropdown";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -49,6 +50,7 @@ export default async function DashboardPage() {
               📅 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 11 }}>{kpis.reportPeriod}</span>
             </div>
             <LanguageSwitcher />
+            <DocsDropdown show={!!session} />
             <HeaderControls session={session} />
           </div>
         </div>
@@ -81,7 +83,7 @@ export default async function DashboardPage() {
 
         {/* Section 5: Safety Targets */}
         <div className="section-label">{t(locale, "questProgress")}</div>
-        <TargetGrid targets={targets} isAdmin={isAdmin} />
+        <TargetGrid targets={targets} isAdmin={isAdmin} allCountryTargets={isAdmin ? countryTargets : undefined} />
 
       </div>
 

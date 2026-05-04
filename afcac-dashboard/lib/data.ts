@@ -1,4 +1,4 @@
-import fs from "fs";
+﻿import fs from "fs";
 import path from "path";
 import { kvGet, kvSet, setupSchema } from "./db";
 import type { KpiData, ActionRow, ActionStatus, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
@@ -11,7 +11,7 @@ async function ensureSchema() {
   schemaReady = true;
 }
 
-// JSON files are read-only seeds (bundled at build time — readable on Vercel too)
+// JSON files are read-only seeds (bundled at build time â€” readable on Vercel too)
 const SOURCE_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(process.cwd(), "data");
@@ -40,7 +40,7 @@ async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
   return data;
 }
 
-/* ── Readers ─────────────────────────────────────── */
+/* â”€â”€ Readers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export async function getKpis(): Promise<KpiData> {
   return dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
@@ -65,7 +65,7 @@ export async function getDashboardData(): Promise<DashboardData> {
   return { kpis, actions, countries, targets };
 }
 
-/* ── Writers ─────────────────────────────────────── */
+/* â”€â”€ Writers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export async function saveKpis(data: KpiData): Promise<void> {
   await kvSet(K.kpis, data);
@@ -92,7 +92,7 @@ export async function saveDashboardData(data: DashboardData): Promise<void> {
   ]);
 }
 
-/* ── Country-specific targets ───────────────────── */
+/* â”€â”€ Country-specific targets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const COUNTRY_REGIONS: Record<string, string> = {
   "Algeria": "North Africa",     "Angola": "Southern Africa",   "Benin": "West Africa",
@@ -108,7 +108,7 @@ const COUNTRY_REGIONS: Record<string, string> = {
   "Malawi": "East Africa",       "Mali": "West Africa",         "Mauritania": "North Africa",
   "Mauritius": "East Africa",    "Morocco": "North Africa",     "Mozambique": "Southern Africa",
   "Namibia": "Southern Africa",  "Niger": "West Africa",        "Nigeria": "West Africa",
-  "Rwanda": "East Africa",       "São Tomé & Príncipe": "Central Africa", "Senegal": "West Africa",
+  "Rwanda": "East Africa",       "SÃ£o TomÃ© & PrÃ­ncipe": "Central Africa", "Senegal": "West Africa",
   "Seychelles": "East Africa",   "Sierra Leone": "West Africa", "Somalia": "East Africa",
   "South Africa": "Southern Africa", "South Sudan": "East Africa", "Sudan": "North Africa",
   "Tanzania": "East Africa",     "Togo": "West Africa",         "Tunisia": "North Africa",
@@ -133,7 +133,7 @@ export async function saveCountryTargets(country: string, targets: TargetRow[]):
   all[country] = targets;
   await kvSet(K.countryTargets, all);
 
-  // 2–4. Update all derived data in parallel where possible
+  // 2â€“4. Update all derived data in parallel where possible
   await Promise.all([
     syncCountryStats(country, targets),
     syncActionRow(country, targets),
@@ -201,14 +201,14 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   const countries = await getCountries();
   const idx = countries.findIndex((c) => c.country === country);
   if (idx >= 0) {
-    countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, onhold: 0, notstarted };
+    countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, notstarted };
   } else {
-    countries.push({ country, region: COUNTRY_REGIONS[country] ?? "Africa", actions: total, completed, inprogress, delayed, onhold: 0, notstarted, budget: 0, entity: "CAA" });
+    countries.push({ country, region: COUNTRY_REGIONS[country] ?? "Africa", actions: total, completed, inprogress, delayed, notstarted, budget: 0, entity: "CAA" });
   }
   await saveCountries(countries);
 }
 
-/* ── Users (Neon DB primary, JSON file fallback) ─── */
+/* â”€â”€ Users (Neon DB primary, JSON file fallback) â”€â”€â”€ */
 
 export async function getUsers(): Promise<AppUser[]> {
   try {
@@ -224,7 +224,7 @@ export async function findUser(username: string): Promise<AppUser | null> {
   return users.find((u) => u.username.toLowerCase() === normalized) ?? null;
 }
 
-/* ── Update logs ─────────────────────────────────── */
+/* â”€â”€ Update logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export async function getUpdateLogs(): Promise<UpdateLog[]> {
   return (await kvGet<UpdateLog[]>(K.updates)) ?? [];
@@ -257,3 +257,4 @@ export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
     .sort((a, b) => b.totalUpdates - a.totalUpdates)
     .slice(0, limit);
 }
+

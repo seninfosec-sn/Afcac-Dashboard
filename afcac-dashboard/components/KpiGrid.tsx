@@ -52,9 +52,10 @@ export default function KpiGrid({ kpis, experts, locale = "en" }: { kpis: KpiDat
         trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".2s"
       />
       <KpiCard
-        colorClass="k-teal" icon="⏱" iconBg="#e8f2f8"
-        value={String(kpis.avgDurationWeeks)} label={t(locale, "avgDuration")}
-        trend={t(locale, "monthsAvg")} trendClass="trend-flat" delay=".25s"
+        colorClass="k-red" icon="⏸" iconBg="#fdecea"
+        value={`${kpis.pctNotStarted}%`} valueColor="var(--c-notstarted)"
+        label={t(locale, "pctNotStarted")}
+        trend={`▼ ${kpis.pctNotStartedTrend}`} trendClass="trend-down" delay=".25s"
       />
       <KpiCard
         colorClass="k-blue" icon="👥" iconBg="#eee8f8"

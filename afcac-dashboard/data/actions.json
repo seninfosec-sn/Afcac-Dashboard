@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "country": "Algeria",
     "action": "T6.1",
@@ -23,7 +23,7 @@
     "country": "DR Congo",
     "action": "T13.1",
     "section": "ASBU",
-    "status": "onhold",
+    "status": "notstarted",
     "start": 2024,
     "end": 2025,
     "duration": 14,
@@ -460,7 +460,7 @@
     "budget": 0
   },
   {
-    "country": "São Tomé & Príncipe",
+    "country": "SÃ£o TomÃ© & PrÃ­ncipe",
     "action": "AST",
     "section": "Safety Targets Questionnaire",
     "status": "notstarted",

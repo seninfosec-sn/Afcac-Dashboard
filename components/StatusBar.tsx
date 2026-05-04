@@ -4,14 +4,14 @@ import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
 import { useLanguage } from "./LanguageProvider";
 
-export default function StatusBar({ kpis, isAdmin, canExport }: { kpis: KpiData; isAdmin?: boolean; canExport?: boolean }) {
+export default function StatusBar({ kpis, isAdmin, canExport, isCountryProfile }: { kpis: KpiData; isAdmin?: boolean; canExport?: boolean; isCountryProfile?: boolean }) {
   const { t } = useLanguage();
+  const titleKey = isCountryProfile ? "stateStatusDistribution" : "statusDistribution";
 
   const segs = [
     { pct: kpis.pctCompleted,   color: "var(--c-complete)", label: t("completed"),   hex: "#2d9d5e" },
     { pct: kpis.pctInProgress,  color: "var(--c-progress)", label: t("inProgress"),  hex: "#f0a500" },
     { pct: kpis.pctDelayed,     color: "var(--c-delayed)",  label: t("delayed"),     hex: "#e07b39" },
-    { pct: kpis.pctOnHold,      color: "var(--c-onhold)",   label: t("onHold"),      hex: "#c0392b" },
     { pct: kpis.pctNotStarted,  color: "var(--c-nostart)",  label: t("notStarted"),  hex: "#95a5a6" },
   ];
 
@@ -19,20 +19,20 @@ export default function StatusBar({ kpis, isAdmin, canExport }: { kpis: KpiData;
     const headers = [t("colStatus"), "(%)", t("totalActions")];
     const rows = segs.map(s => [s.label, s.pct, Math.round(s.pct * kpis.totalActions / 100)]);
     rows.push(["TOTAL", 100, kpis.totalActions] as (string | number)[]);
-    await exportExcel("AFCAC_Continental_Status", t("statusDistribution"), headers, rows);
+    await exportExcel("AFCAC_Continental_Status", t(titleKey), headers, rows);
   }
 
   async function handlePdf() {
     const headers = [t("colStatus"), "(%)", t("totalActions")];
     const rows = segs.map(s => [s.label, `${s.pct}%`, Math.round(s.pct * kpis.totalActions / 100)]);
     rows.push(["TOTAL", "100%", kpis.totalActions] as (string | number)[]);
-    await exportPdf("AFCAC_Continental_Status", t("statusDistribution"), headers, rows, `Total: ${kpis.totalActions} ${t("actions")}`);
+    await exportPdf("AFCAC_Continental_Status", t(titleKey), headers, rows, `Total: ${kpis.totalActions} ${t("actions")}`);
   }
 
   return (
     <div className="card" style={{ display: "flex", flexDirection: "column" }}>
       <div className="card-head">
-        <span className="card-head-title">{t("statusDistribution")}</span>
+        <span className="card-head-title">{t(titleKey)}</span>
         <span className="card-head-badge">{kpis.totalActions} {t("actions")}</span>
         {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
@@ -87,7 +87,6 @@ export default function StatusBar({ kpis, isAdmin, canExport }: { kpis: KpiData;
             <li><strong style={{ color: "var(--c-complete)" }}>{t("completed")}</strong> {t("completedDesc")}</li>
             <li><strong style={{ color: "var(--c-progress)" }}>{t("inProgress")}</strong> {t("inProgressDesc")}</li>
             <li><strong style={{ color: "var(--c-delayed)" }}>{t("delayed")}</strong> {t("delayedDesc")}</li>
-            <li><strong style={{ color: "var(--c-onhold)" }}>{t("onHold")}</strong> {t("onHoldDesc")}</li>
             <li><strong style={{ color: "var(--c-nostart)" }}>{t("notStarted")}</strong> {t("notStartedDesc")}</li>
           </ul>
           <p style={{ fontSize: 10, color: "var(--ink3)", marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
@@ -98,7 +97,7 @@ export default function StatusBar({ kpis, isAdmin, canExport }: { kpis: KpiData;
         {/* Bar Chart */}
         <div style={{ marginTop: 24, paddingTop: 14, borderTop: "1px solid var(--border2)" }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 14 }}>
-            {t("statusDistribution")}
+            {t(titleKey)}
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 130, position: "relative", paddingLeft: 28 }}>

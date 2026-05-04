@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser } from "@/lib/types";
 import OnlineUsers from "@/components/OnlineUsers";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DocsDropdown from "@/components/DocsDropdown";
 import { useLanguage } from "@/components/LanguageProvider";
 
 /* ─── Types ──────────────────────────────────────── */
@@ -23,10 +24,10 @@ const AFRICAN_STATES = [
 ];
 
 
-const STATUS_OPTIONS = ["completed", "inprogress", "delayed", "onhold", "notstarted"] as const;
+const STATUS_OPTIONS = ["completed", "inprogress", "delayed", "notstarted"] as const;
 const STATUS_LABELS: Record<string, string> = {
   completed: "Completed", inprogress: "In Progress",
-  delayed: "Delayed", onhold: "On Hold", notstarted: "Not Started",
+  delayed: "Delayed", notstarted: "Not Started",
 };
 const PCT_COLORS: Record<number, string> = {
   0: "#95a5a6", 25: "#e07b39", 50: "#f0a500", 75: "#52b788", 100: "#2d9d5e",
@@ -59,11 +60,13 @@ export default function AdminClient({
   username,
   role,
   users = [],
+  isMasterAdmin = false,
 }: {
   initialData: DashboardData;
   username: string;
   role: UserRole;
   users?: AppUser[];
+  isMasterAdmin?: boolean;
 }) {
   const router = useRouter();
   const { t } = useLanguage();
@@ -74,13 +77,54 @@ export default function AdminClient({
   const [targets, setTargets] = useState<TargetRow[]>(initialData.targets);
   const [saving, setSaving] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
-  const [fullName, setFullName] = useState("");
+  const [fullName] = useState(username);
   const [updaterCountry, setUpdaterCountry] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
   const [toastVisible, setToastVisible] = useState(false);
   const [loginTime] = useState(() => new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
   const [loginDate] = useState(() => new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }));
   const mainRef = useRef<HTMLElement>(null);
+
+  /* ── User management states ── */
+  const [localUsers, setLocalUsers] = useState<AppUser[]>(users);
+  const [editingUser, setEditingUser] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState<{ devPassword: string; role: UserRole; country: string; displayName: string; email: string }>({ devPassword: "", role: "focal_point", country: "", displayName: "", email: "" });
+  const [userSearch, setUserSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
+  const [userSaving, setUserSaving] = useState(false);
+
+  function startEdit(u: AppUser) {
+    setEditingUser(u.username);
+    setEditDraft({ devPassword: "", role: u.role, country: u.country ?? "", displayName: u.displayName, email: u.email ?? "" });
+  }
+  function cancelEdit() { setEditingUser(null); }
+
+  async function saveUser() {
+    if (!editingUser) return;
+    setUserSaving(true);
+    try {
+      const res = await fetch("/api/admin/update-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: editingUser, ...editDraft }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      setLocalUsers((prev) => prev.map((u) => u.username === editingUser ? {
+        ...u,
+        displayName: editDraft.displayName || u.displayName,
+        role: editDraft.role,
+        country: editDraft.country,
+        email: editDraft.email,
+        devPassword: editDraft.devPassword || u.devPassword,
+      } : u));
+      showToast("✅ User saved", "ok");
+      setEditingUser(null);
+    } catch {
+      showToast("❌ Error saving user", "warn");
+    } finally {
+      setUserSaving(false);
+    }
+  }
 
   /* ── Heartbeat: keep session "online" every 2 min ── */
   useEffect(() => {
@@ -195,11 +239,12 @@ export default function AdminClient({
             <img src="/afcac_logo.png" alt="AFCAC Logo" style={{ height: 44, width: "auto", objectFit: "contain" }} />
           </div>
           <div className="db-title-wrap">
-            <div className="db-title">AFCAC — Mise à Jour du Tableau de Bord</div>
+            <div className="db-title">{t("adminPanelTitle")}</div>
             <div className="db-sub">{t("adminPanelSub")}</div>
           </div>
           <div className="db-controls">
             <LanguageSwitcher />
+            <DocsDropdown show={true} />
             {/* Header progress */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>{t("pctCompleted")}</span>
@@ -260,7 +305,7 @@ export default function AdminClient({
 
           {/* Navigation */}
           <div className="sb-section">Sections</div>
-          {NAV_ITEMS.filter((item) => role === "admin" ? true : item.id === "targets").filter((item) => !item.adminOnly || role === "admin").map((item) => (
+          {NAV_ITEMS.filter((item) => role === "admin" ? true : item.id === "targets").filter((item) => !item.adminOnly || role === "admin").filter((item) => item.id !== "users" || isMasterAdmin).map((item) => (
             <div
               key={item.id}
               className={`sb-item${tab === item.id ? " active" : ""}${tab === item.id ? " done" : ""}`}
@@ -356,9 +401,9 @@ export default function AdminClient({
                       <input
                         className="field-input"
                         type="text"
-                        placeholder={t('adminFullNamePlaceholder')}
                         value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        readOnly
+                        style={{ background: "var(--bg2)", color: "var(--ink2)", cursor: "default" }}
                       />
                     </div>
                     <div className="field-group">
@@ -386,25 +431,25 @@ export default function AdminClient({
             <>
               {/* Group: Overview */}
               <div className="group-header">
-                <span className="gh-title">📌 Indicateurs Principaux</span>
-                <span className="gh-count">3 champs</span>
+                <span className="gh-title">{t("adminKpiTitle")}</span>
+                <span className="gh-count">{t("adminKpiCount")}</span>
               </div>
               <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)" }}>
                 <div className="q-options">
                   <div className="field-grid">
                     <div className="field-group">
-                      <label className="field-label">Pays Total</label>
+                      <label className="field-label">{t("totalCountries")}</label>
                       <input className="field-input" type="number" value={kpis.totalCountries}
                         onChange={(e) => updateKpi("totalCountries", Number(e.target.value))} />
-                      <input className="field-input" type="text" value={kpis.totalCountriesTrend} placeholder="Tendance"
+                      <input className="field-input" type="text" value={kpis.totalCountriesTrend} placeholder={t("adminTrendPlaceholder")}
                         onChange={(e) => updateKpi("totalCountriesTrend", e.target.value)}
                         style={{ marginTop: 6, fontSize: 11 }} />
                     </div>
                     <div className="field-group">
-                      <label className="field-label">Actions Totales</label>
+                      <label className="field-label">{t("totalActions")}</label>
                       <input className="field-input" type="number" value={kpis.totalActions}
                         onChange={(e) => updateKpi("totalActions", Number(e.target.value))} />
-                      <input className="field-input" type="text" value={kpis.totalActionsTrend} placeholder="Tendance"
+                      <input className="field-input" type="text" value={kpis.totalActionsTrend} placeholder={t("adminTrendPlaceholder")}
                         onChange={(e) => updateKpi("totalActionsTrend", e.target.value)}
                         style={{ marginTop: 6, fontSize: 11 }} />
                     </div>
@@ -422,16 +467,15 @@ export default function AdminClient({
 
               {/* Group: Status */}
               <div className="group-header">
-                <span className="gh-title">📌 Répartition des Statuts</span>
-                <span className="gh-count">5 champs — doit totaliser ~100%</span>
+                <span className="gh-title">{t("adminStatusTitle")}</span>
+                <span className="gh-count">{t("adminStatusCount")}</span>
               </div>
-              {(["pctCompleted", "pctInProgress", "pctDelayed", "pctOnHold", "pctNotStarted"] as const).map((key, i) => {
+              {(["pctCompleted", "pctInProgress", "pctDelayed", "pctNotStarted"] as const).map((key, i) => {
                 const meta: Record<string, { label: string; color: string; trendKey: keyof KpiData; icon: string }> = {
-                  pctCompleted:  { label: "% Complété",     color: "#2d9d5e", trendKey: "pctCompletedTrend",  icon: "✅" },
-                  pctInProgress: { label: "% En Cours",     color: "#f0a500", trendKey: "pctInProgressTrend", icon: "⏳" },
-                  pctDelayed:    { label: "% En Retard",    color: "#e07b39", trendKey: "pctDelayedTrend",    icon: "⚠" },
-                  pctOnHold:     { label: "% En Suspens",   color: "#c0392b", trendKey: "pctOnHoldTrend",     icon: "⏸" },
-                  pctNotStarted: { label: "% Non Démarré",  color: "#95a5a6", trendKey: "pctNotStartedTrend", icon: "🔘" },
+                  pctCompleted:  { label: t("pctCompleted"),  color: "#2d9d5e", trendKey: "pctCompletedTrend",  icon: "✅" },
+                  pctInProgress: { label: t("pctInProgress"), color: "#f0a500", trendKey: "pctInProgressTrend", icon: "⏳" },
+                  pctDelayed:    { label: t("pctDelayed"),    color: "#e07b39", trendKey: "pctDelayedTrend",    icon: "⚠" },
+                  pctNotStarted: { label: t("pctNotStarted"), color: "#95a5a6", trendKey: "pctNotStartedTrend", icon: "🔘" },
                 };
                 const m = meta[key];
                 return (
@@ -472,29 +516,29 @@ export default function AdminClient({
 
               {/* Group: Metadata */}
               <div className="group-header" style={{ marginTop: 28 }}>
-                <span className="gh-title">📌 Métadonnées</span>
-                <span className="gh-count">4 champs</span>
+                <span className="gh-title">{t("adminMetaTitle")}</span>
+                <span className="gh-count">{t("adminMetaCount")}</span>
               </div>
               <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)" }}>
                 <div className="q-options">
                   <div className="field-grid">
                     <div className="field-group">
-                      <label className="field-label">Période du Rapport</label>
+                      <label className="field-label">{t("reportPeriodLabel")}</label>
                       <input className="field-input" type="text" value={kpis.reportPeriod}
                         onChange={(e) => updateKpi("reportPeriod", e.target.value)} />
                     </div>
                     <div className="field-group">
-                      <label className="field-label">Dernière Mise à Jour</label>
+                      <label className="field-label">{t("lastUpdated")}</label>
                       <input className="field-input" type="date" value={kpis.lastUpdated}
                         onChange={(e) => updateKpi("lastUpdated", e.target.value)} />
                     </div>
                     <div className="field-group">
-                      <label className="field-label">Durée Moyenne (semaines)</label>
+                      <label className="field-label">{t("avgDuration")}</label>
                       <input className="field-input" type="number" value={kpis.avgDurationWeeks}
                         onChange={(e) => updateKpi("avgDurationWeeks", Number(e.target.value))} />
                     </div>
                     <div className="field-group">
-                      <label className="field-label">Experts Planifiés</label>
+                      <label className="field-label">{t("expertsPlanned")}</label>
                       <input className="field-input" type="number" value={kpis.expertsPlanned}
                         onChange={(e) => updateKpi("expertsPlanned", Number(e.target.value))} />
                     </div>
@@ -511,7 +555,6 @@ export default function AdminClient({
                 <div key={group}>
                   <div className="group-header" style={gi === 0 ? { marginTop: 0 } : {}}>
                     <span className="gh-title">📌 {group}</span>
-                    <span className="gh-count">{groupTargets.length} cible{groupTargets.length > 1 ? "s" : ""}</span>
                   </div>
                   {groupTargets.map((tgt, qi) => {
                     const isLast = qi === groupTargets.length - 1;
@@ -521,7 +564,6 @@ export default function AdminClient({
                           <span className="q-num">T{gi + 1}.{qi + 1}</span>
                           <span className="q-target">{tgt.id}</span>
                           <span className="q-title">{tgt.title}</span>
-                          <span className="q-deadline">🗓 {tgt.deadline}</span>
                           {tgt.question && (
                             <button
                               onClick={() => toggleQuestion(tgt.id)}
@@ -610,13 +652,13 @@ export default function AdminClient({
           {tab === "actions" && (
             <>
               <div className="group-header" style={{ marginTop: 0 }}>
-                <span className="gh-title">📌 Plan d'Actions — Détail par Pays</span>
+                <span className="gh-title">{t("adminActionsPlanTitle")}</span>
                 <span className="gh-count">{actions.length} actions</span>
               </div>
               {actions.map((row, idx) => {
                 const statusColor: Record<string, string> = {
                   completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e07b39",
-                  onhold: "#c0392b", notstarted: "#95a5a6",
+                  notstarted: "#95a5a6",
                 };
                 const sc = statusColor[row.status] ?? "#95a5a6";
                 const isLast = idx === actions.length - 1;
@@ -690,7 +732,7 @@ export default function AdminClient({
                       <div className="q-options">
                         <div className="field-grid">
                           <div className="field-group">
-                            <label className="field-label">Actions Totales</label>
+                            <label className="field-label">{t("totalActions")}</label>
                             <input className="field-input" type="number" value={row.actions}
                               onChange={(e) => updateCountry(row.country, "actions", Number(e.target.value))} />
                           </div>
@@ -700,36 +742,30 @@ export default function AdminClient({
                               onChange={(e) => updateCountry(row.country, "budget", Number(e.target.value))} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label">Entité Responsable</label>
+                            <label className="field-label">{t("colResponsible")}</label>
                             <input className="field-input" type="text" value={row.entity}
                               onChange={(e) => updateCountry(row.country, "entity", e.target.value)} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "var(--c-complete)" }}>% Complété</label>
+                            <label className="field-label" style={{ color: "var(--c-complete)" }}>{t("pctCompleted")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.completed}
                               onChange={(e) => updateCountry(row.country, "completed", Number(e.target.value))}
                               style={{ borderColor: "var(--c-complete)" }} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "#b07800" }}>% En Cours</label>
+                            <label className="field-label" style={{ color: "#b07800" }}>{t("pctInProgress")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.inprogress}
                               onChange={(e) => updateCountry(row.country, "inprogress", Number(e.target.value))}
                               style={{ borderColor: "var(--c-progress)" }} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "var(--amber)" }}>% Retardé</label>
+                            <label className="field-label" style={{ color: "var(--amber)" }}>{t("pctDelayed")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.delayed}
                               onChange={(e) => updateCountry(row.country, "delayed", Number(e.target.value))}
                               style={{ borderColor: "var(--c-delayed)" }} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "var(--crimson)" }}>% En Suspens</label>
-                            <input className="field-input" type="number" min="0" max="100" value={row.onhold}
-                              onChange={(e) => updateCountry(row.country, "onhold", Number(e.target.value))}
-                              style={{ borderColor: "var(--c-onhold)" }} />
-                          </div>
-                          <div className="field-group">
-                            <label className="field-label" style={{ color: "var(--slate)" }}>% Non Démarré</label>
+                            <label className="field-label" style={{ color: "var(--slate)" }}>{t("pctNotStarted")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.notstarted}
                               onChange={(e) => updateCountry(row.country, "notstarted", Number(e.target.value))}
                               style={{ borderColor: "var(--c-nostart)" }} />
@@ -741,7 +777,6 @@ export default function AdminClient({
                             { v: row.completed, c: "var(--c-complete)" },
                             { v: row.inprogress, c: "var(--c-progress)" },
                             { v: row.delayed, c: "var(--c-delayed)" },
-                            { v: row.onhold, c: "var(--c-onhold)" },
                             { v: row.notstarted, c: "var(--c-nostart)" },
                           ].map((s, i) => s.v > 0 && (
                             <div key={i} style={{ width: `${s.v}%`, background: s.c, minWidth: 4 }} title={`${s.v}%`} />
@@ -756,46 +791,156 @@ export default function AdminClient({
           )}
 
           {/* ─────────────────── USERS / ACCESS ─────────────────── */}
-          {tab === "users" && (
-            <>
-              <div className="group-header" style={{ marginTop: 0 }}>
-                <span className="gh-title">🔑 Identifiants d&apos;accès — 54 États membres</span>
-                <span className="gh-count">{users.length} comptes · URL : <strong>/login</strong></span>
-              </div>
-              <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", padding: 0, overflow: "hidden" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-                  <thead>
-                    <tr style={{ background: "var(--surface2)", borderBottom: "2px solid var(--border)" }}>
-                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 30 }}>#</th>
-                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Pays</th>
-                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Nom d&apos;utilisateur</th>
-                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Mot de passe</th>
-                      <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>Email</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((u, i) => (
-                      <tr key={u.username} style={{ borderBottom: "1px solid var(--border)", background: i % 2 === 0 ? "transparent" : "var(--surface2)" }}>
-                        <td style={{ padding: "8px 14px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
-                        <td style={{ padding: "8px 14px", fontWeight: 600, color: "var(--ink1)" }}>{u.country}</td>
-                        <td style={{ padding: "8px 14px" }}>
-                          <code style={{ background: "var(--surface2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
-                            {u.username}
-                          </code>
-                        </td>
-                        <td style={{ padding: "8px 14px" }}>
-                          <code style={{ background: "var(--surface2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--amber)", border: "1px solid var(--border)" }}>
-                            {u.devPassword}
-                          </code>
-                        </td>
-                        <td style={{ padding: "8px 14px", fontSize: 11, color: "var(--ink3)" }}>{u.email}</td>
+          {tab === "users" && isMasterAdmin && (() => {
+            const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60" };
+            const ROLE_LABELS: Record<string, string> = { admin: "Admin", focal_point: "Focal Point", expert: "Expert" };
+            const filtered = localUsers.filter((u) => {
+              if (roleFilter !== "all" && u.role !== roleFilter) return false;
+              const q = userSearch.toLowerCase();
+              return !q || u.username.toLowerCase().includes(q) || u.displayName?.toLowerCase().includes(q) || u.country?.toLowerCase().includes(q);
+            });
+            return (
+              <>
+                {/* Header */}
+                <div className="group-header" style={{ marginTop: 0 }}>
+                  <span className="gh-title">{t("adminUsersTitle")}</span>
+                  <span className="gh-count">{t("adminUsersCount").replace("{n}", String(localUsers.length))}</span>
+                </div>
+
+                {/* Toolbar */}
+                <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
+                  <input
+                    type="text"
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.target.value)}
+                    placeholder="🔍 Search user, country…"
+                    style={{ flex: 1, minWidth: 200, padding: "6px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)" }}
+                  />
+                  {(["all", "admin", "focal_point", "expert"] as const).map((r) => (
+                    <button key={r} onClick={() => setRoleFilter(r)} style={{
+                      padding: "5px 12px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                      border: roleFilter === r ? "2px solid var(--forest2)" : "1px solid var(--border)",
+                      background: roleFilter === r ? "var(--forest2)" : "var(--surface2)",
+                      color: roleFilter === r ? "#fff" : "var(--ink2)",
+                    }}>
+                      {r === "all" ? `All (${localUsers.length})` : r === "admin" ? `Admin (${localUsers.filter(u => u.role === "admin").length})` : r === "focal_point" ? `Focal Point (${localUsers.filter(u => u.role === "focal_point").length})` : `Expert (${localUsers.filter(u => u.role === "expert").length})`}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Table */}
+                <div style={{ borderRadius: 8, border: "1px solid var(--border)", overflow: "hidden" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                    <thead>
+                      <tr style={{ background: "var(--forest)", color: "#fff" }}>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700, width: 32 }}>#</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Display Name</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colUsername")}</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colCountry")}</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Role</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 70 }}>Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
+                    </thead>
+                    <tbody>
+                      {filtered.map((u, i) => {
+                        const isEditing = editingUser === u.username;
+                        return (
+                          <>
+                            <tr key={u.username} style={{ borderTop: "1px solid var(--border)", background: isEditing ? "rgba(1,119,100,0.07)" : i % 2 === 0 ? "transparent" : "var(--surface2)" }}>
+                              <td style={{ padding: "8px 12px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
+                              <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>{u.displayName}</td>
+                              <td style={{ padding: "8px 12px" }}>
+                                <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
+                                  {u.username}
+                                </code>
+                              </td>
+                              <td style={{ padding: "8px 12px", color: "var(--ink2)" }}>{u.country || "—"}</td>
+                              <td style={{ padding: "8px 12px" }}>
+                                <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 700, background: ROLE_COLORS[u.role] + "22", color: ROLE_COLORS[u.role], border: `1px solid ${ROLE_COLORS[u.role]}44` }}>
+                                  {ROLE_LABELS[u.role] ?? u.role}
+                                </span>
+                              </td>
+                              <td style={{ padding: "8px 12px" }}>
+                                <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--amber)", border: "1px solid var(--border)" }}>
+                                  {u.devPassword}
+                                </code>
+                              </td>
+                              <td style={{ padding: "8px 12px", textAlign: "center" }}>
+                                <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
+                                  padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                                  border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
+                                  background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
+                                  color: isEditing ? "var(--amber)" : "var(--forest2)",
+                                }}>
+                                  {isEditing ? "✕ Cancel" : "✎ Edit"}
+                                </button>
+                              </td>
+                            </tr>
+
+                            {/* Inline edit row */}
+                            {isEditing && (
+                              <tr key={`${u.username}-edit`} style={{ background: "rgba(1,119,100,0.04)", borderTop: "1px dashed var(--forest2)" }}>
+                                <td colSpan={7} style={{ padding: "14px 16px" }}>
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+                                    <div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Display Name</label>
+                                      <input type="text" value={editDraft.displayName} onChange={(e) => setEditDraft((d) => ({ ...d, displayName: e.target.value }))}
+                                        style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
+                                    </div>
+                                    <div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>New Password</label>
+                                      <input type="text" value={editDraft.devPassword} onChange={(e) => setEditDraft((d) => ({ ...d, devPassword: e.target.value }))}
+                                        placeholder="Leave blank to keep current"
+                                        style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
+                                    </div>
+                                    <div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Role</label>
+                                      <select value={editDraft.role} onChange={(e) => setEditDraft((d) => ({ ...d, role: e.target.value as UserRole }))}
+                                        style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }}>
+                                        <option value="admin">Admin</option>
+                                        <option value="focal_point">Focal Point</option>
+                                        <option value="expert">Expert</option>
+                                      </select>
+                                    </div>
+                                    <div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Country</label>
+                                      <select value={editDraft.country} onChange={(e) => setEditDraft((d) => ({ ...d, country: e.target.value }))}
+                                        style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }}>
+                                        <option value="">— No country —</option>
+                                        {AFRICAN_STATES.map((c) => <option key={c} value={c}>{c}</option>)}
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <button onClick={saveUser} disabled={userSaving} style={{
+                                      padding: "6px 18px", borderRadius: 6, fontWeight: 700, fontSize: 12, cursor: userSaving ? "not-allowed" : "pointer",
+                                      background: "var(--forest2)", color: "#fff", border: "none", opacity: userSaving ? 0.7 : 1,
+                                    }}>
+                                      {userSaving ? "Saving…" : "💾 Save Changes"}
+                                    </button>
+                                    <button onClick={cancelEdit} style={{ padding: "6px 14px", borderRadius: 6, fontWeight: 600, fontSize: 12, cursor: "pointer", background: "var(--surface2)", color: "var(--ink2)", border: "1px solid var(--border)" }}>
+                                      Cancel
+                                    </button>
+                                    <span style={{ fontSize: 11, color: "var(--ink3)", marginLeft: 6 }}>
+                                      Editing: <strong style={{ color: "var(--forest2)" }}>{u.username}</strong>
+                                    </span>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </>
+                        );
+                      })}
+                      {filtered.length === 0 && (
+                        <tr><td colSpan={7} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            );
+          })()}
 
           {/* ─────────────────── SESSIONS ─────────────────── */}
           {tab === "sessions" && role === "admin" && (

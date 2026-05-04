@@ -9,7 +9,6 @@ const SC: Record<string, { cls: string }> = {
   completed:  { cls: "s-completed" },
   inprogress: { cls: "s-inprogress" },
   delayed:    { cls: "s-delayed" },
-  onhold:     { cls: "s-onhold" },
   notstarted: { cls: "s-notstarted" },
 };
 
@@ -43,7 +42,6 @@ export default function ActionTable({
     completed: t("completed"),
     inprogress: t("inProgress"),
     delayed: t("delayed"),
-    onhold: t("onHold"),
     notstarted: t("notStarted"),
   };
 
@@ -52,8 +50,6 @@ export default function ActionTable({
     { label: t("colTargetId"),  key: "action" },
     { label: t("colSection"),   key: "section" },
     { label: t("colStatus"),    key: "status" },
-    { label: t("colStart"),     key: "start" },
-    { label: t("colEnd"),       key: "end" },
   ];
 
   function handleSort(idx: number, key: keyof ActionRow) {
@@ -77,14 +73,14 @@ export default function ActionTable({
   }
 
   async function handleExcel() {
-    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus"), t("colStart"), t("colEnd")];
-    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status, r.start, r.end]);
+    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus")];
+    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status]);
     await exportExcel("AFCAC_Action_Plan", t("actionPlanDetail"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus"), t("colStart"), t("colEnd")];
-    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status, r.start, r.end]);
+    const headers = [t("colCountry"), t("colTargetId"), t("colSection"), t("colStatus")];
+    const rows = sorted.map(r => [r.country, r.action, r.section, statusLabel[r.status] ?? r.status]);
     await exportPdf("AFCAC_Action_Plan", t("actionPlanDetail"), headers, rows, `${sorted.length} ${t("countries")}`);
   }
 
@@ -136,13 +132,11 @@ export default function ActionTable({
                     <td style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 }}>{row.action}</td>
                     <td style={{ color: "var(--ink2)" }}>{row.section}</td>
                     <td><span className={`badge ${s.cls}`}>{sLabel}</span></td>
-                    <td>{row.start}</td>
-                    <td>{row.end}</td>
                   </tr>
 
                   {isOpen && (
                     <tr key={`expand-${i}`}>
-                      <td colSpan={7} style={{ padding: 0, background: "var(--surface2)", borderBottom: "2px solid var(--border)" }}>
+                      <td colSpan={5} style={{ padding: 0, background: "var(--surface2)", borderBottom: "2px solid var(--border)" }}>
                         <div style={{ padding: "12px 16px" }}>
                           <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 8 }}>
                             {t("abujaTargets")} — {row.country}

@@ -34,7 +34,9 @@ function groupNum(id: string): number {
   return parseInt(id.replace(/^T/, "").split(".")[0], 10);
 }
 
-export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[]; isAdmin?: boolean }) {
+const TOTAL_AFRICAN_STATES = 54;
+
+export default function TargetGrid({ targets, isAdmin, allCountryTargets }: { targets: TargetRow[]; isAdmin?: boolean; allCountryTargets?: Record<string, TargetRow[]> }) {
   const { t } = useLanguage();
 
   function statusInfo(pct: number): { label: string; cls: string } {
@@ -51,10 +53,21 @@ export default function TargetGrid({ targets, isAdmin }: { targets: TargetRow[];
     return acc;
   }, {});
 
+  const allSubmissions = allCountryTargets ? Object.values(allCountryTargets) : null;
+
   const rows = Object.entries(grouped)
     .map(([n, ts]) => {
-      const num    = Number(n);
-      const avgPct = Math.round(ts.reduce((s, tRow) => s + tRow.pct, 0) / ts.length);
+      const num = Number(n);
+      let avgPct: number;
+      if (allSubmissions) {
+        const groupAvg = ts.reduce((sum, tRow) => {
+          const submittedSum = allSubmissions.reduce((s, sub) => s + (sub.find(x => x.id === tRow.id)?.pct ?? 0), 0);
+          return sum + submittedSum / TOTAL_AFRICAN_STATES;
+        }, 0);
+        avgPct = Math.round(groupAvg / ts.length);
+      } else {
+        avgPct = Math.round(ts.reduce((s, tRow) => s + tRow.pct, 0) / ts.length);
+      }
       const deadlines = [...new Set(ts.map(tRow => tRow.deadline))].join(" / ");
       return { num, name: TARGET_NAMES[num] ?? ts[0].group, avgPct, count: ts.length, deadlines };
     })

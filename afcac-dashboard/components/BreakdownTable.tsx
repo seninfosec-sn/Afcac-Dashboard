@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
@@ -33,14 +33,14 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
   }
 
   async function handleExcel() {
-    const headers = [t("colCountry"), t("colTotalActions"), t("colPctCompleted"), t("colPctInProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity"];
-    const rows = sorted.map(r => [r.country, r.actions, r.completed, r.inprogress, r.delayed, r.onhold, r.notstarted, r.entity]);
+    const headers = [t("colCountry"), t("colTotalActions"), t("colPctCompleted"), t("colPctInProgress"), t("delayed"), t("notStarted"), "Entity"];
+    const rows = sorted.map(r => [r.country, r.actions, r.completed, r.inprogress, r.delayed, r.notstarted, r.entity]);
     await exportExcel("AFCAC_Country_Breakdown", t("actionPlanBreakdown"), headers, rows);
   }
 
   async function handlePdf() {
-    const headers = [t("colCountry"), t("totalActions"), t("completed"), t("inProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity"];
-    const rows = sorted.map(r => [r.country, r.actions, `${r.completed}%`, `${r.inprogress}%`, `${r.delayed}%`, `${r.onhold}%`, `${r.notstarted}%`, r.entity]);
+    const headers = [t("colCountry"), t("totalActions"), t("completed"), t("inProgress"), t("delayed"), t("notStarted"), "Entity"];
+    const rows = sorted.map(r => [r.country, r.actions, `${r.completed}%`, `${r.inprogress}%`, `${r.delayed}%`, `${r.notstarted}%`, r.entity]);
     await exportPdf("AFCAC_Country_Breakdown", t("actionPlanBreakdown"), headers, rows, `${sorted.length} African States`);
   }
 
@@ -80,9 +80,7 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
                     {[
                       { pct: row.completed,  color: "var(--c-complete)" },
                       { pct: row.inprogress, color: "var(--c-progress)" },
-                      { pct: row.delayed,    color: "var(--c-delayed)" },
-                      { pct: row.onhold,     color: "var(--c-onhold)" },
-                      { pct: row.notstarted, color: "var(--c-nostart)" },
+                      { pct: row.delayed,    color: "var(--c-delayed)" },                      { pct: row.notstarted, color: "var(--c-nostart)" },
                     ].map((s, si) =>
                       s.pct > 0 ? (
                         <div
@@ -102,3 +100,4 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
     </div>
   );
 }
+

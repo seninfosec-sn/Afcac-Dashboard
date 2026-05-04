@@ -1,4 +1,4 @@
-import type { ExpertStat } from "@/lib/types";
+import type { ExpertStat, UpdateLog } from "@/lib/types";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 
@@ -12,7 +12,15 @@ function timeAgo(isoDate: string, locale: Locale): string {
   return `${days}${t(locale, "daysAgo")}`;
 }
 
-export default function TopExpertsCard({ experts, locale = "en" }: { experts: ExpertStat[]; locale?: Locale }) {
+function formatDateTime(isoDate: string, locale: Locale): { date: string; time: string } {
+  const d = new Date(isoDate);
+  const langMap: Record<Locale, string> = { en: "en-GB", fr: "fr-FR", pt: "pt-PT" };
+  const date = d.toLocaleDateString(langMap[locale], { day: "2-digit", month: "short", year: "numeric" });
+  const time = d.toLocaleTimeString(langMap[locale], { hour: "2-digit", minute: "2-digit" });
+  return { date, time };
+}
+
+export default function TopExpertsCard({ experts, locale = "en", lastCountryUpdate }: { experts: ExpertStat[]; locale?: Locale; lastCountryUpdate?: UpdateLog | null }) {
   const top = experts[0] ?? null;
 
   return (
@@ -42,6 +50,23 @@ export default function TopExpertsCard({ experts, locale = "en" }: { experts: Ex
               ))}
             </div>
           )}
+
+          {lastCountryUpdate && (() => {
+            const { date, time } = formatDateTime(lastCountryUpdate.date, locale);
+            return (
+              <div style={{ marginTop: 8, borderTop: "1px solid var(--border2)", paddingTop: 7, display: "flex", flexDirection: "column", gap: 2 }}>
+                <div style={{ fontSize: 9, color: "var(--ink3)", textTransform: "uppercase", letterSpacing: ".04em", fontWeight: 700 }}>
+                  {t(locale, "lastUpdateBy")}
+                </div>
+                <div style={{ fontSize: 11, color: "var(--ink2)", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {lastCountryUpdate.fullName ?? lastCountryUpdate.username}
+                </div>
+                <div style={{ fontSize: 10, color: "var(--ink3)" }}>
+                  {date} {t(locale, "atTime")} {time}
+                </div>
+              </div>
+            );
+          })()}
         </>
       ) : (
         <>

@@ -10,8 +10,6 @@ export interface KpiData {
   pctInProgressTrend: string;
   pctDelayed: number;
   pctDelayedTrend: string;
-  pctOnHold: number;
-  pctOnHoldTrend: string;
   pctNotStarted: number;
   pctNotStartedTrend: string;
   avgDurationWeeks: number;
@@ -20,7 +18,7 @@ export interface KpiData {
   lastUpdated: string;
 }
 
-export type ActionStatus = "completed" | "inprogress" | "delayed" | "onhold" | "notstarted";
+export type ActionStatus = "completed" | "inprogress" | "delayed" | "notstarted";
 
 export interface ActionRow {
   country: string;
@@ -40,7 +38,6 @@ export interface CountryRow {
   completed: number;
   inprogress: number;
   delayed: number;
-  onhold: number;
   notstarted: number;
   budget: number;
   entity: string;

@@ -1,38 +1,37 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════════════════
-   DESIGN SYSTEM — AASAP Executive Dashboard
-   Aesthetic: Institutional Authority · Deep forest greens
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DESIGN SYSTEM â€” AASAP Executive Dashboard
+   Aesthetic: Institutional Authority Â· Deep forest greens
    + sharp gold + precise data density
-═══════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 :root {
-  --forest:   #0d3b2b;
-  --forest2:  #1a5c42;
-  --forest3:  #2d7d5f;
-  --mint:     #52b788;
-  --gold:     #f0a500;
+  --forest:   #013d31;
+  --forest2:  #017764;
+  --forest3:  #019478;
+  --mint:     #4db89a;
+  --gold:     #b0aa34;
   --amber:    #e07b39;
   --crimson:  #c0392b;
   --slate:    #7f8c8d;
   --snow:     #f4f7f5;
   --white:    #ffffff;
   --ink:      #1a2e25;
-  --ink2:     #3d5a4d;
-  --ink3:     #6b8a7a;
-  --border:   #d0dfd8;
-  --border2:  #e5eeea;
+  --ink2:     #2d5a4d;
+  --ink3:     #5a8070;
+  --border:   #c8ddd8;
+  --border2:  #e2eeea;
 
   --c-complete:  #2d9d5e;
-  --c-progress:  #f0a500;
+  --c-progress:  #b0aa34;
   --c-delayed:   #e07b39;
-  --c-onhold:    #c0392b;
   --c-nostart:   #95a5a6;
 
-  --shadow-sm: 0 1px 4px rgba(13,59,43,0.08);
-  --shadow-md: 0 4px 16px rgba(13,59,43,0.12);
-  --shadow-lg: 0 8px 32px rgba(13,59,43,0.16);
+  --shadow-sm: 0 1px 4px rgba(1,119,100,0.08);
+  --shadow-md: 0 4px 16px rgba(1,119,100,0.12);
+  --shadow-lg: 0 8px 32px rgba(1,119,100,0.16);
   --r: 8px;
 }
 
@@ -52,7 +51,7 @@ body {
 ::-webkit-scrollbar-track { background: var(--border2); }
 ::-webkit-scrollbar-thumb { background: var(--forest3); border-radius: 3px; }
 
-/* ── HEADER ── */
+/* â”€â”€ HEADER â”€â”€ */
 .db-header {
   background: linear-gradient(135deg, var(--forest) 0%, var(--forest2) 60%, var(--forest3) 100%);
   padding: 0 28px;
@@ -142,14 +141,14 @@ body {
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 .live-label { font-size: 10px; color: rgba(255,255,255,0.6); }
 
-/* ── CANVAS ── */
+/* â”€â”€ CANVAS â”€â”€ */
 .canvas {
   padding: 20px 28px 32px;
   display: grid;
   gap: 16px;
 }
 
-/* ── SECTION LABELS ── */
+/* â”€â”€ SECTION LABELS â”€â”€ */
 .section-label {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
@@ -169,7 +168,7 @@ body {
   background: linear-gradient(to right, var(--border), transparent);
 }
 
-/* ── CARDS ── */
+/* â”€â”€ CARDS â”€â”€ */
 .card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -203,7 +202,7 @@ body {
 }
 .card-body { padding: 16px; }
 
-/* ── KPI GRID ── */
+/* â”€â”€ KPI GRID â”€â”€ */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -276,7 +275,7 @@ body {
 .trend-flat { color: var(--ink3); }
 .trend-bad  { color: var(--crimson); }
 
-/* ── ROW LAYOUTS ── */
+/* â”€â”€ ROW LAYOUTS â”€â”€ */
 .row-wide {
   display: grid;
   grid-template-columns: 340px 1fr;
@@ -300,7 +299,7 @@ body {
   .row-wide, .row-map, .row-budget { grid-template-columns: 1fr; }
 }
 
-/* ── STACKED BAR ── */
+/* â”€â”€ STACKED BAR â”€â”€ */
 .stack-bar {
   display: flex;
   height: 24px;
@@ -314,7 +313,7 @@ body {
 }
 .stack-seg:hover { opacity: 0.8; }
 
-/* ── MINI PROGRESS ── */
+/* â”€â”€ MINI PROGRESS â”€â”€ */
 .mini-track {
   height: 6px;
   background: var(--border2);
@@ -327,7 +326,7 @@ body {
   transition: width 0.6s ease;
 }
 
-/* ── TABLE ── */
+/* â”€â”€ TABLE â”€â”€ */
 .tbl-scroll {
   overflow-x: auto;
   max-height: 340px;
@@ -361,7 +360,7 @@ body {
 }
 .dtable tr:hover td { background: #f0f7f4; }
 
-/* ── STATUS BADGES ── */
+/* â”€â”€ STATUS BADGES â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -375,10 +374,9 @@ body {
 .s-completed  { background: rgba(45,157,94,0.12); color: var(--c-complete); }
 .s-inprogress { background: rgba(240,165,0,0.12);  color: #b07800; }
 .s-delayed    { background: rgba(224,123,57,0.12); color: var(--amber); }
-.s-onhold     { background: rgba(192,57,43,0.12);  color: var(--crimson); }
 .s-notstarted { background: rgba(149,165,166,0.15);color: #6b8a7a; }
 
-/* ── TARGET GRID ── */
+/* â”€â”€ TARGET GRID â”€â”€ */
 .target-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -433,7 +431,7 @@ body {
   color: var(--ink3);
 }
 
-/* ── MAP ── */
+/* â”€â”€ MAP â”€â”€ */
 .africa-svg { width: 100%; height: 100%; display: block; }
 .country-shape {
   cursor: pointer;
@@ -443,7 +441,7 @@ body {
 }
 .country-shape:hover { opacity: 0.7 !important; stroke-width: 1.5; }
 
-/* ── MAP TOOLTIP ── */
+/* â”€â”€ MAP TOOLTIP â”€â”€ */
 .map-tooltip {
   position: absolute;
   background: var(--forest);
@@ -457,7 +455,7 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* ── DONUT CHART WRAPPER ── */
+/* â”€â”€ DONUT CHART WRAPPER â”€â”€ */
 .donut-wrap {
   display: flex;
   align-items: center;
@@ -478,14 +476,14 @@ body {
 .legend-name { flex: 1; color: var(--ink2); }
 .legend-pct  { font-weight: 700; font-size: 11px; }
 
-/* ── HBAR ── */
+/* â”€â”€ HBAR â”€â”€ */
 .hbar-list { display: flex; flex-direction: column; gap: 8px; }
 .hbar-item { display: flex; flex-direction: column; gap: 3px; }
 .hbar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink2); }
 .hbar-track { height: 8px; background: var(--border2); border-radius: 4px; overflow: hidden; }
 .hbar-fill  { height: 100%; background: var(--forest3); border-radius: 4px; transition: width 0.6s; }
 
-/* ── FOOTER ── */
+/* â”€â”€ FOOTER â”€â”€ */
 .db-footer {
   background: var(--forest);
   color: rgba(255,255,255,0.45);
@@ -498,14 +496,14 @@ body {
 }
 .db-footer strong { color: rgba(255,255,255,0.7); }
 
-/* ── ANIMATIONS ── */
+/* â”€â”€ ANIMATIONS â”€â”€ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .card { animation: fadeUp 0.5s ease both; animation-delay: .1s; }
 
-/* ── LOGIN PAGE ── */
+/* â”€â”€ LOGIN PAGE â”€â”€ */
 .login-page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--forest) 0%, var(--forest2) 60%, var(--forest3) 100%);
@@ -594,18 +592,18 @@ body {
   margin-bottom: 14px;
 }
 
-/* ══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    QUESTIONNAIRE / ADMIN FORM DESIGN
-   Reprend fidèlement le design de AFCAC AST Questionnaire
-══════════════════════════════════════════════════════════ */
+   Reprend fidÃ¨lement le design de AFCAC AST Questionnaire
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── SHELL LAYOUT ── */
+/* â”€â”€ SHELL LAYOUT â”€â”€ */
 .shell {
   display: flex;
   min-height: calc(100vh - 60px);
 }
 
-/* ── SIDEBAR ── */
+/* â”€â”€ SIDEBAR â”€â”€ */
 .sidebar {
   width: 260px;
   background: var(--forest);
@@ -619,7 +617,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ── PROFILE CARD (top of sidebar) ── */
+/* â”€â”€ PROFILE CARD (top of sidebar) â”€â”€ */
 .profile-block {
   padding: 16px 18px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -676,7 +674,7 @@ body {
   animation: pulse 2s infinite;
 }
 
-/* ── SIDEBAR NAV ── */
+/* â”€â”€ SIDEBAR NAV â”€â”€ */
 .sb-info {
   padding: 14px 18px 12px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -751,7 +749,7 @@ body {
 }
 .sb-logout:hover { background: rgba(192,57,43,0.3); color: white; }
 
-/* ── MAIN CONTENT ── */
+/* â”€â”€ MAIN CONTENT â”€â”€ */
 .form-main {
   flex: 1;
   padding: 24px 32px 100px;
@@ -759,7 +757,7 @@ body {
   min-width: 0;
 }
 
-/* ── INTRO BLOCK ── */
+/* â”€â”€ INTRO BLOCK â”€â”€ */
 .intro {
   background: white; border: 1px solid var(--border);
   border-radius: var(--r); padding: 20px 24px; margin-bottom: 24px;
@@ -773,7 +771,7 @@ body {
 }
 .intro-text { font-size: 12px; color: var(--ink2); line-height: 1.7; }
 
-/* ── GROUP HEADER ── */
+/* â”€â”€ GROUP HEADER â”€â”€ */
 .group-header {
   background: linear-gradient(135deg, var(--forest) 0%, var(--forest2) 100%);
   color: white; padding: 12px 20px;
@@ -791,7 +789,7 @@ body {
   padding: 3px 10px; border-radius: 12px; color: rgba(255,255,255,0.8);
 }
 
-/* ── QUESTION CARD ── */
+/* â”€â”€ QUESTION CARD â”€â”€ */
 .q-card {
   background: white; border: 1px solid var(--border);
   border-top: none; padding: 0; transition: box-shadow .2s;
@@ -829,7 +827,7 @@ body {
   font-style: italic;
 }
 
-/* ── DROPDOWN OPTIONS ── */
+/* â”€â”€ DROPDOWN OPTIONS â”€â”€ */
 .q-options { padding: 14px 20px 18px; }
 .q-select-wrap { display: flex; align-items: center; gap: 12px; }
 .q-swatch {
@@ -872,7 +870,7 @@ body {
 .q-desc-box.dc-75  { border-left-color: #52b788; }
 .q-desc-box.dc-100 { border-left-color: #2d9d5e; }
 
-/* ── KPI FIELD CARDS ── */
+/* â”€â”€ KPI FIELD CARDS â”€â”€ */
 .kpi-field-card {
   background: white; border: 1px solid var(--border);
   border-radius: 8px; padding: 20px;
@@ -906,7 +904,7 @@ body {
 }
 .field-select:focus { border-color: var(--forest3); }
 
-/* ── FORM ACTION BAR ── */
+/* â”€â”€ FORM ACTION BAR â”€â”€ */
 .form-actions {
   position: sticky; bottom: 0;
   background: white; border-top: 2px solid var(--forest2);
@@ -917,7 +915,7 @@ body {
 .fa-stats { font-size: 11px; color: var(--ink3); margin-right: auto; }
 .fa-stats strong { color: var(--forest2); }
 
-/* ── BUTTONS ── */
+/* â”€â”€ BUTTONS â”€â”€ */
 .btn {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 18px; border-radius: 6px;
@@ -932,7 +930,7 @@ body {
 .btn-ghost-form     { background: transparent; color: var(--ink3); }
 .btn-ghost-form:hover { color: var(--ink); background: var(--border2); }
 
-/* ── TOAST ── */
+/* â”€â”€ TOAST â”€â”€ */
 .toast {
   position: fixed; bottom: 80px; right: 24px;
   background: var(--forest); color: white;
@@ -947,7 +945,7 @@ body {
 .toast.t-ok   { border-left: 4px solid var(--mint); }
 .toast.t-warn { border-left: 4px solid var(--gold); }
 
-/* ── SUCCESS / ERROR MSGS ── */
+/* â”€â”€ SUCCESS / ERROR MSGS â”€â”€ */
 .success-msg {
   background: rgba(45,157,94,0.1); border: 1px solid rgba(45,157,94,0.3);
   color: var(--c-complete); padding: 10px 14px; border-radius: 7px;
@@ -958,7 +956,7 @@ body {
   color: var(--crimson); padding: 10px 14px; border-radius: 7px; font-size: 12px;
 }
 
-/* ── SCORE PILLS ── */
+/* â”€â”€ SCORE PILLS â”€â”€ */
 .pct-pill {
   display: inline-block; padding: 2px 9px; border-radius: 12px;
   font-weight: 700; font-size: 11px; font-family: 'Barlow Condensed', sans-serif;
@@ -969,7 +967,7 @@ body {
 .p75  { background: rgba(82,183,136,.12);  color: #2d7d5f; }
 .p100 { background: rgba(45,157,94,.12);   color: #2d9d5e; }
 
-/* ── COUNTRY BLOCK ── */
+/* â”€â”€ COUNTRY BLOCK â”€â”€ */
 .country-block {
   border: 1px solid var(--border); border-radius: 8px;
   overflow: hidden; margin-bottom: 20px;
@@ -985,12 +983,12 @@ body {
 
 @media (max-width: 900px) { .sidebar { display: none; } }
 
-/* ── HEADER HEIGHT for sticky offset ── */
+/* â”€â”€ HEADER HEIGHT for sticky offset â”€â”€ */
 .header-h60 { --header: 60px; }
 
-/* ══════════════════════════════════════════════════════
-   QUESTIONNAIRE FORM — Formulaire 1 & 2
-══════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   QUESTIONNAIRE FORM â€” Formulaire 1 & 2
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 :root { --header: 60px; --sidebar: 260px; }
 
 .header {
@@ -1070,3 +1068,4 @@ body {
   text-transform: uppercase; letter-spacing: .08em; color: var(--forest); margin-bottom: 6px;
 }
 .intro-text { font-size: 12px; color: var(--ink2); line-height: 1.7; }
+

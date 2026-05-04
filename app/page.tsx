@@ -1,10 +1,11 @@
-import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry } from "@/lib/data";
+import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry, getLastCountryUpdate } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import HeaderControls from "@/components/HeaderControls";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DocsDropdown from "@/components/DocsDropdown";
 import KpiGrid from "@/components/KpiGrid";
 import StatusBar from "@/components/StatusBar";
 import ActionTable from "@/components/ActionTable";
@@ -21,9 +22,8 @@ export default async function DashboardPage() {
   const langCookie = cookieStore.get("lang")?.value;
   const locale: Locale = langCookie === "fr" || langCookie === "pt" ? langCookie : "en";
 
-  const [rawData, experts, allCountryTargets, session] = await Promise.all([
+  const [rawData, allCountryTargets, session] = await Promise.all([
     getDashboardData(),
-    getTopExperts(3),
     getAllCountryTargets(),
     getServerSession(),
   ]);
@@ -45,6 +45,11 @@ export default async function DashboardPage() {
   const { kpis, actions, countries, targets } = filtered ?? rawData;
   const countryTargets = filtered?.countryTargets ?? allCountryTargets;
 
+  const [experts, lastCountryUpdate] = await Promise.all([
+    getTopExperts(3, userCountry),
+    getLastCountryUpdate(userCountry),
+  ]);
+
   return (
     <>
       {/* ── HEADER ── */}
@@ -62,10 +67,8 @@ export default async function DashboardPage() {
               <div className="status-dot" />
               <span className="live-label">{t(locale, "live")}</span>
             </div>
-            <div className="hctl">
-              📅 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 11 }}>{kpis.reportPeriod}</span>
-            </div>
             <LanguageSwitcher />
+            <DocsDropdown show={!!session} />
             <HeaderControls session={session} />
           </div>
         </div>
@@ -76,29 +79,33 @@ export default async function DashboardPage() {
 
         {/* Section 1: KPI Summary */}
         <div className="section-label">{t(locale, "execSummary")}</div>
-        <KpiGrid kpis={kpis} experts={experts} locale={locale} />
+        <KpiGrid kpis={kpis} experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} isCountryProfile={!isAdmin && !!userCountry} globalPctCompleted={rawData.kpis.pctCompleted} />
 
         {/* Section 2: Status + Action Table */}
         <div className="section-label">{t(locale, "statusOverview")}</div>
         <div className="row-wide">
           <StatusDonut kpis={kpis} isAdmin={isAdmin} />
-          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} canExport={!!session} />
+          <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} canExport={isAdmin} />
         </div>
 
         {/* Section 3: Map + Status Bar */}
         <div className="section-label">{t(locale, "geoOverview")}</div>
         <div className="row-map">
           <AfricaMap countries={countries} isAdmin={isAdmin} />
-          <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} />
+          <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} isCountryProfile={!isAdmin && !!userCountry} />
         </div>
 
-        {/* Section 4: Country Breakdown */}
-        <div className="section-label">{t(locale, "countryBreakdown")}</div>
-        <BreakdownTable countries={countries} isAdmin={isAdmin} canExport={!!session} />
+        {/* Section 4: Country Breakdown — hidden for country profile */}
+        {!userCountry && (
+          <>
+            <div className="section-label">{t(locale, "countryBreakdown")}</div>
+            <BreakdownTable countries={countries} isAdmin={isAdmin} canExport={!!session} />
+          </>
+        )}
 
         {/* Section 5: Safety Targets */}
         <div className="section-label">{t(locale, "questProgress")}</div>
-        <TargetGrid targets={targets} isAdmin={isAdmin} canExport={!!session} />
+        <TargetGrid targets={targets} isAdmin={isAdmin} canExport={!!session} allCountryTargets={isAdmin ? allCountryTargets : undefined} />
 
         {/* Section 6: Download Reports (all authenticated users) */}
         {session && (
@@ -106,7 +113,6 @@ export default async function DashboardPage() {
             <div className="section-label">{t(locale, "reportSection")}</div>
             <CountryReportCard
               kpis={kpis}
-              actions={actions}
               countries={countries}
               targets={targets}
               userCountry={userCountry}

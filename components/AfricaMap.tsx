@@ -9,7 +9,6 @@ const STATUS_COLORS: Record<string, string> = {
   completed:  "#2d9d5e",
   inprogress: "#f0a500",
   delayed:    "#e07b39",
-  onhold:     "#c0392b",
   notstarted: "#95a5a6",
 };
 
@@ -18,7 +17,6 @@ function getDominantStatus(row: CountryRow): string {
     { k: "completed",  v: row.completed },
     { k: "inprogress", v: row.inprogress },
     { k: "delayed",    v: row.delayed },
-    { k: "onhold",     v: row.onhold },
     { k: "notstarted", v: row.notstarted },
   ].reduce((a, b) => (b.v > a.v ? b : a)).k;
 }
@@ -46,7 +44,6 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
     completed:  t("completed"),
     inprogress: t("inProgress"),
     delayed:    t("delayed"),
-    onhold:     t("onHold"),
     notstarted: t("notStarted"),
   };
 
@@ -127,10 +124,10 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
   ];
 
   async function handleExcel() {
-    const headers = [t("colCountry"), t("totalActions"), t("pctCompleted"), t("pctInProgress"), t("delayed"), t("onHold"), t("notStarted"), "Entity", t("colStatus")];
+    const headers = [t("colCountry"), t("totalActions"), t("pctCompleted"), t("pctInProgress"), t("delayed"), t("notStarted"), "Entity", t("colStatus")];
     const rows = [...countries]
       .sort((a, b) => a.country.localeCompare(b.country))
-      .map(c => [c.country, c.actions, c.completed, c.inprogress, c.delayed, c.onhold, c.notstarted, c.entity, statusLabels[getDominantStatus(c)]]);
+      .map(c => [c.country, c.actions, c.completed, c.inprogress, c.delayed, c.notstarted, c.entity, statusLabels[getDominantStatus(c)]]);
     await exportExcel("AFCAC_Africa_Map_Status", t("africaMap"), headers, rows);
   }
 

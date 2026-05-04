@@ -38,7 +38,8 @@ export async function getKpis(): Promise<KpiData> {
 }
 
 export async function getActions(): Promise<ActionRow[]> {
-  return dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
+  const rows = await dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
+  return rows.map((r) => (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r);
 }
 
 export async function getCountries(): Promise<CountryRow[]> {
@@ -107,7 +108,13 @@ const COUNTRY_REGIONS: Record<string, string> = {
 };
 
 export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
-  return (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  const all = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  for (const country of Object.keys(all)) {
+    all[country] = all[country].map((t) =>
+      (t.status as string) === "onhold" ? { ...t, status: "notstarted" as const } : t
+    );
+  }
+  return all;
 }
 
 export async function getCountryTargets(country: string): Promise<TargetRow[]> {
@@ -192,9 +199,9 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   const countries = await getCountries();
   const idx = countries.findIndex((c) => c.country === country);
   if (idx >= 0) {
-    countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, onhold: 0, notstarted };
+    countries[idx] = { ...countries[idx], actions: total, completed, inprogress, delayed, notstarted };
   } else {
-    countries.push({ country, region: COUNTRY_REGIONS[country] ?? "Africa", actions: total, completed, inprogress, delayed, onhold: 0, notstarted, budget: 0, entity: "CAA" });
+    countries.push({ country, region: COUNTRY_REGIONS[country] ?? "Africa", actions: total, completed, inprogress, delayed, notstarted, budget: 0, entity: "CAA" });
   }
   await saveCountries(countries);
 }
@@ -210,18 +217,21 @@ export function filterDashboardForCountry(
   const countries = data.countries.filter((c) => c.country === country);
   const targets   = countryTargets[country] ?? data.targets.map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
 
-  const total = actions.length || 1;
-  const count = (status: string) => actions.filter((a) => a.status === status).length;
+  // All KPI percentages derived from targets (questionnaire objectives) for the country
+  // profile — a single synthetic action row per country is not granular enough.
+  const tTotal = targets.length || 1;
+  const tPct = (fn: (t: TargetRow) => boolean) => Math.round(targets.filter(fn).length / tTotal * 100);
 
   const kpis: KpiData = {
     ...data.kpis,
-    totalCountries:     1,
-    totalActions:       actions.length,
-    pctCompleted:       Math.round((count("completed")  / total) * 100),
-    pctInProgress:      Math.round((count("inprogress") / total) * 100),
-    pctDelayed:         Math.round((count("delayed")    / total) * 100),
-    pctOnHold:          Math.round((count("onhold")     / total) * 100),
-    pctNotStarted:      Math.round((count("notstarted") / total) * 100),
+    totalCountries:      1,
+    totalCountriesTrend: "",
+    totalActions:        targets.filter((t) => t.pct > 0).length,
+    totalActionsTrend:   "",
+    pctCompleted:        tPct((t) => t.pct === 100),
+    pctInProgress:       tPct((t) => t.pct > 0 && t.pct < 100),
+    pctDelayed:      0,
+    pctNotStarted:   tPct((t) => t.pct === 0),
   };
 
   return {
@@ -261,8 +271,9 @@ export async function appendUpdateLog(log: UpdateLog): Promise<void> {
   await kvSet(K.updates, logs);
 }
 
-export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
-  const logs = await getUpdateLogs();
+export async function getTopExperts(limit = 3, country?: string | null): Promise<ExpertStat[]> {
+  const allLogs = await getUpdateLogs();
+  const logs = country ? allLogs.filter(l => l.country === country) : allLogs;
   const map: Record<string, { total: number; targetsSum: number; lastDate: string }> = {};
 
   for (const log of logs) {
@@ -281,4 +292,11 @@ export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
     }))
     .sort((a, b) => b.totalUpdates - a.totalUpdates)
     .slice(0, limit);
+}
+
+export async function getLastCountryUpdate(country?: string | null): Promise<UpdateLog | null> {
+  const logs = await getUpdateLogs();
+  const filtered = country ? logs.filter(l => l.country === country) : logs;
+  if (filtered.length === 0) return null;
+  return filtered.reduce((latest, log) => log.date > latest.date ? log : latest);
 }

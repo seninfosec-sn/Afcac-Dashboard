@@ -12,7 +12,6 @@ export default function StatusDonut({ kpis, isAdmin }: { kpis: KpiData; isAdmin?
     { name: t("completed"),   value: kpis.pctCompleted,  color: "#2d9d5e" },
     { name: t("inProgress"),  value: kpis.pctInProgress, color: "#f0a500" },
     { name: t("delayed"),     value: kpis.pctDelayed,    color: "#e07b39" },
-    { name: t("onHold"),      value: kpis.pctOnHold,     color: "#c0392b" },
     { name: t("notStarted"),  value: kpis.pctNotStarted, color: "#95a5a6" },
   ];
 
