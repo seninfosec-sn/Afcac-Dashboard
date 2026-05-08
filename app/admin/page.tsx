@@ -25,7 +25,7 @@ export default async function AdminPage() {
   const currentUser = await findUser(session.username);
   const displayName = currentUser?.displayName ?? session.username;
   const allUsers = await getUsers();
-  const isMasterAdmin = session.username === "admin";
+  const isMasterAdmin = ["admin", "mohamed.wade"].includes(session.username);
   const users = isMasterAdmin ? allUsers : [];
 
   return <AdminClient initialData={initialData} username={displayName} role={session.role} users={users} isMasterAdmin={isMasterAdmin} />;

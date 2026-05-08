@@ -9,6 +9,15 @@
     "country": "AFCAC HQ"
   },
   {
+    "username": "mohamed.wade",
+    "displayName": "Mohamed WADE",
+    "role": "admin",
+    "passwordHash": "",
+    "devPassword": "MohamedW@2024",
+    "email": "mohamed.wade@afcac.org",
+    "country": "AFCAC HQ"
+  },
+  {
     "username": "agnes.aguma",
     "displayName": "Agnes Aguma",
     "role": "admin",
