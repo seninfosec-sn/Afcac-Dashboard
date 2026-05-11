@@ -867,8 +867,9 @@ export default function AdminClient({
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colUsername")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colCountry")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Role</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700 }}>Account Status</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 140 }}>Actions</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 80 }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -895,6 +896,24 @@ export default function AdminClient({
                                   {ROLE_LABELS[u.role] ?? u.role}
                                 </span>
                               </td>
+                              <td style={{ padding: "6px 12px", textAlign: "center" }}>
+                                <button
+                                  onClick={() => canToggle ? toggleDisabled(u) : undefined}
+                                  disabled={!canToggle}
+                                  title={!canToggle ? "Protected account" : isDisabled ? "Enable this account" : "Disable this account"}
+                                  style={{
+                                    padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700,
+                                    cursor: canToggle ? "pointer" : "not-allowed",
+                                    border: isDisabled ? "1px solid #dc2626" : "1px solid #16a34a",
+                                    background: isDisabled ? "rgba(220,38,38,0.10)" : "rgba(22,163,74,0.10)",
+                                    color: isDisabled ? "#dc2626" : "#16a34a",
+                                    opacity: canToggle ? 1 : 0.4,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {isDisabled ? "🚫 Disabled" : "✅ Active"}
+                                </button>
+                              </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--amber)", border: "1px solid var(--border)" }}>
                                   {u.devPassword}
@@ -915,8 +934,8 @@ export default function AdminClient({
                             {/* Inline edit row */}
                             {isEditing && (
                               <tr key={`${u.username}-edit`} style={{ background: "rgba(1,119,100,0.04)", borderTop: "1px dashed var(--forest2)" }}>
-                                <td colSpan={7} style={{ padding: "14px 16px" }}>
-                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+                                <td colSpan={8} style={{ padding: "14px 16px" }}>
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
                                     <div>
                                       <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Display Name</label>
                                       <input type="text" value={editDraft.displayName} onChange={(e) => setEditDraft((d) => ({ ...d, displayName: e.target.value }))}
@@ -944,26 +963,6 @@ export default function AdminClient({
                                         <option value="">— No country —</option>
                                         {AFRICAN_STATES.map((c) => <option key={c} value={c}>{c}</option>)}
                                       </select>
-                                    </div>
-                                    {/* 5th field: Account Status */}
-                                    <div>
-                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Account Status</label>
-                                      <button
-                                        onClick={() => canToggle ? toggleDisabled(u) : undefined}
-                                        disabled={!canToggle}
-                                        title={!canToggle ? "Protected account — cannot be disabled" : isDisabled ? "Enable this account" : "Disable this account"}
-                                        style={{
-                                          width: "100%", padding: "6px 8px", borderRadius: 5, fontWeight: 700, fontSize: 12,
-                                          cursor: canToggle ? "pointer" : "not-allowed",
-                                          border: isDisabled ? "1px solid #dc2626" : "1px solid #16a34a",
-                                          background: isDisabled ? "rgba(220,38,38,0.10)" : "rgba(22,163,74,0.10)",
-                                          color: isDisabled ? "#dc2626" : "#16a34a",
-                                          opacity: canToggle ? 1 : 0.45,
-                                          boxSizing: "border-box",
-                                        }}
-                                      >
-                                        {isDisabled ? "🚫 Disabled — Enable" : "✅ Active — Disable"}
-                                      </button>
                                     </div>
                                   </div>
 
