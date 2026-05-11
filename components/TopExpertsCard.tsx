@@ -14,7 +14,7 @@ function timeAgo(isoDate: string, locale: Locale): string {
 
 function formatDateTime(isoDate: string, locale: Locale): { date: string; time: string } {
   const d = new Date(isoDate);
-  const langMap: Record<Locale, string> = { en: "en-GB", fr: "fr-FR", pt: "pt-PT" };
+  const langMap: Record<Locale, string> = { en: "en-GB", fr: "fr-FR", pt: "pt-PT", ar: "ar-SA" };
   const date = d.toLocaleDateString(langMap[locale], { day: "2-digit", month: "short", year: "numeric" });
   const time = d.toLocaleTimeString(langMap[locale], { hour: "2-digit", minute: "2-digit" });
   return { date, time };

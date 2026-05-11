@@ -1,6 +1,6 @@
-export type Locale = "en" | "fr" | "pt";
+export type Locale = "en" | "fr" | "pt" | "ar";
 
-export const LOCALES: Locale[] = ["en", "fr", "pt"];
+export const LOCALES: Locale[] = ["en", "fr", "pt", "ar"];
 
 export const translations = {
   en: {
@@ -745,6 +745,254 @@ export const translations = {
     scoreDesc50:  "Parcialmente implementado, lacunas subsistem",
     scoreDesc75:  "Implementação avançada, alguns pontos pendentes",
     scoreDesc100: "Totalmente implementado e operacional",
+  },
+
+  ar: {
+    // Header
+    dashboardTitle: "أهداف سلامة أبوجا المعدّلة - أفكاك",
+    dashboardSub: "لوحة متابعة وإعداد تقارير أهداف سلامة أبوجا المعدّلة",
+    live: "مباشر",
+    signIn: "تسجيل الدخول",
+    adminLogin: "دخول المشرف",
+    admin: "الاستبيان",
+    logOut: "تسجيل الخروج",
+    disconnect: "قطع الاتصال",
+
+    // Section labels
+    execSummary: "الملخص التنفيذي",
+    statusOverview: "نظرة عامة على الحالة",
+    geoOverview: "النظرة الجغرافية والحالة العامة",
+    countryBreakdown: "توزيع خطة العمل حسب الدولة",
+    questProgress: "أهداف سلامة أفكاك - تقدم الاستبيان",
+
+    // Footer
+    footerTitle: "لوحة أهداف سلامة أبوجا المعدّلة",
+    lastUpdated: "آخر تحديث",
+    footerSource: "مصدر البيانات: وحدة سلامة أفكاك عبر النقاط المحورية للدول · © أفكاك",
+
+    // KPI labels
+    totalCountries: "إجمالي الدول",
+    totalActions: "إجمالي الإجراءات",
+    pctCompleted: "% مكتمل",
+    pctInProgress: "% قيد التنفيذ",
+    pctDelayed: "% متأخر",
+    pctNotStarted: "% لم يبدأ",
+    avgDuration: "متوسط المدة (أسبوع)",
+    continentalProgress: "الإنجاز الأفريقي الإجمالي",
+    continentalSub: "● جميع الدول الأفريقية",
+    expertsPlanned: "الخبراء المخططون",
+    monthsAvg: "● متوسط 3.5 أشهر",
+    afcacExperts: "● خبراء أفكاك",
+    reportPeriodLabel: "فترة التقرير",
+
+    // Top Experts
+    topExpert: "أفضل خبير - التحديثات",
+    updates: "تحديث",
+    noUpdates: "● لا توجد تحديثات",
+    hoursAgo: "س مضت",
+    daysAgo: "ي مضت",
+    lastUpdateBy: "آخر تحديث بواسطة",
+    atTime: "في",
+
+    // Status labels
+    completed: "مكتمل",
+    inProgress: "قيد التنفيذ",
+    delayed: "متأخر",
+    notStarted: "لم يبدأ",
+
+    // StatusBar
+    statusDistribution: "التوزيع القاري للحالة",
+    stateStatusDistribution: "توزيع حالة الدولة",
+    actions: "الإجراءات",
+    detailedDist: "التوزيع التفصيلي",
+    aboutIndicator: "حول هذا المؤشر",
+    statusBarDesc: "يُظهر هذا الرسم البياني التوزيع العالمي لحالات الإجراءات عبر جميع الإجراءات ضمن أهداف سلامة أبوجا المعدّلة لأفكاك. كل شريحة تمثل فئة تقدم:",
+    completedDesc: "- الهدف محقق بالكامل (100%)",
+    inProgressDesc: "- التنفيذ جارٍ",
+    delayedDesc: "- متأخر عن الجدول الزمني المخطط",
+    notStartedDesc: "- الإجراء لم يُبدأ بعد",
+    statusSource: "المصدر: وحدة سلامة أفكاك عبر النقاط المحورية للدول · البيانات محدّثة من قِبل النقاط المحورية الوطنية.",
+
+    // StatusDonut
+    statusDistTitle: "توزيع الحالة",
+
+    // ActionTable
+    actionPlanDetail: "خطة العمل - التفاصيل",
+    rows: "صفوف",
+    hideTargets: "إخفاء الأهداف",
+    seeTargets: "عرض 15 هدفاً",
+    abujaTargets: "أهداف سلامة أبوجا",
+    colCountry: "الدولة",
+    colTargetId: "معرّف الهدف",
+    colSection: "القسم",
+    colStatus: "الحالة",
+    colStart: "البداية",
+    colEnd: "النهاية",
+    colId: "المعرّف",
+    colTarget: "الهدف",
+    colGroup: "المجموعة",
+    colProgress: "التقدم",
+    colDeadline: "الموعد النهائي",
+
+    // BreakdownTable
+    actionPlanBreakdown: "توزيع خطة العمل حسب الدولة",
+    countries: "الدول",
+    colTotalActions: "إجمالي الإجراءات",
+    colPctCompleted: "% مكتمل",
+    colPctInProgress: "% قيد التنفيذ",
+    colResponsible: "المسؤول",
+    colProgressVisual: "مؤشر التقدم",
+
+    // TargetGrid
+    targetAchievement: "أفكاك / أهداف سلامة أبوجا - تقدم الإنجاز",
+    continentalScore: "النقاط القارية",
+    colHash: "#",
+    colSub: "فرعي",
+    colScore: "النقاط",
+    continentalAvg: "المتوسط القاري - جميع الأهداف الـ15",
+    targets: "هدف",
+    targetsPlural: "أهداف",
+
+    // AfricaMap
+    africaMap: "أفريقيا - خريطة حالة الإجراءات",
+    targetsLabel: "الأهداف:",
+    noData: "لا توجد بيانات",
+
+    // ExportButtons
+    downloadExcel: "تحميل Excel",
+    downloadPdf: "تحميل PDF",
+
+    // Country Report Card
+    reportSection: "تحميل تقرير الدولة",
+    reportDownload: "تحميل تقريري",
+    reportGenerating: "جارٍ الإنشاء...",
+    reportExcelDesc: "Excel متعدد الأوراق: مؤشرات · أهداف · إجراءات",
+    reportPdfDesc: "تقرير PDF منسق مع جميع الأقسام",
+    reportCountryLabel: "الدولة",
+    reportAllCountries: "جميع الدول (إجمالي)",
+
+    // Login
+    loginTitle: "لوحة أفكاك",
+    loginSub: "وصول آمن · تسجيل الدخول",
+    labelUsername: "اسم المستخدم",
+    labelPassword: "كلمة المرور",
+    placeholderUsername: "your.username",
+    signingIn: "جارٍ المصادقة...",
+    backToDashboard: "العودة إلى اللوحة",
+    adminAccounts: "حسابات المشرف:",
+    loginFailed: "فشل تسجيل الدخول",
+    networkError: "خطأ في الشبكة - يرجى المحاولة مرة أخرى",
+
+    // Admin panel
+    adminPanelTitle: "أفكاك - تحديث اللوحة",
+    adminPanelSub: "لوحة أفكاك · بيانات في الوقت الحقيقي · أهداف سلامة أبوجا المعدّلة",
+    tabActions: "الإجراءات",
+    tabCountries: "الدول",
+    tabTargets: "الأهداف",
+    tabExperts: "الخبراء",
+    tabUsers: "المستخدمون",
+    tabSessions: "الجلسات",
+    dashboard: "اللوحة",
+
+    // Language switcher
+    language: "اللغة",
+
+    // Questionnaire form
+    qFormTitle: "أفكاك - أهداف سلامة أبوجا المعدّلة",
+    qFormLabel: "استبيان السلامة",
+    qFormSub: "أفكاك · استبيان سلامة الدولة",
+    qCompletion: "الإكمال",
+    qSummary: "الملخص",
+    qSubmit: "إرسال",
+    qStateLabel: "الدولة / البلد",
+    qSelectState: "- اختر الدولة -",
+    qAnswered: "تمت الإجابة",
+    qRemaining: "المتبقي",
+    qAddComment: "إضافة تعليق / ملاحظة",
+    qCommentPlaceholder: "اختياري: صف التحديات أو السياق أو الأدلة الداعمة...",
+    qClearAll: "مسح الكل",
+    qReviewSummary: "مراجعة الملخص",
+    qSubmitDashboard: "إرسال إلى اللوحة",
+    qSelectLevel: "- اختر مستوى التنفيذ -",
+    qClearedMsg: "تم مسح جميع الإجابات",
+    qSelectStateFirst: "يرجى اختيار دولة أولاً",
+    qUnansweredMsg: "سؤال/أسئلة لم تتم الإجابة عليها بعد. إرسال على أي حال؟",
+    qClearConfirm: "مسح جميع إجابات هذا النموذج؟",
+    qSubmittedMsg: "تم إرسال الاستبيان - تم تصدير JSON",
+    qExportJSON: "تصدير JSON",
+    qExportCSV: "تصدير CSV",
+    qClose: "إغلاق",
+    qAvgScore: "متوسط النقاط",
+    qSummaryTitle: "الملخص",
+    qIntroText: "يغطي هذا الاستبيان {total} هدفاً عبر الرقابة على السلامة وبرامج سلامة الدولة والبنية التحتية والملاحة الجوية والأهداف البيئية. لكل سؤال، اختر الخيار الذي يصف بشكل أفضل المستوى الحالي لتنفيذ دولتك. تتراوح درجة كل خيار من 0% (لم يبدأ) إلى 100% (محقق بالكامل).",
+    qColHash: "#",
+    qColTarget: "الهدف",
+    qColScore: "النقاط",
+    qColStatus: "الحالة",
+    qColComments: "التعليقات",
+    qQuestions: "سؤال",
+    qQuestionsPlural: "أسئلة",
+
+    // Admin tabs
+    adminTabKpisTitle: "إدارة مؤشرات الأداء",
+    adminTabTargetsTitle: "إدارة الأهداف",
+    adminTabActionsTitle: "إدارة الإجراءات",
+    adminTabCountriesTitle: "إدارة الدول",
+    adminTabUsersTitle: "إدارة المستخدمين",
+    adminTabSessionsTitle: "إدارة الجلسات",
+
+    // Admin intro texts
+    adminIntroKpis: "إدارة مؤشرات الأداء الرئيسية المعروضة في اللوحة.",
+    adminIntroTargets: "إدارة {n} هدفاً من أهداف السلامة عبر {g} مجموعات.",
+    adminIntroActions: "إدارة خطط العمل لجميع الدول.",
+    adminIntroCountries: "إدارة بيانات الدول والنقاط المحورية.",
+    adminIntroUsers: "إدارة {n} حساب مستخدم مشرف.",
+    adminIntroSessions: "عرض وإدارة الجلسات النشطة.",
+
+    // Admin misc
+    adminActionsDetailTitle: "تفاصيل الإجراء",
+    adminDeadline: "الموعد النهائي",
+    adminTargetsSingular: "هدف",
+    adminTargetsPlural: "أهداف",
+    adminTrendPlaceholder: "وسم الاتجاه...",
+    adminSaveError: "خطأ في الحفظ",
+    adminSaveSuccess: "تم تحديث اللوحة بنجاح",
+    adminTargetsAnswered: "{n} / {total} هدفاً مكتملاً",
+    adminActiveTab: "التبويب النشط:",
+    adminCancel: "إلغاء",
+    adminSave: "حفظ التغييرات",
+    adminSaving: "جارٍ الحفظ...",
+    adminUpdaterTitle: "هوية المُعلِن",
+    adminUpdaterSub: "معلومات عن الشخص القائم بالتحديث",
+    adminKpiTitle:      "المؤشرات الرئيسية",
+    adminKpiCount:      "3 حقول",
+    adminStatusTitle:   "توزيع الحالة",
+    adminStatusCount:   "5 حقول - يجب أن يكون المجموع ~100%",
+    adminMetaTitle:     "البيانات الوصفية",
+    adminMetaCount:     "4 حقول",
+    adminActionsPlanTitle: "خطة العمل - التفاصيل حسب الدولة",
+    adminUsersTitle:    "بيانات الاعتماد - 54 دولة عضو",
+    adminUsersCount:    "{n} حساب · URL: /login",
+    colUsername:        "اسم المستخدم",
+    colPassword:        "كلمة المرور",
+    adminFullName: "الاسم الكامل",
+    adminFullNamePlaceholder: "مثال: محمد واد",
+    adminCountryRepresented: "الدولة الممثَّلة",
+    adminSelectCountry: "- اختر دولة -",
+
+    // Score options
+    scoreOpt0:   "أ)   0% - لم يبدأ / غير قابل للتطبيق",
+    scoreOpt25:  "ب)  25% - بدأ جزئياً",
+    scoreOpt50:  "ج)  50% - قيد التنفيذ / محقق جزئياً",
+    scoreOpt75:  "د)  75% - متقدم / على المسار",
+    scoreOpt100: "هـ) 100% - محقق بالكامل",
+
+    // Score descriptions
+    scoreDesc0:   "لم يبدأ",
+    scoreDesc25:  "بدأ لكن لم يكتمل",
+    scoreDesc50:  "مُنفَّذ جزئياً، ثمة فجوات",
+    scoreDesc75:  "تنفيذ متقدم، بعض المسائل معلقة",
+    scoreDesc100: "مُنفَّذ بالكامل وتشغيلي",
   },
 } as const;
 
