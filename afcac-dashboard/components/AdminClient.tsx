@@ -901,31 +901,14 @@ export default function AdminClient({
                                 </code>
                               </td>
                               <td style={{ padding: "8px 12px", textAlign: "center" }}>
-                                <div style={{ display: "flex", gap: 5, justifyContent: "center" }}>
-                                  <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
-                                    padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                                    border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
-                                    background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
-                                    color: isEditing ? "var(--amber)" : "var(--forest2)",
-                                  }}>
-                                    {isEditing ? "✕ Cancel" : "✎ Edit"}
-                                  </button>
-                                  <button
-                                    onClick={() => canToggle ? toggleDisabled(u) : undefined}
-                                    disabled={!canToggle}
-                                    title={!canToggle ? "Protected account" : isDisabled ? "Enable account" : "Disable account"}
-                                    style={{
-                                      padding: "4px 9px", borderRadius: 5, fontSize: 11, fontWeight: 700,
-                                      cursor: canToggle ? "pointer" : "not-allowed",
-                                      border: !canToggle ? "1px solid var(--border)" : isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
-                                      background: !canToggle ? "transparent" : isDisabled ? "rgba(22,163,74,0.1)" : "rgba(220,38,38,0.1)",
-                                      color: !canToggle ? "var(--ink4)" : isDisabled ? "#16a34a" : "#dc2626",
-                                      opacity: canToggle ? 1 : 0.4,
-                                    }}
-                                  >
-                                    {isDisabled ? "✓ Enable" : "🚫"}
-                                  </button>
-                                </div>
+                                <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
+                                  padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                                  border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
+                                  background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
+                                  color: isEditing ? "var(--amber)" : "var(--forest2)",
+                                }}>
+                                  {isEditing ? "✕ Cancel" : "✎ Edit"}
+                                </button>
                               </td>
                             </tr>
 
@@ -972,6 +955,21 @@ export default function AdminClient({
                                     </button>
                                     <button onClick={cancelEdit} style={{ padding: "6px 14px", borderRadius: 6, fontWeight: 600, fontSize: 12, cursor: "pointer", background: "var(--surface2)", color: "var(--ink2)", border: "1px solid var(--border)" }}>
                                       Cancel
+                                    </button>
+                                    <button
+                                      onClick={() => canToggle ? toggleDisabled(u) : undefined}
+                                      disabled={!canToggle}
+                                      title={!canToggle ? "Protected account" : isDisabled ? "Enable account" : "Disable account"}
+                                      style={{
+                                        padding: "6px 14px", borderRadius: 6, fontWeight: 700, fontSize: 12,
+                                        cursor: canToggle ? "pointer" : "not-allowed",
+                                        border: !canToggle ? "1px solid var(--border)" : isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
+                                        background: !canToggle ? "transparent" : isDisabled ? "rgba(22,163,74,0.1)" : "rgba(220,38,38,0.1)",
+                                        color: !canToggle ? "var(--ink4)" : isDisabled ? "#16a34a" : "#dc2626",
+                                        opacity: canToggle ? 1 : 0.35,
+                                      }}
+                                    >
+                                      {isDisabled ? "✓ Enable Account" : "🚫 Disable Account"}
                                     </button>
                                     <span style={{ fontSize: 11, color: "var(--ink3)", marginLeft: 6 }}>
                                       Editing: <strong style={{ color: "var(--forest2)" }}>{u.username}</strong>
