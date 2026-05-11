@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -40,8 +40,8 @@ const NAV_ITEMS: { id: Tab; icon: string; label: string; sub: string; adminOnly?
   { id: "targets",   icon: "🎯", label: "Safety Targets",  sub: "39 AFCAC targets" },
   { id: "actions",   icon: "📋", label: "Action Plan",     sub: "15 country actions" },
   { id: "countries", icon: "🌍", label: "Country Data",    sub: "15 countries" },
-  { id: "users",     icon: "🔑", label: "State Access",    sub: "54 focal points",    adminOnly: true },
-  { id: "sessions",  icon: "🟢", label: "Users",          sub: "Online & history",   adminOnly: true },
+  { id: "users",     icon: "🔑", label: "Accès États",     sub: "54 points focaux",   adminOnly: true },
+  { id: "sessions",  icon: "🟢", label: "Utilisateurs",   sub: "En ligne & historique", adminOnly: true },
 ];
 
 /* ─── Toast ──────────────────────────────────────── */
@@ -59,12 +59,14 @@ function Toast({ msg, type, visible }: { msg: string; type: "ok" | "warn" | ""; 
 export default function AdminClient({
   initialData,
   username,
+  displayName,
   role,
   users = [],
   isMasterAdmin = false,
 }: {
   initialData: DashboardData;
   username: string;
+  displayName: string;
   role: UserRole;
   users?: AppUser[];
   isMasterAdmin?: boolean;
@@ -78,7 +80,7 @@ export default function AdminClient({
   const [targets, setTargets] = useState<TargetRow[]>(initialData.targets);
   const [saving, setSaving] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
-  const [fullName] = useState(username);
+  const [fullName] = useState(displayName);
   const [updaterCountry, setUpdaterCountry] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
   const [toastVisible, setToastVisible] = useState(false);
@@ -99,6 +101,26 @@ export default function AdminClient({
     setEditDraft({ devPassword: "", role: u.role, country: u.country ?? "", displayName: u.displayName, email: u.email ?? "" });
   }
   function cancelEdit() { setEditingUser(null); }
+
+  const MASTER_ADMINS = ["admin", "mohamed.wade"];
+
+  async function toggleDisabled(u: AppUser) {
+    const newDisabled = !u.disabled;
+    if (MASTER_ADMINS.includes(u.username)) return; // protect master admins
+    if (u.username === username) return;             // cannot disable yourself
+    try {
+      const res = await fetch("/api/admin/update-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: u.username, disabled: newDisabled }),
+      });
+      if (!res.ok) throw new Error();
+      setLocalUsers((prev) => prev.map((p) => p.username === u.username ? { ...p, disabled: newDisabled } : p));
+      showToast(newDisabled ? "🚫 Account disabled" : "✅ Account enabled", newDisabled ? "warn" : "ok");
+    } catch {
+      showToast("❌ Error updating account", "warn");
+    }
+  }
 
   async function saveUser() {
     if (!editingUser) return;
@@ -157,8 +179,8 @@ export default function AdminClient({
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? t('adminSaveError'));
-      showToast(t('adminSaveSuccess'), "ok");
+      if (!res.ok) throw new Error(data.error ?? "Erreur de sauvegarde");
+      showToast("✓ Tableau de bord mis à jour avec succès", "ok");
       router.refresh();
     } catch (err) {
       showToast(`⚠ ${(err as Error).message}`, "warn");
@@ -226,7 +248,7 @@ export default function AdminClient({
   }, {});
 
   /* ── Avatar initial ── */
-  const initial = username.charAt(0).toUpperCase();
+  const initial = displayName.charAt(0).toUpperCase();
 
   /* ══════════════════════════════════════════════
      RENDER
@@ -282,7 +304,7 @@ export default function AdminClient({
           {/* Profile block */}
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
-            <div className="profile-name">{username}</div>
+            <div className="profile-name">{displayName}</div>
             <div className="profile-role">{role === "admin" ? "Administrator" : "Expert"} · AFCAC</div>
             <div className="profile-meta">
               <div className="profile-meta-row">
@@ -391,14 +413,14 @@ export default function AdminClient({
           {tab !== "users" && (
             <>
               <div className="group-header" style={{ marginTop: 0 }}>
-                <span className="gh-title">{t('adminUpdaterTitle')}</span>
-                <span className="gh-count">{t('adminUpdaterSub')}</span>
+                <span className="gh-title">{t("adminUpdaterTitle")}</span>
+                <span className="gh-count">{t("adminUpdaterSub")}</span>
               </div>
               <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", marginBottom: 24 }}>
                 <div className="q-options">
                   <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
                     <div className="field-group">
-                      <label className="field-label">{t('adminFullName')}</label>
+                      <label className="field-label">{t("adminFullName")}</label>
                       <input
                         className="field-input"
                         type="text"
@@ -408,14 +430,14 @@ export default function AdminClient({
                       />
                     </div>
                     <div className="field-group">
-                      <label className="field-label">{t('adminCountryRepresented')}</label>
+                      <label className="field-label">{t("adminCountryRepresented")}</label>
                       <select
                         className="field-input"
                         value={updaterCountry}
                         onChange={(e) => setUpdaterCountry(e.target.value)}
                         style={{ cursor: "pointer" }}
                       >
-                        <option value="">{t('adminSelectCountry')}</option>
+                        <option value="">{t("adminSelectCountry")}</option>
                         {AFRICAN_STATES.map((c) => (
                           <option key={c} value={c}>{c}</option>
                         ))}
@@ -502,7 +524,7 @@ export default function AdminClient({
                           <input className="field-input" type="text"
                             value={kpis[m.trendKey] as string}
                             onChange={(e) => updateKpi(m.trendKey, e.target.value)}
-                            placeholder={t('adminTrendPlaceholder')}
+                            placeholder={t("adminTrendPlaceholder")}
                             style={{ flex: 1, fontSize: 11 }}
                           />
                         </div>
@@ -568,7 +590,7 @@ export default function AdminClient({
                           {tgt.question && (
                             <button
                               onClick={() => toggleQuestion(tgt.id)}
-                              title={t('adminActionsDetailTitle')}
+                              title="?"
                               style={{
                                 marginLeft: 8, width: 22, height: 22, borderRadius: "50%",
                                 border: "1.5px solid var(--gold)", background: openQuestions.has(tgt.id) ? "var(--gold)" : "transparent",
@@ -625,14 +647,14 @@ export default function AdminClient({
                                 tgt.pct === 50  ? t('scoreDesc50') :
                                 tgt.pct === 75  ? t('scoreDesc75') :
                                 tgt.pct === 100 ? t('scoreDesc100') :
-                                                 t('scoreDesc0')
+                                                  t('scoreDesc0')
                               }
                             </div>
                           )}
                         </div>
                         {/* Deadline field */}
                         <div style={{ padding: "0 20px 14px", display: "flex", alignItems: "center", gap: 10 }}>
-                          <span style={{ fontSize: 11, color: "var(--ink3)" }}>🗓 {t('adminDeadline')} :</span>
+                          <span style={{ fontSize: 11, color: "var(--ink3)" }}>{t('adminDeadline')}</span>
                           <input
                             className="field-input"
                             type="text"
@@ -653,13 +675,12 @@ export default function AdminClient({
           {tab === "actions" && (
             <>
               <div className="group-header" style={{ marginTop: 0 }}>
-                <span className="gh-title">{t("adminActionsPlanTitle")}</span>
+                <span className="gh-title">{t('adminActionsDetailTitle')}</span>
                 <span className="gh-count">{actions.length} actions</span>
               </div>
               {actions.map((row, idx) => {
                 const statusColor: Record<string, string> = {
-                  completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e07b39",
-                  notstarted: "#95a5a6",
+                  completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e07b39", notstarted: "#95a5a6",
                 };
                 const sc = statusColor[row.status] ?? "#95a5a6";
                 const isLast = idx === actions.length - 1;
@@ -777,8 +798,7 @@ export default function AdminClient({
                           {[
                             { v: row.completed, c: "var(--c-complete)" },
                             { v: row.inprogress, c: "var(--c-progress)" },
-                            { v: row.delayed, c: "var(--c-delayed)" },
-                            { v: row.notstarted, c: "var(--c-nostart)" },
+                            { v: row.delayed, c: "var(--c-delayed)" },                            { v: row.notstarted, c: "var(--c-nostart)" },
                           ].map((s, i) => s.v > 0 && (
                             <div key={i} style={{ width: `${s.v}%`, background: s.c, minWidth: 4 }} title={`${s.v}%`} />
                           ))}
@@ -847,18 +867,24 @@ export default function AdminClient({
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colUsername")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colCountry")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Role</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700 }}>Account Status</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 70 }}>Action</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 80 }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filtered.map((u, i) => {
                         const isEditing = editingUser === u.username;
+                        const isDisabled = !!u.disabled;
+                        const canToggle = !MASTER_ADMINS.includes(u.username) && u.username !== username;
                         return (
                           <>
-                            <tr key={u.username} style={{ borderTop: "1px solid var(--border)", background: isEditing ? "rgba(1,119,100,0.07)" : i % 2 === 0 ? "transparent" : "var(--surface2)" }}>
+                            <tr key={u.username} style={{ borderTop: "1px solid var(--border)", background: isEditing ? "rgba(1,119,100,0.07)" : i % 2 === 0 ? "transparent" : "var(--surface2)", opacity: isDisabled ? 0.55 : 1 }}>
                               <td style={{ padding: "8px 12px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
-                              <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>{u.displayName}</td>
+                              <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>
+                                {u.displayName}
+                                {isDisabled && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: "#fff", background: "#dc2626", padding: "1px 5px", borderRadius: 4, letterSpacing: ".04em" }}>DISABLED</span>}
+                              </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
                                   {u.username}
@@ -869,6 +895,24 @@ export default function AdminClient({
                                 <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 700, background: ROLE_COLORS[u.role] + "22", color: ROLE_COLORS[u.role], border: `1px solid ${ROLE_COLORS[u.role]}44` }}>
                                   {ROLE_LABELS[u.role] ?? u.role}
                                 </span>
+                              </td>
+                              <td style={{ padding: "6px 12px", textAlign: "center" }}>
+                                <button
+                                  onClick={() => canToggle ? toggleDisabled(u) : undefined}
+                                  disabled={!canToggle}
+                                  title={!canToggle ? "Protected account" : isDisabled ? "Enable this account" : "Disable this account"}
+                                  style={{
+                                    padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700,
+                                    cursor: canToggle ? "pointer" : "not-allowed",
+                                    border: isDisabled ? "1px solid #dc2626" : "1px solid #16a34a",
+                                    background: isDisabled ? "rgba(220,38,38,0.10)" : "rgba(22,163,74,0.10)",
+                                    color: isDisabled ? "#dc2626" : "#16a34a",
+                                    opacity: canToggle ? 1 : 0.4,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {isDisabled ? "🚫 Disabled" : "✅ Active"}
+                                </button>
                               </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--amber)", border: "1px solid var(--border)" }}>
@@ -890,7 +934,7 @@ export default function AdminClient({
                             {/* Inline edit row */}
                             {isEditing && (
                               <tr key={`${u.username}-edit`} style={{ background: "rgba(1,119,100,0.04)", borderTop: "1px dashed var(--forest2)" }}>
-                                <td colSpan={7} style={{ padding: "14px 16px" }}>
+                                <td colSpan={8} style={{ padding: "14px 16px" }}>
                                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
                                     <div>
                                       <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Display Name</label>
@@ -921,6 +965,7 @@ export default function AdminClient({
                                       </select>
                                     </div>
                                   </div>
+
                                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                     <button onClick={saveUser} disabled={userSaving} style={{
                                       padding: "6px 18px", borderRadius: 6, fontWeight: 700, fontSize: 12, cursor: userSaving ? "not-allowed" : "pointer",
@@ -942,7 +987,7 @@ export default function AdminClient({
                         );
                       })}
                       {filtered.length === 0 && (
-                        <tr><td colSpan={7} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
+                        <tr><td colSpan={8} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -962,18 +1007,18 @@ export default function AdminClient({
       {/* ── BOTTOM ACTION BAR ── */}
       <div className="form-actions">
         <div className="fa-stats">
-          {t('adminTargetsAnswered').replace('{n}', String(answeredTargets)).replace('{total}', String(targets.length))}
-          &nbsp;·&nbsp; {t('adminActiveTab')} <strong>{NAV_ITEMS.find((n) => n.id === tab)?.label}</strong>
+          <strong>{answeredTargets}</strong> / {targets.length} cibles renseignées
+          &nbsp;·&nbsp; Onglet actif : <strong>{NAV_ITEMS.find((n) => n.id === tab)?.label}</strong>
         </div>
         <Link href="/" className="btn btn-secondary-form">
-          {t('adminCancel')}
+          ← Annuler
         </Link>
         <button
           className="btn btn-primary-form"
           onClick={handleSave}
           disabled={saving}
         >
-          {saving ? t('adminSaving') : t('adminSave')}
+          {saving ? "Enregistrement…" : "💾 Enregistrer les modifications"}
         </button>
       </div>
 
@@ -982,3 +1027,4 @@ export default function AdminClient({
     </>
   );
 }
+

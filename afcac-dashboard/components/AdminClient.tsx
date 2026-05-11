@@ -987,7 +987,7 @@ export default function AdminClient({
                         );
                       })}
                       {filtered.length === 0 && (
-                        <tr><td colSpan={7} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
+                        <tr><td colSpan={8} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
                       )}
                     </tbody>
                   </table>
