@@ -45,6 +45,8 @@ export const translations = {
     noUpdates: "â— No updates",
     hoursAgo: "h ago",
     daysAgo: "d ago",
+    lastUpdateBy: "Last updated by",
+    atTime: "at",
 
     // Status labels
     completed: "Completed",
@@ -264,6 +266,8 @@ export const translations = {
     noUpdates: "â— Aucune mise Ã  jour",
     hoursAgo: "h",
     daysAgo: "j",
+    lastUpdateBy: "Derniere mise a jour par",
+    atTime: "a",
 
     // Status labels
     completed: "TerminÃ©",
@@ -483,6 +487,8 @@ export const translations = {
     noUpdates: "â— Nenhuma atualizaÃ§Ã£o",
     hoursAgo: "h atrÃ¡s",
     daysAgo: "d atrÃ¡s",
+    lastUpdateBy: "Ultima atualizacao por",
+    atTime: "as",
 
     // Status labels
     completed: "ConcluÃ­do",
@@ -702,6 +708,8 @@ export const translations = {
     noUpdates: "● لا توجد تحديثات",
     hoursAgo: "س مضت",
     daysAgo: "ي مضت",
+    lastUpdateBy: "آخر تحديث بواسطة",
+    atTime: "في",
 
     // Status labels
     completed: "مكتمل",

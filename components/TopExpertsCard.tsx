@@ -21,35 +21,34 @@ function formatDateTime(isoDate: string, locale: Locale): { date: string; time: 
 }
 
 export default function TopExpertsCard({ experts, locale = "en", lastCountryUpdate }: { experts: ExpertStat[]; locale?: Locale; lastCountryUpdate?: UpdateLog | null }) {
-  const top = experts[0] ?? null;
-
   return (
     <div className="kpi-card k-gold" style={{ animationDelay: ".35s", cursor: "default" }}>
       <div className="kpi-icon-wrap" style={{ background: "#fff8e6" }}>🏆</div>
 
-      {top ? (
+      {experts.length > 0 ? (
         <>
-          <div className="kpi-val" style={{ color: "var(--gold)", fontSize: 20, lineHeight: 1.1 }}>
-            {top.username}
+          <div className="kpi-label" style={{ marginBottom: 8 }}>{t(locale, "lastUpdateBy")}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {experts.map((e, i) => (
+              <div key={e.username} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{ fontSize: i === 0 ? 15 : 12, flexShrink: 0 }}>{MEDALS[i]}</span>
+                <span style={{
+                  flex: 1,
+                  color: i === 0 ? "var(--gold)" : "var(--ink2)",
+                  fontWeight: 700,
+                  fontSize: i === 0 ? 13 : 11,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}>
+                  {e.username}
+                </span>
+                <span style={{ color: "var(--ink3)", flexShrink: 0, fontSize: 10 }}>
+                  ▲ {e.totalUpdates} {t(locale, "updates")} · {timeAgo(e.lastUpdate, locale)}
+                </span>
+              </div>
+            ))}
           </div>
-          <div className="kpi-label">{t(locale, "topExpert")}</div>
-          <div className="kpi-trend trend-up">
-            ▲ {top.totalUpdates} {t(locale, "updates")} · {timeAgo(top.lastUpdate, locale)}
-          </div>
-
-          {experts.length > 1 && (
-            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 3, borderTop: "1px solid var(--border2)", paddingTop: 7 }}>
-              {experts.slice(1).map((e, i) => (
-                <div key={e.username} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10 }}>
-                  <span style={{ fontSize: 11 }}>{MEDALS[i + 1]}</span>
-                  <span style={{ flex: 1, color: "var(--ink2)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {e.username}
-                  </span>
-                  <span style={{ color: "var(--ink3)", flexShrink: 0 }}>{e.totalUpdates} {t(locale, "updates")}</span>
-                </div>
-              ))}
-            </div>
-          )}
 
           {lastCountryUpdate && (() => {
             const { date, time } = formatDateTime(lastCountryUpdate.date, locale);
@@ -71,7 +70,7 @@ export default function TopExpertsCard({ experts, locale = "en", lastCountryUpda
       ) : (
         <>
           <div className="kpi-val" style={{ color: "var(--ink3)", fontSize: 14 }}>—</div>
-          <div className="kpi-label">{t(locale, "topExpert")}</div>
+          <div className="kpi-label">{t(locale, "lastUpdateBy")}</div>
           <div className="kpi-trend trend-flat">{t(locale, "noUpdates")}</div>
         </>
       )}
