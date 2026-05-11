@@ -246,11 +246,22 @@ export function filterDashboardForCountry(
 /* ── Users (Neon DB primary, JSON file fallback) ─── */
 
 export async function getUsers(): Promise<AppUser[]> {
-  try {
-    const fromDb = await kvGet<AppUser[]>("users");
-    if (fromDb && fromDb.length > 0) return fromDb;
-  } catch { /* fall through */ }
-  try { return readJsonFile<AppUser[]>("users.json"); } catch { return []; }
+  let kvUsers: AppUser[] | null = null;
+  try { kvUsers = await kvGet<AppUser[]>("users"); } catch { /* ignore */ }
+
+  let fileUsers: AppUser[] = [];
+  try { fileUsers = readJsonFile<AppUser[]>("users.json"); } catch { /* ignore */ }
+
+  if (!kvUsers || kvUsers.length === 0) return fileUsers;
+
+  // Auto-sync: add any user from users.json not yet in KV (e.g. new seeds added via git)
+  const kvUsernames = new Set(kvUsers.map((u) => u.username.toLowerCase()));
+  const missing = fileUsers.filter((u) => !kvUsernames.has(u.username.toLowerCase()));
+  if (missing.length === 0) return kvUsers;
+
+  const merged = [...kvUsers, ...missing];
+  try { await kvSet("users", merged); } catch { /* ignore */ }
+  return merged;
 }
 
 export async function findUser(username: string): Promise<AppUser | null> {
