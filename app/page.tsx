@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic"; // always fresh data
 export default async function DashboardPage() {
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("lang")?.value;
-  const locale: Locale = langCookie === "fr" || langCookie === "pt" ? langCookie : "en";
+  const locale: Locale = langCookie === "fr" || langCookie === "pt" || langCookie === "ar" ? langCookie : "en";
 
   const [rawData, allCountryTargets, session] = await Promise.all([
     getDashboardData(),

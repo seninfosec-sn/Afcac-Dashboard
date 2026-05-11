@@ -17,10 +17,10 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("lang")?.value;
   const initialLocale: Locale =
-    langCookie === "fr" || langCookie === "pt" ? langCookie : "en";
+    langCookie === "fr" || langCookie === "pt" || langCookie === "ar" ? langCookie : "en";
 
   return (
-    <html lang={initialLocale}>
+    <html lang={initialLocale} dir={initialLocale === "ar" ? "rtl" : "ltr"}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&display=swap"
