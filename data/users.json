@@ -1213,5 +1213,14 @@
     "devPassword": "Mayun2024",
     "email": "mayun@afcac.org",
     "country": ""
+  },
+  {
+    "username": "ini.udofia",
+    "displayName": "Ini Udofia",
+    "role": "expert",
+    "passwordHash": "",
+    "devPassword": "Ini2025",
+    "email": "ini.udofia@afcac.org",
+    "country": ""
   }
 ]
