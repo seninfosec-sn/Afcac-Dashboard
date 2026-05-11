@@ -59,12 +59,14 @@ function Toast({ msg, type, visible }: { msg: string; type: "ok" | "warn" | ""; 
 export default function AdminClient({
   initialData,
   username,
+  displayName,
   role,
   users = [],
   isMasterAdmin = false,
 }: {
   initialData: DashboardData;
   username: string;
+  displayName: string;
   role: UserRole;
   users?: AppUser[];
   isMasterAdmin?: boolean;
@@ -78,7 +80,7 @@ export default function AdminClient({
   const [targets, setTargets] = useState<TargetRow[]>(initialData.targets);
   const [saving, setSaving] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
-  const [fullName] = useState(username);
+  const [fullName] = useState(displayName);
   const [updaterCountry, setUpdaterCountry] = useState("");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
   const [toastVisible, setToastVisible] = useState(false);
@@ -246,7 +248,7 @@ export default function AdminClient({
   }, {});
 
   /* ── Avatar initial ── */
-  const initial = username.charAt(0).toUpperCase();
+  const initial = displayName.charAt(0).toUpperCase();
 
   /* ══════════════════════════════════════════════
      RENDER
@@ -302,7 +304,7 @@ export default function AdminClient({
           {/* Profile block */}
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
-            <div className="profile-name">{username}</div>
+            <div className="profile-name">{displayName}</div>
             <div className="profile-role">{role === "admin" ? "Administrator" : "Expert"} · AFCAC</div>
             <div className="profile-meta">
               <div className="profile-meta-row">
@@ -908,16 +910,21 @@ export default function AdminClient({
                                   }}>
                                     {isEditing ? "✕ Cancel" : "✎ Edit"}
                                   </button>
-                                  {canToggle && (
-                                    <button onClick={() => toggleDisabled(u)} title={isDisabled ? "Enable account" : "Disable account"} style={{
-                                      padding: "4px 9px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer",
-                                      border: isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
-                                      background: isDisabled ? "rgba(22,163,74,0.1)" : "rgba(220,38,38,0.1)",
-                                      color: isDisabled ? "#16a34a" : "#dc2626",
-                                    }}>
-                                      {isDisabled ? "✓ Enable" : "🚫"}
-                                    </button>
-                                  )}
+                                  <button
+                                    onClick={() => canToggle ? toggleDisabled(u) : undefined}
+                                    disabled={!canToggle}
+                                    title={!canToggle ? "Protected account" : isDisabled ? "Enable account" : "Disable account"}
+                                    style={{
+                                      padding: "4px 9px", borderRadius: 5, fontSize: 11, fontWeight: 700,
+                                      cursor: canToggle ? "pointer" : "not-allowed",
+                                      border: !canToggle ? "1px solid var(--border)" : isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
+                                      background: !canToggle ? "transparent" : isDisabled ? "rgba(22,163,74,0.1)" : "rgba(220,38,38,0.1)",
+                                      color: !canToggle ? "var(--ink4)" : isDisabled ? "#16a34a" : "#dc2626",
+                                      opacity: canToggle ? 1 : 0.4,
+                                    }}
+                                  >
+                                    {isDisabled ? "✓ Enable" : "🚫"}
+                                  </button>
                                 </div>
                               </td>
                             </tr>
