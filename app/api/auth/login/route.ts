@@ -21,6 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    if (user.disabled) {
+      console.warn("[LOGIN] Account disabled:", username);
+      return NextResponse.json({ error: "Account disabled — contact your administrator" }, { status: 403 });
+    }
+
     // Validate password
     let valid = false;
     const trimmedPassword = password.trim();

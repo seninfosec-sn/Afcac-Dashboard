@@ -100,6 +100,26 @@ export default function AdminClient({
   }
   function cancelEdit() { setEditingUser(null); }
 
+  const MASTER_ADMINS = ["admin", "mohamed.wade"];
+
+  async function toggleDisabled(u: AppUser) {
+    const newDisabled = !u.disabled;
+    if (MASTER_ADMINS.includes(u.username)) return; // protect master admins
+    if (u.username === username) return;             // cannot disable yourself
+    try {
+      const res = await fetch("/api/admin/update-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: u.username, disabled: newDisabled }),
+      });
+      if (!res.ok) throw new Error();
+      setLocalUsers((prev) => prev.map((p) => p.username === u.username ? { ...p, disabled: newDisabled } : p));
+      showToast(newDisabled ? "🚫 Account disabled" : "✅ Account enabled", newDisabled ? "warn" : "ok");
+    } catch {
+      showToast("❌ Error updating account", "warn");
+    }
+  }
+
   async function saveUser() {
     if (!editingUser) return;
     setUserSaving(true);
@@ -846,17 +866,22 @@ export default function AdminClient({
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colCountry")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Role</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 70 }}>Action</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 140 }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filtered.map((u, i) => {
                         const isEditing = editingUser === u.username;
+                        const isDisabled = !!u.disabled;
+                        const canToggle = !MASTER_ADMINS.includes(u.username) && u.username !== username;
                         return (
                           <>
-                            <tr key={u.username} style={{ borderTop: "1px solid var(--border)", background: isEditing ? "rgba(1,119,100,0.07)" : i % 2 === 0 ? "transparent" : "var(--surface2)" }}>
+                            <tr key={u.username} style={{ borderTop: "1px solid var(--border)", background: isEditing ? "rgba(1,119,100,0.07)" : i % 2 === 0 ? "transparent" : "var(--surface2)", opacity: isDisabled ? 0.55 : 1 }}>
                               <td style={{ padding: "8px 12px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
-                              <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>{u.displayName}</td>
+                              <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>
+                                {u.displayName}
+                                {isDisabled && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: "#fff", background: "#dc2626", padding: "1px 5px", borderRadius: 4, letterSpacing: ".04em" }}>DISABLED</span>}
+                              </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
                                   {u.username}
@@ -874,14 +899,26 @@ export default function AdminClient({
                                 </code>
                               </td>
                               <td style={{ padding: "8px 12px", textAlign: "center" }}>
-                                <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
-                                  padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                                  border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
-                                  background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
-                                  color: isEditing ? "var(--amber)" : "var(--forest2)",
-                                }}>
-                                  {isEditing ? "✕ Cancel" : "✎ Edit"}
-                                </button>
+                                <div style={{ display: "flex", gap: 5, justifyContent: "center" }}>
+                                  <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
+                                    padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                                    border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
+                                    background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
+                                    color: isEditing ? "var(--amber)" : "var(--forest2)",
+                                  }}>
+                                    {isEditing ? "✕ Cancel" : "✎ Edit"}
+                                  </button>
+                                  {canToggle && (
+                                    <button onClick={() => toggleDisabled(u)} title={isDisabled ? "Enable account" : "Disable account"} style={{
+                                      padding: "4px 9px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer",
+                                      border: isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
+                                      background: isDisabled ? "rgba(22,163,74,0.1)" : "rgba(220,38,38,0.1)",
+                                      color: isDisabled ? "#16a34a" : "#dc2626",
+                                    }}>
+                                      {isDisabled ? "✓ Enable" : "🚫"}
+                                    </button>
+                                  )}
+                                </div>
                               </td>
                             </tr>
 

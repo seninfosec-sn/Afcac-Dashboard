@@ -101,4 +101,5 @@ export interface AppUser {
   devPassword: string;
   email: string;
   country: string;
+  disabled?: boolean;
 }

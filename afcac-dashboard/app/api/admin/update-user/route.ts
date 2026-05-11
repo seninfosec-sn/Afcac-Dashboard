@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     country?: string;
     displayName?: string;
     email?: string;
+    disabled?: boolean;
   };
 
   if (!body.username) {
@@ -38,7 +39,8 @@ export async function POST(request: NextRequest) {
   if (body.country     !== undefined) updated.country     = body.country;
   if (body.displayName !== undefined && body.displayName.trim() !== "")
     updated.displayName = body.displayName.trim();
-  if (body.email !== undefined) updated.email = body.email;
+  if (body.email    !== undefined) updated.email    = body.email;
+  if (body.disabled !== undefined) updated.disabled = body.disabled;
 
   users[idx] = updated;
   await kvSet("users", users);
