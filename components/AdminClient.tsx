@@ -7,6 +7,7 @@ import OnlineUsers from "@/components/OnlineUsers";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DocsDropdown from "@/components/DocsDropdown";
 import { useLanguage } from "@/components/LanguageProvider";
+import { exportExcel } from "@/lib/exportUtils";
 
 /* ─── Types ──────────────────────────────────────── */
 type Tab = "kpis" | "targets" | "actions" | "countries" | "users" | "sessions";
@@ -826,6 +827,14 @@ export default function AdminClient({
                       {r === "all" ? `All (${localUsers.length})` : r === "admin" ? `Admin (${localUsers.filter(u => u.role === "admin").length})` : r === "focal_point" ? `Focal Point (${localUsers.filter(u => u.role === "focal_point").length})` : `Expert (${localUsers.filter(u => u.role === "expert").length})`}
                     </button>
                   ))}
+                  <button onClick={() => exportExcel(
+                    "AFCAC_Users",
+                    "Users",
+                    ["#", "Display Name", "Username", "Role", "Country", "Email", "Password"],
+                    localUsers.map((u, i) => [i + 1, u.displayName, u.username, u.role, u.country ?? "", u.email ?? "", u.devPassword ?? ""])
+                  )} style={{ padding: "5px 14px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid #27ae60", background: "rgba(39,174,96,0.12)", color: "#27ae60", whiteSpace: "nowrap" }}>
+                    ⬇ Export Excel
+                  </button>
                 </div>
 
                 {/* Table */}
