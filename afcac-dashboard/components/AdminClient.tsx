@@ -916,7 +916,7 @@ export default function AdminClient({
                             {isEditing && (
                               <tr key={`${u.username}-edit`} style={{ background: "rgba(1,119,100,0.04)", borderTop: "1px dashed var(--forest2)" }}>
                                 <td colSpan={7} style={{ padding: "14px 16px" }}>
-                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
                                     <div>
                                       <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Display Name</label>
                                       <input type="text" value={editDraft.displayName} onChange={(e) => setEditDraft((d) => ({ ...d, displayName: e.target.value }))}
@@ -945,36 +945,26 @@ export default function AdminClient({
                                         {AFRICAN_STATES.map((c) => <option key={c} value={c}>{c}</option>)}
                                       </select>
                                     </div>
-                                  </div>
-
-                                  {/* ── Account Status ── */}
-                                  <div style={{
-                                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                                    marginBottom: 12, padding: "10px 14px", borderRadius: 6,
-                                    background: isDisabled ? "rgba(220,38,38,0.06)" : "rgba(22,163,74,0.04)",
-                                    border: `1px solid ${isDisabled ? "#dc262655" : "#16a34a33"}`,
-                                  }}>
+                                    {/* 5th field: Account Status */}
                                     <div>
-                                      <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 2 }}>Account Status</div>
-                                      <div style={{ fontSize: 13, fontWeight: 700, color: isDisabled ? "#dc2626" : "#16a34a" }}>
-                                        {isDisabled ? "🚫 Disabled" : "✅ Active"}
-                                      </div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Account Status</label>
+                                      <button
+                                        onClick={() => canToggle ? toggleDisabled(u) : undefined}
+                                        disabled={!canToggle}
+                                        title={!canToggle ? "Protected account — cannot be disabled" : isDisabled ? "Enable this account" : "Disable this account"}
+                                        style={{
+                                          width: "100%", padding: "6px 8px", borderRadius: 5, fontWeight: 700, fontSize: 12,
+                                          cursor: canToggle ? "pointer" : "not-allowed",
+                                          border: isDisabled ? "1px solid #dc2626" : "1px solid #16a34a",
+                                          background: isDisabled ? "rgba(220,38,38,0.10)" : "rgba(22,163,74,0.10)",
+                                          color: isDisabled ? "#dc2626" : "#16a34a",
+                                          opacity: canToggle ? 1 : 0.45,
+                                          boxSizing: "border-box",
+                                        }}
+                                      >
+                                        {isDisabled ? "🚫 Disabled — Enable" : "✅ Active — Disable"}
+                                      </button>
                                     </div>
-                                    <button
-                                      onClick={() => canToggle ? toggleDisabled(u) : undefined}
-                                      disabled={!canToggle}
-                                      title={!canToggle ? "Protected account — cannot be disabled" : isDisabled ? "Enable this account" : "Disable this account"}
-                                      style={{
-                                        padding: "7px 16px", borderRadius: 6, fontWeight: 700, fontSize: 12,
-                                        cursor: canToggle ? "pointer" : "not-allowed",
-                                        border: !canToggle ? "1px solid var(--border)" : isDisabled ? "1px solid #16a34a" : "1px solid #dc2626",
-                                        background: !canToggle ? "transparent" : isDisabled ? "rgba(22,163,74,0.15)" : "rgba(220,38,38,0.12)",
-                                        color: !canToggle ? "var(--ink4)" : isDisabled ? "#16a34a" : "#dc2626",
-                                        opacity: canToggle ? 1 : 0.4,
-                                      }}
-                                    >
-                                      {isDisabled ? "✓ Enable Account" : "🚫 Disable Account"}
-                                    </button>
                                   </div>
 
                                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
