@@ -41,7 +41,7 @@ export default function TopExpertsCard({ experts, locale = "en", lastCountryUpda
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                 }}>
-                  {e.username}
+                  {e.fullName ?? e.username}
                 </span>
                 <span style={{ color: "var(--ink3)", flexShrink: 0, fontSize: 10 }}>
                   ▲ {e.totalUpdates} {t(locale, "updates")} · {timeAgo(e.lastUpdate, locale)}

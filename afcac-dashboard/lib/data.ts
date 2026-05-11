@@ -249,18 +249,22 @@ export async function appendUpdateLog(log: UpdateLog): Promise<void> {
 
 export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
   const logs = await getUpdateLogs();
-  const map: Record<string, { total: number; targetsSum: number; lastDate: string }> = {};
+  const map: Record<string, { total: number; targetsSum: number; lastDate: string; fullName?: string }> = {};
 
   for (const log of logs) {
     if (!map[log.username]) map[log.username] = { total: 0, targetsSum: 0, lastDate: log.date };
     map[log.username].total += 1;
     map[log.username].targetsSum += log.targetsUpdated;
-    if (log.date > map[log.username].lastDate) map[log.username].lastDate = log.date;
+    if (log.date > map[log.username].lastDate) {
+      map[log.username].lastDate = log.date;
+      if (log.fullName) map[log.username].fullName = log.fullName;
+    }
   }
 
   return Object.entries(map)
     .map(([username, s]) => ({
       username,
+      fullName: s.fullName,
       totalUpdates: s.total,
       lastUpdate: s.lastDate,
       avgTargetsPerUpdate: Math.round(s.targetsSum / s.total),

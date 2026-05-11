@@ -71,6 +71,7 @@ export interface UpdateLog {
 
 export interface ExpertStat {
   username: string;
+  fullName?: string;
   totalUpdates: number;
   lastUpdate: string; // ISO string
   avgTargetsPerUpdate: number;
