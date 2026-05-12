@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       updaterCountry?: string;
     };
 
-    if (session.role === "expert") {
+    if (session.role === "expert" || session.role === "focal_point") {
       if (!body.targets || !Array.isArray(body.targets)) {
         return NextResponse.json({ error: "Missing targets data" }, { status: 400 });
       }

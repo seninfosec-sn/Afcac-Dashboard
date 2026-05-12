@@ -13,9 +13,9 @@ export default async function AdminPage() {
 
   if (!session) redirect("/login");
 
-  // Experts load their own country's targets (not the global aggregate)
+  // Focal points and experts load their own country's targets (not the global aggregate)
   let initialData = data;
-  if (session.role === "expert") {
+  if (session.role === "expert" || session.role === "focal_point") {
     const user = await findUser(session.username);
     if (user?.country) {
       initialData = { ...data, targets: await getCountryTargets(user.country) };

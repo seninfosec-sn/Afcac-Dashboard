@@ -170,7 +170,7 @@ export default function AdminClient({
   async function handleSave() {
     setSaving(true);
     try {
-      const payload = role === "expert"
+      const payload = (role === "expert" || role === "focal_point")
         ? { targets, fullName, updaterCountry }
         : { kpis, actions, countries, targets, fullName, updaterCountry };
       const res = await fetch("/api/dashboard", {
