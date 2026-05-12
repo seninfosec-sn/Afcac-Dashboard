@@ -78,7 +78,7 @@ type SessionRow = {
 };
 
 export async function insertSessionLog(e: SessionRow): Promise<void> {
-  try {
+  const doInsert = async () => {
     const sql = getSql();
     await sql`
       INSERT INTO afcac_sessions
@@ -90,7 +90,18 @@ export async function insertSessionLog(e: SessionRow): Promise<void> {
          ${e.country ?? null}, ${e.city ?? null}, ${e.countryCode ?? null})
       ON CONFLICT (session_id) DO NOTHING
     `;
-  } catch { /* non-blocking — KV is primary */ }
+  };
+  try {
+    await doInsert();
+  } catch {
+    // Table may not exist yet — create schema and retry once
+    try {
+      await setupSchema();
+      await doInsert();
+    } catch (err) {
+      console.error("[SESSION LOG] Failed to persist session to SQL:", err);
+    }
+  }
 }
 
 export async function updateSessionLastSeen(sessionId: string, lastSeen: string): Promise<void> {

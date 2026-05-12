@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { findUser } from "@/lib/data";
 import { createToken, buildSessionCookie } from "@/lib/auth";
 import { upsertSession } from "@/lib/sessions";
+import { setupSchema } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,6 +54,9 @@ export async function POST(request: NextRequest) {
     const country     = countryCodeToName(countryCode);
 
     const now = new Date().toISOString();
+
+    // Ensure SQL schema exists before recording session
+    setupSchema().catch(() => {});
 
     // Record session (non-blocking — don't delay login response)
     upsertSession({
