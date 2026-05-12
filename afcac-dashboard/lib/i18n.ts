@@ -117,7 +117,7 @@ export const translations = {
     downloadPdf: "Download PDF",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "Secure Access Â· Login",
     labelUsername: "Username",
     labelPassword: "Password",
@@ -388,7 +388,7 @@ export const translations = {
     downloadPdf: "TÃ©lÃ©charger PDF",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "AccÃ¨s SÃ©curisÃ© Â· Connexion",
     labelUsername: "Identifiant",
     labelPassword: "Mot de passe",
@@ -659,7 +659,7 @@ export const translations = {
     downloadPdf: "Baixar PDF",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "Acesso Seguro Â· Login",
     labelUsername: "Utilizador",
     labelPassword: "Palavra-passe",

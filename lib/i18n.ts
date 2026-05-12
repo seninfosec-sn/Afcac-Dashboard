@@ -128,7 +128,7 @@ export const translations = {
     reportAllCountries: "All Countries (Aggregate)",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "Secure Access · Login",
     labelUsername: "Username",
     labelPassword: "Password",
@@ -426,7 +426,7 @@ export const translations = {
     reportAllCountries: "Tous les pays (Agrégat)",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "Accès Sécurisé · Connexion",
     labelUsername: "Identifiant",
     labelPassword: "Mot de passe",
@@ -723,7 +723,7 @@ export const translations = {
     reportAllCountries: "Todos os países (Agregado)",
 
     // Login
-    loginTitle: "AFCAC Dashboard",
+    loginTitle: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     loginSub: "Acesso Seguro · Login",
     labelUsername: "Utilizador",
     labelPassword: "Palavra-passe",
