@@ -22,22 +22,23 @@ async function isAuthenticated(request: NextRequest): Promise<boolean> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin routes
-  if (pathname.startsWith("/admin")) {
+  // Public paths — no auth required
+  const isPublic =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon");
+
+  if (!isPublic) {
     if (!(await isAuthenticated(request))) {
+      // Protect all API write operations with 401
+      if (pathname.startsWith("/api/") && request.method !== "GET") {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      // Redirect all other pages to login
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  // Protect POST/PUT/DELETE on /api/dashboard
-  if (
-    pathname.startsWith("/api/dashboard") &&
-    request.method !== "GET"
-  ) {
-    if (!(await isAuthenticated(request))) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
 
@@ -45,5 +46,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/dashboard/:path*"],
+  matcher: [
+    /*
+     * Match all paths except Next.js internals and static files.
+     * /login and /api/auth are allowed through above in the isPublic check.
+     */
+    "/((?!_next/static|_next/image|favicon\\.ico).*)",
+  ],
 };
