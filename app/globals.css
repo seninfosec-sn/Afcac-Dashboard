@@ -520,12 +520,15 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 .login-logo {
-  width: 52px; height: 52px;
-  background: var(--forest);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0 auto 20px;
+}
+.login-logo img {
+  height: 90px;
+  width: auto;
+  object-fit: contain;
 }
 .login-title {
   font-family: 'Barlow Condensed', sans-serif;

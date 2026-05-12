@@ -52,7 +52,7 @@ function LoginForm() {
         </div>
 
         <div className="login-logo">
-          <img src="/afcac_logo.png" alt="AFCAC Logo" style={{ height: 64, width: "auto", objectFit: "contain" }} />
+          <img src="/afcac_logo.png" alt="AFCAC Logo" />
         </div>
         <div className="login-title">{t("loginTitle")}</div>
         <div className="login-sub">{t("loginSub")}</div>
