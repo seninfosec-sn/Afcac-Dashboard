@@ -34,14 +34,14 @@ const PCT_COLORS: Record<number, string> = {
   0: "#95a5a6", 25: "#e07b39", 50: "#f0a500", 75: "#52b788", 100: "#2d9d5e",
 };
 
-/* ─── Section nav items ──────────────────────────── */
-const NAV_ITEMS: { id: Tab; icon: string; label: string; sub: string; adminOnly?: boolean }[] = [
-  { id: "kpis",      icon: "📊", label: "KPI Overview",    sub: "Global indicators" },
-  { id: "targets",   icon: "🎯", label: "Safety Targets",  sub: "39 AFCAC targets" },
-  { id: "actions",   icon: "📋", label: "Action Plan",     sub: "15 country actions" },
-  { id: "countries", icon: "🌍", label: "Country Data",    sub: "15 countries" },
-  { id: "users",     icon: "🔑", label: "Accès États",     sub: "54 points focaux",   adminOnly: true },
-  { id: "sessions",  icon: "🟢", label: "Utilisateurs",   sub: "En ligne & historique", adminOnly: true },
+/* ─── Section nav items (translated at render time) ─ */
+const NAV_ITEM_DEFS: { id: Tab; icon: string; labelKey: string; subKey: string; adminOnly?: boolean }[] = [
+  { id: "kpis",      icon: "📊", labelKey: "navKpiLabel",      subKey: "navKpiSub" },
+  { id: "targets",   icon: "🎯", labelKey: "navTargetsLabel",  subKey: "navTargetsSub" },
+  { id: "actions",   icon: "📋", labelKey: "navActionsLabel",  subKey: "navActionsSub" },
+  { id: "countries", icon: "🌍", labelKey: "navCountriesLabel",subKey: "navCountriesSub" },
+  { id: "users",     icon: "🔑", labelKey: "navUsersLabel",    subKey: "navUsersSub",    adminOnly: true },
+  { id: "sessions",  icon: "🟢", labelKey: "navSessionsLabel", subKey: "navSessionsSub", adminOnly: true },
 ];
 
 /* ─── Toast ──────────────────────────────────────── */
@@ -116,9 +116,9 @@ export default function AdminClient({
       });
       if (!res.ok) throw new Error();
       setLocalUsers((prev) => prev.map((p) => p.username === u.username ? { ...p, disabled: newDisabled } : p));
-      showToast(newDisabled ? "🚫 Account disabled" : "✅ Account enabled", newDisabled ? "warn" : "ok");
+      showToast(newDisabled ? t("toastAccountDisabled") : t("toastAccountEnabled"), newDisabled ? "warn" : "ok");
     } catch {
-      showToast("❌ Error updating account", "warn");
+      showToast("❌ " + t("toastSaveError"), "warn");
     }
   }
 
@@ -140,10 +140,10 @@ export default function AdminClient({
         email: editDraft.email,
         devPassword: editDraft.devPassword || u.devPassword,
       } : u));
-      showToast("✅ User saved", "ok");
+      showToast(t("toastUserSaved"), "ok");
       setEditingUser(null);
     } catch {
-      showToast("❌ Error saving user", "warn");
+      showToast("❌ " + t("toastSaveError"), "warn");
     } finally {
       setUserSaving(false);
     }
@@ -180,7 +180,7 @@ export default function AdminClient({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Erreur de sauvegarde");
-      showToast("✓ Tableau de bord mis à jour avec succès", "ok");
+      showToast(t("toastSaved"), "ok");
       router.refresh();
     } catch (err) {
       showToast(`⚠ ${(err as Error).message}`, "warn");
@@ -305,7 +305,7 @@ export default function AdminClient({
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
             <div className="profile-name">{displayName}</div>
-            <div className="profile-role">{role === "admin" ? "Administrator" : "Expert"} · AFCAC</div>
+            <div className="profile-role">{role === "admin" ? t("roleAdministrator") : role === "focal_point" ? t("roleFocalPointLabel") : t("filterExpert")} · AFCAC</div>
             <div className="profile-meta">
               <div className="profile-meta-row">
                 <span>🗓</span>
@@ -327,8 +327,8 @@ export default function AdminClient({
           </div>
 
           {/* Navigation */}
-          <div className="sb-section">Sections</div>
-          {NAV_ITEMS.filter((item) => role === "admin" ? true : item.id === "targets").filter((item) => !item.adminOnly || role === "admin").filter((item) => item.id !== "users" || isMasterAdmin).map((item) => (
+          <div className="sb-section">{t("tabTargets")}</div>
+          {NAV_ITEM_DEFS.filter((item) => role === "admin" ? true : item.id === "targets").filter((item) => !item.adminOnly || role === "admin").filter((item) => item.id !== "users" || isMasterAdmin).map((item) => (
             <div
               key={item.id}
               className={`sb-item${tab === item.id ? " active" : ""}${tab === item.id ? " done" : ""}`}
@@ -336,9 +336,9 @@ export default function AdminClient({
             >
               <span className="sb-num" style={{ fontSize: 18, width: 22 }}>{item.icon}</span>
               <span className="sb-text">
-                <span style={{ fontWeight: 600 }}>{item.label}</span>
+                <span style={{ fontWeight: 600 }}>{t(item.labelKey as Parameters<typeof t>[0])}</span>
                 <br />
-                <span style={{ fontSize: 10, opacity: 0.65 }}>{item.sub}</span>
+                <span style={{ fontSize: 10, opacity: 0.65 }}>{t(item.subKey as Parameters<typeof t>[0])}</span>
               </span>
               {tab === item.id && <span className="sb-check">▶</span>}
             </div>
@@ -814,7 +814,7 @@ export default function AdminClient({
           {/* ─────────────────── USERS / ACCESS ─────────────────── */}
           {tab === "users" && isMasterAdmin && (() => {
             const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60" };
-            const ROLE_LABELS: Record<string, string> = { admin: "Admin", focal_point: "Focal Point", expert: "Expert" };
+            const ROLE_LABELS: Record<string, string> = { admin: t("admin"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert") };
             const filtered = localUsers.filter((u) => {
               if (roleFilter !== "all" && u.role !== roleFilter) return false;
               const q = userSearch.toLowerCase();
@@ -834,7 +834,7 @@ export default function AdminClient({
                     type="text"
                     value={userSearch}
                     onChange={(e) => setUserSearch(e.target.value)}
-                    placeholder="🔍 Search user, country…"
+                    placeholder={t("searchUserPlaceholder")}
                     style={{ flex: 1, minWidth: 200, padding: "6px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)" }}
                   />
                   {(["all", "admin", "focal_point", "expert"] as const).map((r) => (
@@ -844,16 +844,16 @@ export default function AdminClient({
                       background: roleFilter === r ? "var(--forest2)" : "var(--surface2)",
                       color: roleFilter === r ? "#fff" : "var(--ink2)",
                     }}>
-                      {r === "all" ? `All (${localUsers.length})` : r === "admin" ? `Admin (${localUsers.filter(u => u.role === "admin").length})` : r === "focal_point" ? `Focal Point (${localUsers.filter(u => u.role === "focal_point").length})` : `Expert (${localUsers.filter(u => u.role === "expert").length})`}
+                      {r === "all" ? `${t("filterAll")} (${localUsers.length})` : r === "admin" ? `${t("admin")} (${localUsers.filter(u => u.role === "admin").length})` : r === "focal_point" ? `${t("filterFocalPoint")} (${localUsers.filter(u => u.role === "focal_point").length})` : `${t("filterExpert")} (${localUsers.filter(u => u.role === "expert").length})`}
                     </button>
                   ))}
                   <button onClick={() => exportExcel(
                     "AFCAC_Users",
                     "Users",
-                    ["#", "Display Name", "Username", "Role", "Country", "Email", "Password"],
+                    ["#", t("colDisplayName"), t("colUsername"), t("colRole"), t("colCountry"), "Email", t("colPassword")],
                     localUsers.map((u, i) => [i + 1, u.displayName, u.username, u.role, u.country ?? "", u.email ?? "", u.devPassword ?? ""])
                   )} style={{ padding: "5px 14px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid #27ae60", background: "rgba(39,174,96,0.12)", color: "#27ae60", whiteSpace: "nowrap" }}>
-                    ⬇ Export Excel
+                    {t("btnExportExcel")}
                   </button>
                 </div>
 
@@ -863,13 +863,13 @@ export default function AdminClient({
                     <thead>
                       <tr style={{ background: "var(--forest)", color: "#fff" }}>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700, width: 32 }}>#</th>
-                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Display Name</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colDisplayName")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colUsername")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colCountry")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>Role</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700 }}>Account Status</th>
+                        <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colRole")}</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700 }}>{t("colAccountStatus")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 80 }}>Actions</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 80 }}>{t("colActions")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -883,7 +883,7 @@ export default function AdminClient({
                               <td style={{ padding: "8px 12px", color: "var(--ink3)", fontWeight: 600 }}>{i + 1}</td>
                               <td style={{ padding: "8px 12px", fontWeight: 600, color: "var(--ink1)" }}>
                                 {u.displayName}
-                                {isDisabled && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: "#fff", background: "#dc2626", padding: "1px 5px", borderRadius: 4, letterSpacing: ".04em" }}>DISABLED</span>}
+                                {isDisabled && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: "#fff", background: "#dc2626", padding: "1px 5px", borderRadius: 4, letterSpacing: ".04em" }}>{t("statusBadgeDisabled")}</span>}
                               </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <code style={{ background: "var(--surface2)", padding: "2px 6px", borderRadius: 4, fontSize: 11, color: "var(--forest2)", border: "1px solid var(--border)" }}>
@@ -900,7 +900,7 @@ export default function AdminClient({
                                 <button
                                   onClick={() => canToggle ? toggleDisabled(u) : undefined}
                                   disabled={!canToggle}
-                                  title={!canToggle ? "Protected account" : isDisabled ? "Enable this account" : "Disable this account"}
+                                  title={!canToggle ? t("accountProtected") : isDisabled ? t("enableAccount") : t("disableAccount")}
                                   style={{
                                     padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700,
                                     cursor: canToggle ? "pointer" : "not-allowed",
@@ -911,7 +911,7 @@ export default function AdminClient({
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {isDisabled ? "🚫 Disabled" : "✅ Active"}
+                                  {isDisabled ? t("statusDisabled") : t("statusActive")}
                                 </button>
                               </td>
                               <td style={{ padding: "8px 12px" }}>
@@ -926,7 +926,7 @@ export default function AdminClient({
                                   background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
                                   color: isEditing ? "var(--amber)" : "var(--forest2)",
                                 }}>
-                                  {isEditing ? "✕ Cancel" : "✎ Edit"}
+                                  {isEditing ? t("btnCancelEdit") : t("btnEdit")}
                                 </button>
                               </td>
                             </tr>
@@ -937,18 +937,18 @@ export default function AdminClient({
                                 <td colSpan={8} style={{ padding: "14px 16px" }}>
                                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
                                     <div>
-                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Display Name</label>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editDisplayName")}</label>
                                       <input type="text" value={editDraft.displayName} onChange={(e) => setEditDraft((d) => ({ ...d, displayName: e.target.value }))}
                                         style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
                                     </div>
                                     <div>
-                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>New Password</label>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editNewPassword")}</label>
                                       <input type="text" value={editDraft.devPassword} onChange={(e) => setEditDraft((d) => ({ ...d, devPassword: e.target.value }))}
-                                        placeholder="Leave blank to keep current"
+                                        placeholder={t("editPasswordHint")}
                                         style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
                                     </div>
                                     <div>
-                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Role</label>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editRole")}</label>
                                       <select value={editDraft.role} onChange={(e) => setEditDraft((d) => ({ ...d, role: e.target.value as UserRole }))}
                                         style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }}>
                                         <option value="admin">Admin</option>
@@ -957,10 +957,10 @@ export default function AdminClient({
                                       </select>
                                     </div>
                                     <div>
-                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Country</label>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editCountry")}</label>
                                       <select value={editDraft.country} onChange={(e) => setEditDraft((d) => ({ ...d, country: e.target.value }))}
                                         style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }}>
-                                        <option value="">— No country —</option>
+                                        <option value="">{t("editNoCountry")}</option>
                                         {AFRICAN_STATES.map((c) => <option key={c} value={c}>{c}</option>)}
                                       </select>
                                     </div>
@@ -971,13 +971,13 @@ export default function AdminClient({
                                       padding: "6px 18px", borderRadius: 6, fontWeight: 700, fontSize: 12, cursor: userSaving ? "not-allowed" : "pointer",
                                       background: "var(--forest2)", color: "#fff", border: "none", opacity: userSaving ? 0.7 : 1,
                                     }}>
-                                      {userSaving ? "Saving…" : "💾 Save Changes"}
+                                      {userSaving ? t("btnSaving") : t("btnSaveChanges")}
                                     </button>
                                     <button onClick={cancelEdit} style={{ padding: "6px 14px", borderRadius: 6, fontWeight: 600, fontSize: 12, cursor: "pointer", background: "var(--surface2)", color: "var(--ink2)", border: "1px solid var(--border)" }}>
-                                      Cancel
+                                      {t("btnCancel")}
                                     </button>
                                     <span style={{ fontSize: 11, color: "var(--ink3)", marginLeft: 6 }}>
-                                      Editing: <strong style={{ color: "var(--forest2)" }}>{u.username}</strong>
+                                      {t("editingUser")} <strong style={{ color: "var(--forest2)" }}>{u.username}</strong>
                                     </span>
                                   </div>
                                 </td>
@@ -987,7 +987,7 @@ export default function AdminClient({
                         );
                       })}
                       {filtered.length === 0 && (
-                        <tr><td colSpan={8} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>No users match your search.</td></tr>
+                        <tr><td colSpan={8} style={{ padding: "24px", textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>{t("noUsersFound")}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -1007,18 +1007,18 @@ export default function AdminClient({
       {/* ── BOTTOM ACTION BAR ── */}
       <div className="form-actions">
         <div className="fa-stats">
-          <strong>{answeredTargets}</strong> / {targets.length} cibles renseignées
-          &nbsp;·&nbsp; Onglet actif : <strong>{NAV_ITEMS.find((n) => n.id === tab)?.label}</strong>
+          <strong>{answeredTargets}</strong> / {targets.length} {t("adminTargetsPlural")}
+          &nbsp;·&nbsp; {t("tabTargets")} : <strong>{t((NAV_ITEM_DEFS.find((n) => n.id === tab)?.labelKey ?? "navTargetsLabel") as Parameters<typeof t>[0])}</strong>
         </div>
         <Link href="/" className="btn btn-secondary-form">
-          ← Annuler
+          {t("btnCancel")}
         </Link>
         <button
           className="btn btn-primary-form"
           onClick={handleSave}
           disabled={saving}
         >
-          {saving ? "Enregistrement…" : "💾 Enregistrer les modifications"}
+          {saving ? t("btnSaving") : t("btnSaveChanges")}
         </button>
       </div>
 
