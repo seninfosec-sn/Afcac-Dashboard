@@ -97,13 +97,6 @@ function LoginForm() {
           </Link>
         </div>
 
-        <div style={{ marginTop: 16, padding: "10px 14px", background: "var(--snow)", borderRadius: 6, fontSize: 11, color: "var(--ink3)", borderLeft: "3px solid var(--gold)" }}>
-          <strong>{t("adminAccounts")}</strong>
-          <ul style={{ margin: "6px 0 0 0", paddingLeft: 16, lineHeight: 1.8 }}>
-            <li><code>admin</code> — password : <code>admin123</code></li>
-            <li><code>agnes.aguma</code> — password : <code>Agnes2024</code></li>
-          </ul>
-        </div>
       </div>
     </div>
   );
