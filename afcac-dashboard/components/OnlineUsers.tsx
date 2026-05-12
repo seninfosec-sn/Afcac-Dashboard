@@ -1,29 +1,29 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import type { SessionEntry } from "@/lib/types";
+import { useLanguage } from "@/components/LanguageProvider";
+import type { TranslationKey } from "@/lib/i18n";
 
-function timeAgo(iso: string): string {
+const LOCALE_MAP: Record<string, string> = {
+  en: "en-GB", fr: "fr-FR", pt: "pt-PT", ar: "ar-SA",
+};
+
+function timeAgo(iso: string, t: (k: TranslationKey) => string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 1)  return "just now";
-  if (m < 60) return `${m}m ago`;
+  if (m < 1)  return t("timeJustNow");
+  if (m < 60) return `${m}m`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}h`;
+  return `${Math.floor(h / 24)}d`;
 }
 
-function fmt(iso: string, type: "date" | "time" | "datetime"): string {
+function fmt(iso: string, type: "date" | "time", locale: string): string {
   const d = new Date(iso);
-  if (type === "date")     return d.toLocaleDateString("fr-FR",  { day: "2-digit", month: "short", year: "numeric" });
-  if (type === "time")     return d.toLocaleTimeString("fr-FR",  { hour: "2-digit", minute: "2-digit" });
-  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  const loc = LOCALE_MAP[locale] ?? "en-GB";
+  if (type === "date") return d.toLocaleDateString(loc, { day: "2-digit", month: "short", year: "numeric" });
+  return d.toLocaleTimeString(loc, { hour: "2-digit", minute: "2-digit" });
 }
-
-const ROLE_BADGE: Record<string, { label: string; color: string }> = {
-  admin:       { label: "Admin",        color: "#1a2b3c" },
-  focal_point: { label: "Focal Point",  color: "#7c3aed" },
-  expert:      { label: "Expert",       color: "#1a6b3c" },
-};
 
 const pill: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 4,
@@ -31,6 +31,7 @@ const pill: React.CSSProperties = {
 };
 
 export default function OnlineUsers() {
+  const { t, locale } = useLanguage();
   const [online,  setOnline]  = useState<SessionEntry[]>([]);
   const [history, setHistory] = useState<SessionEntry[]>([]);
   const [total,   setTotal]   = useState(0);
@@ -39,6 +40,12 @@ export default function OnlineUsers() {
   const [tab,     setTab]     = useState<"online" | "history">("online");
 
   const LIMIT = 100;
+
+  const ROLE_BADGE: Record<string, { label: string; color: string }> = {
+    admin:       { label: t("roleAdministrator"), color: "#1a2b3c" },
+    focal_point: { label: t("roleFocalPointLabel"), color: "#7c3aed" },
+    expert:      { label: t("filterExpert"), color: "#1a6b3c" },
+  };
 
   const load = useCallback(async (p = page) => {
     try {
@@ -71,8 +78,8 @@ export default function OnlineUsers() {
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
         {([
-          ["online",  `🟢 En ligne (${online.length})`],
-          ["history", `🕐 Historique (${total.toLocaleString()})`],
+          ["online",  `${t("sessionsOnlineTab")} (${online.length})`],
+          ["history", `${t("sessionsHistoryTab")} (${total.toLocaleString()})`],
         ] as const).map(([id, label]) => (
           <button
             key={id}
@@ -90,18 +97,18 @@ export default function OnlineUsers() {
         <button
           onClick={() => load(page)}
           style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 6, fontSize: 11, cursor: "pointer", border: "1.5px solid var(--border)", background: "var(--surface2)", color: "var(--ink2)" }}
-          title="Rafraîchir"
+          title={t("sessionsRefresh")}
         >↻</button>
       </div>
 
       {loading && (
-        <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>Chargement…</div>
+        <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>{t("sessionsLoading")}</div>
       )}
 
       {/* ── Online view ───────────────────────────────── */}
       {!loading && tab === "online" && (
         online.length === 0
-          ? <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>Aucun utilisateur en ligne en ce moment.</div>
+          ? <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>{t("sessionsNoneOnline")}</div>
           : (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {online.map((s) => {
@@ -129,8 +136,8 @@ export default function OnlineUsers() {
                       </div>
                       <div style={{ fontSize: 10, color: "var(--ink3)", display: "flex", gap: 14, flexWrap: "wrap" }}>
                         <span>👤 {s.username}</span>
-                        <span>🕐 Connecté le {fmt(s.loginTime, "date")} à {fmt(s.loginTime, "time")}</span>
-                        <span>⏱ Actif {timeAgo(s.lastSeen)}</span>
+                        <span>🕐 {t("sessionsConnectedOn")} {fmt(s.loginTime, "date", locale)} {t("sessionsAt")} {fmt(s.loginTime, "time", locale)}</span>
+                        <span>⏱ {t("sessionsActive")} {timeAgo(s.lastSeen, t)}</span>
                       </div>
                     </div>
                     <div style={{ textAlign: "right", fontSize: 10, color: "var(--ink3)", minWidth: 120 }}>
@@ -152,21 +159,21 @@ export default function OnlineUsers() {
       {!loading && tab === "history" && (
         <>
           {history.length === 0
-            ? <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>Aucune session enregistrée.</div>
+            ? <div style={{ textAlign: "center", padding: 40, color: "var(--ink3)", fontSize: 12 }}>{t("sessionsNoneHistory")}</div>
             : (
               <div className="tbl-scroll">
                 <table className="dtable" style={{ fontSize: 11 }}>
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Utilisateur</th>
-                      <th>Rôle</th>
-                      <th>Connexion</th>
-                      <th>Déconnexion</th>
-                      <th>Durée</th>
-                      <th>Localisation</th>
+                      <th>{t("colUser")}</th>
+                      <th>{t("colRole")}</th>
+                      <th>{t("colLogin")}</th>
+                      <th>{t("colLogout")}</th>
+                      <th>{t("colDuration")}</th>
+                      <th>{t("colLocation")}</th>
                       <th>IP</th>
-                      <th>Statut</th>
+                      <th>{t("colStatus")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -192,12 +199,12 @@ export default function OnlineUsers() {
                           </td>
                           <td><span style={{ ...pill, background: rb.color + "22", color: rb.color }}>{rb.label}</span></td>
                           <td style={{ whiteSpace: "nowrap" }}>
-                            <div>{fmt(s.loginTime, "date")}</div>
-                            <div style={{ color: "var(--ink3)" }}>{fmt(s.loginTime, "time")}</div>
+                            <div>{fmt(s.loginTime, "date", locale)}</div>
+                            <div style={{ color: "var(--ink3)" }}>{fmt(s.loginTime, "time", locale)}</div>
                           </td>
                           <td style={{ color: "var(--ink3)", whiteSpace: "nowrap" }}>
                             {s.logoutTime
-                              ? <><div>{fmt(s.logoutTime, "date")}</div><div>{fmt(s.logoutTime, "time")}</div></>
+                              ? <><div>{fmt(s.logoutTime, "date", locale)}</div><div>{fmt(s.logoutTime, "time", locale)}</div></>
                               : "—"
                             }
                           </td>
@@ -210,7 +217,7 @@ export default function OnlineUsers() {
                               background: isActive ? "#e6f4ea" : "#f3f4f6",
                               color:      isActive ? "#1a6b3c" : "#6b7280",
                             }}>
-                              {isActive ? "🟢 En ligne" : "⚪ Déconnecté"}
+                              {isActive ? t("sessionsOnlineStatus") : t("sessionsOfflineStatus")}
                             </span>
                           </td>
                         </tr>
@@ -229,15 +236,15 @@ export default function OnlineUsers() {
                 onClick={() => load(page - 1)}
                 disabled={page === 0}
                 style={{ padding: "5px 12px", borderRadius: 5, fontSize: 11, cursor: page === 0 ? "default" : "pointer", border: "1.5px solid var(--border)", background: "var(--surface2)", color: page === 0 ? "var(--ink3)" : "var(--ink)", opacity: page === 0 ? 0.4 : 1 }}
-              >← Précédent</button>
+              >{t("pagePrev")}</button>
               <span style={{ fontSize: 11, color: "var(--ink2)" }}>
-                Page {page + 1} / {totalPages} &nbsp;·&nbsp; {total.toLocaleString()} sessions
+                Page {page + 1} / {totalPages} &nbsp;·&nbsp; {total.toLocaleString()} {t("pageSessions")}
               </span>
               <button
                 onClick={() => load(page + 1)}
                 disabled={page >= totalPages - 1}
                 style={{ padding: "5px 12px", borderRadius: 5, fontSize: 11, cursor: page >= totalPages - 1 ? "default" : "pointer", border: "1.5px solid var(--border)", background: "var(--surface2)", color: page >= totalPages - 1 ? "var(--ink3)" : "var(--ink)", opacity: page >= totalPages - 1 ? 0.4 : 1 }}
-              >Suivant →</button>
+              >{t("pageNext")}</button>
             </div>
           )}
         </>
