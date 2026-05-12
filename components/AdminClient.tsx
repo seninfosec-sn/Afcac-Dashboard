@@ -814,7 +814,7 @@ export default function AdminClient({
           {/* ─────────────────── USERS / ACCESS ─────────────────── */}
           {tab === "users" && isMasterAdmin && (() => {
             const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60" };
-            const ROLE_LABELS: Record<string, string> = { admin: t("admin"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert") };
+            const ROLE_LABELS: Record<string, string> = { admin: t("roleAdministrator"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert") };
             const filtered = localUsers.filter((u) => {
               if (roleFilter !== "all" && u.role !== roleFilter) return false;
               const q = userSearch.toLowerCase();
