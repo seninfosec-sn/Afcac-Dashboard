@@ -1,13 +1,12 @@
 "use client";
 import { useState, FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function LoginForm() {
-  const router = useRouter();
   const params = useSearchParams();
   const redirect = params.get("redirect") ?? "/admin";
   const { t } = useLanguage();
@@ -33,8 +32,7 @@ function LoginForm() {
       if (!res.ok) {
         setError(data.error ?? t("loginFailed"));
       } else {
-        router.push(redirect);
-        router.refresh();
+        window.location.href = redirect;
       }
     } catch {
       setError(t("networkError"));
