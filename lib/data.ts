@@ -254,24 +254,12 @@ export async function getUsers(): Promise<AppUser[]> {
 
   if (!kvUsers || kvUsers.length === 0) return fileUsers;
 
-  // Auto-sync: add missing users and propagate devPassword changes from JSON
-  const fileMap = new Map(fileUsers.map((u) => [u.username.toLowerCase(), u]));
+  // Auto-sync: add any new user from users.json not yet in KV
   const kvUsernames = new Set(kvUsers.map((u) => u.username.toLowerCase()));
   const missing = fileUsers.filter((u) => !kvUsernames.has(u.username.toLowerCase()));
+  if (missing.length === 0) return kvUsers;
 
-  // For users still on devPassword (no bcrypt hash), update devPassword from the JSON file
-  const synced = kvUsers.map((kvUser) => {
-    const fileUser = fileMap.get(kvUser.username.toLowerCase());
-    if (fileUser && !kvUser.passwordHash && fileUser.devPassword !== kvUser.devPassword) {
-      return { ...kvUser, devPassword: fileUser.devPassword };
-    }
-    return kvUser;
-  });
-
-  const changed = synced.some((u, i) => u !== kvUsers[i]);
-  if (!changed && missing.length === 0) return kvUsers;
-
-  const merged = [...synced, ...missing];
+  const merged = [...kvUsers, ...missing];
   try { await kvSet("users", merged); } catch { /* ignore */ }
   return merged;
 }
