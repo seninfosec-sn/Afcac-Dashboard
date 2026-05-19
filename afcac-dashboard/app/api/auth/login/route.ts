@@ -92,7 +92,7 @@ function countryCodeToName(code: string): string {
     CV:"Cabo Verde",CM:"Cameroon",CF:"Central African Republic",TD:"Chad",KM:"Comoros",
     CG:"Congo",CD:"DR Congo",DJ:"Djibouti",EG:"Egypt",GQ:"Equatorial Guinea",ER:"Eritrea",
     SZ:"Eswatini",ET:"Ethiopia",GA:"Gabon",GM:"Gambia",GH:"Ghana",GN:"Guinea",GW:"Guinea-Bissau",
-    CI:"Ivory Coast",KE:"Kenya",LS:"Lesotho",LR:"Liberia",LY:"Libya",MG:"Madagascar",
+    CI:"Cote D'Ivoire",KE:"Kenya",LS:"Lesotho",LR:"Liberia",LY:"Libya",MG:"Madagascar",
     MW:"Malawi",ML:"Mali",MR:"Mauritania",MU:"Mauritius",MA:"Morocco",MZ:"Mozambique",
     NA:"Namibia",NE:"Niger",NG:"Nigeria",RW:"Rwanda",ST:"São Tomé & Príncipe",SN:"Senegal",
     SC:"Seychelles",SL:"Sierra Leone",SO:"Somalia",ZA:"South Africa",SS:"South Sudan",

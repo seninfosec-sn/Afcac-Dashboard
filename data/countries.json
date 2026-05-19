@@ -32,7 +32,7 @@
   { "country": "Gambia",                   "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "GCAA" },
   { "country": "Guinea",                   "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "ANAC" },
   { "country": "Guinea-Bissau",            "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "AAACVGB" },
-  { "country": "Ivory Coast",              "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "ANAC" },
+  { "country": "Cote D'Ivoire",            "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "ANAC" },
   { "country": "Lesotho",                  "region": "Southern Africa", "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "DCAA" },
   { "country": "Liberia",                  "region": "West Africa",     "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "LCAA" },
   { "country": "Libya",                    "region": "North Africa",    "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "LYCAA" },

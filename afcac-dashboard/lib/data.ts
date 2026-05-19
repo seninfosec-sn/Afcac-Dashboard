@@ -37,13 +37,26 @@ export async function getKpis(): Promise<KpiData> {
   return dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
 }
 
-export async function getActions(): Promise<ActionRow[]> {
-  const rows = await dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
-  return rows.map((r) => (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r);
+const COUNTRY_RENAMES: Record<string, string> = { "Ivory Coast": "Cote D'Ivoire" };
+
+function renameCountry(name: string): string {
+  return COUNTRY_RENAMES[name] ?? name;
 }
 
 export async function getCountries(): Promise<CountryRow[]> {
-  return dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
+  const rows = await dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
+  const fixed = rows.map(r => ({ ...r, country: renameCountry(r.country) }));
+  if (fixed.some((r, i) => r.country !== rows[i].country)) await kvSet(K.countries, fixed);
+  return fixed;
+}
+
+export async function getActions(): Promise<ActionRow[]> {
+  const rows = await dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
+  const fixed = rows
+    .map(r => (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r)
+    .map(r => ({ ...r, country: renameCountry(r.country) }));
+  if (fixed.some((r, i) => r.country !== rows[i].country)) await kvSet(K.actions, fixed);
+  return fixed;
 }
 
 const DEADLINE_FIXES: Record<string, string> = { "Dec 2025": "May 2026" };
@@ -104,7 +117,7 @@ const COUNTRY_REGIONS: Record<string, string> = {
   "Equatorial Guinea": "Central Africa", "Eritrea": "East Africa", "Eswatini": "Southern Africa",
   "Ethiopia": "East Africa",     "Gabon": "Central Africa",     "Gambia": "West Africa",
   "Ghana": "West Africa",        "Guinea": "West Africa",       "Guinea-Bissau": "West Africa",
-  "Ivory Coast": "West Africa",  "Kenya": "East Africa",        "Lesotho": "Southern Africa",
+  "Cote D'Ivoire": "West Africa",  "Kenya": "East Africa",        "Lesotho": "Southern Africa",
   "Liberia": "West Africa",      "Libya": "North Africa",       "Madagascar": "East Africa",
   "Malawi": "East Africa",       "Mali": "West Africa",         "Mauritania": "North Africa",
   "Mauritius": "East Africa",    "Morocco": "North Africa",     "Mozambique": "Southern Africa",
@@ -117,14 +130,17 @@ const COUNTRY_REGIONS: Record<string, string> = {
 };
 
 export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
-  const all = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  const raw = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
   let dirty = false;
-  for (const country of Object.keys(all)) {
-    const original = all[country];
-    all[country] = fixDeadlines(original.map((t) =>
+  const all: Record<string, TargetRow[]> = {};
+  for (const country of Object.keys(raw)) {
+    const newKey = renameCountry(country);
+    if (newKey !== country) dirty = true;
+    const original = raw[country];
+    all[newKey] = fixDeadlines(original.map((t) =>
       (t.status as string) === "onhold" ? { ...t, status: "notstarted" as const } : t
     ));
-    if (all[country].some((r, i) => r.deadline !== original[i]?.deadline)) dirty = true;
+    if (all[newKey].some((r, i) => r.deadline !== original[i]?.deadline)) dirty = true;
   }
   if (dirty) await kvSet(K.countryTargets, all);
   return all;
@@ -267,14 +283,20 @@ export async function getUsers(): Promise<AppUser[]> {
 
   if (!kvUsers || kvUsers.length === 0) return fileUsers;
 
-  // Auto-sync: add any new user from users.json not yet in KV
-  const kvUsernames = new Set(kvUsers.map((u) => u.username.toLowerCase()));
-  const missing = fileUsers.filter((u) => !kvUsernames.has(u.username.toLowerCase()));
-  if (missing.length === 0) return kvUsers;
+  // Migrate country renames in KV
+  const renamed = kvUsers.map(u => u.country ? { ...u, country: renameCountry(u.country) } : u);
+  const needsRename = renamed.some((u, i) => u.country !== kvUsers![i].country);
 
-  const merged = [...kvUsers, ...missing];
-  try { await kvSet("users", merged); } catch { /* ignore */ }
-  return merged;
+  // Auto-sync: add any new user from users.json not yet in KV
+  const kvUsernames = new Set(renamed.map((u) => u.username.toLowerCase()));
+  const missing = fileUsers.filter((u) => !kvUsernames.has(u.username.toLowerCase()));
+
+  if (needsRename || missing.length > 0) {
+    const merged = [...renamed, ...missing];
+    try { await kvSet("users", merged); } catch { /* ignore */ }
+    return merged;
+  }
+  return renamed;
 }
 
 export async function findUser(username: string): Promise<AppUser | null> {

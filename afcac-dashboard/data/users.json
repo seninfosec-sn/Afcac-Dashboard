@@ -289,12 +289,12 @@
   },
   {
     "username": "ivory_coast",
-    "displayName": "Focal Point — Ivory Coast",
+    "displayName": "Focal Point — Cote D'Ivoire",
     "role": "expert",
     "passwordHash": "",
     "devPassword": "ivorycoast@afcac2024",
     "email": "fp.ivorycoast@afcac.org",
-    "country": "Ivory Coast"
+    "country": "Cote D'Ivoire"
   },
   {
     "username": "kenya",
@@ -1194,7 +1194,7 @@
     "passwordHash": "",
     "devPassword": "Silue2024",
     "email": "katchienne.silue@afcac.org",
-    "country": "Ivory Coast"
+    "country": "Cote D'Ivoire"
   },
   {
     "username": "babazau.shettima",

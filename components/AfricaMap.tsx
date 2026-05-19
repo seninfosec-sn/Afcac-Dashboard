@@ -95,7 +95,7 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
     { name: "Gambia",                   cx: 127, cy: 183, r:  4 },
     { name: "Guinea",                   cx: 146, cy: 196, r:  9 },
     { name: "Guinea-Bissau",            cx: 128, cy: 193, r:  5 },
-    { name: "Ivory Coast",              cx: 164, cy: 215, r: 10 },
+    { name: "Cote D'Ivoire",            cx: 164, cy: 215, r: 10 },
     { name: "Lesotho",                  cx: 264, cy: 428, r:  4 },
     { name: "Liberia",                  cx: 150, cy: 222, r:  7 },
     { name: "Libya",                    cx: 240, cy: 106, r: 17 },
