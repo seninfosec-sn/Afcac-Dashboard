@@ -1,17 +1,9 @@
-﻿import fs from "fs";
+import fs from "fs";
 import path from "path";
-import { kvGet, kvSet, setupSchema } from "./db";
+import { kvGet, kvSet } from "./db";
 import type { KpiData, ActionRow, ActionStatus, CountryRow, TargetRow, DashboardData, UpdateLog, ExpertStat, AppUser } from "./types";
 
-// Ensure schema exists on first DB access (idempotent)
-let schemaReady = false;
-async function ensureSchema() {
-  if (schemaReady) return;
-  await setupSchema();
-  schemaReady = true;
-}
-
-// JSON files are read-only seeds (bundled at build time â€” readable on Vercel too)
+// JSON files are read-only seeds (bundled at build time — readable on Vercel too)
 const SOURCE_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(process.cwd(), "data");
@@ -32,7 +24,6 @@ const K = {
 
 /** Read from DB; if missing, seed from the bundled JSON file and return. */
 async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
-  await ensureSchema();
   const cached = await kvGet<T>(key);
   if (cached !== null) return cached;
   const data = readJsonFile<T>(filename);
@@ -40,22 +31,32 @@ async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
   return data;
 }
 
-/* â”€â”€ Readers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Readers ─────────────────────────────────────── */
 
 export async function getKpis(): Promise<KpiData> {
   return dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
 }
 
 export async function getActions(): Promise<ActionRow[]> {
-  return dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
+  const rows = await dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
+  return rows.map((r) => (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r);
 }
 
 export async function getCountries(): Promise<CountryRow[]> {
   return dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
 }
 
+const DEADLINE_FIXES: Record<string, string> = { "Dec 2025": "May 2026" };
+
+function fixDeadlines<T extends { deadline?: string }>(rows: T[]): T[] {
+  return rows.map(r => r.deadline && DEADLINE_FIXES[r.deadline] ? { ...r, deadline: DEADLINE_FIXES[r.deadline] } : r);
+}
+
 export async function getTargets(): Promise<TargetRow[]> {
-  return dbGetOrSeed<TargetRow[]>(K.targets, "targets.json");
+  const rows = await dbGetOrSeed<TargetRow[]>(K.targets, "targets.json");
+  const fixed = fixDeadlines(rows);
+  if (fixed.some((r, i) => r.deadline !== rows[i].deadline)) await kvSet(K.targets, fixed);
+  return fixed;
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -65,7 +66,7 @@ export async function getDashboardData(): Promise<DashboardData> {
   return { kpis, actions, countries, targets };
 }
 
-/* â”€â”€ Writers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Writers ─────────────────────────────────────── */
 
 export async function saveKpis(data: KpiData): Promise<void> {
   await kvSet(K.kpis, data);
@@ -92,7 +93,7 @@ export async function saveDashboardData(data: DashboardData): Promise<void> {
   ]);
 }
 
-/* â”€â”€ Country-specific targets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Country-specific targets ───────────────────── */
 
 const COUNTRY_REGIONS: Record<string, string> = {
   "Algeria": "North Africa",     "Angola": "Southern Africa",   "Benin": "West Africa",
@@ -108,7 +109,7 @@ const COUNTRY_REGIONS: Record<string, string> = {
   "Malawi": "East Africa",       "Mali": "West Africa",         "Mauritania": "North Africa",
   "Mauritius": "East Africa",    "Morocco": "North Africa",     "Mozambique": "Southern Africa",
   "Namibia": "Southern Africa",  "Niger": "West Africa",        "Nigeria": "West Africa",
-  "Rwanda": "East Africa",       "SÃ£o TomÃ© & PrÃ­ncipe": "Central Africa", "Senegal": "West Africa",
+  "Rwanda": "East Africa",       "São Tomé & Príncipe": "Central Africa", "Senegal": "West Africa",
   "Seychelles": "East Africa",   "Sierra Leone": "West Africa", "Somalia": "East Africa",
   "South Africa": "Southern Africa", "South Sudan": "East Africa", "Sudan": "North Africa",
   "Tanzania": "East Africa",     "Togo": "West Africa",         "Tunisia": "North Africa",
@@ -116,7 +117,17 @@ const COUNTRY_REGIONS: Record<string, string> = {
 };
 
 export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
-  return (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  const all = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  let dirty = false;
+  for (const country of Object.keys(all)) {
+    const original = all[country];
+    all[country] = fixDeadlines(original.map((t) =>
+      (t.status as string) === "onhold" ? { ...t, status: "notstarted" as const } : t
+    ));
+    if (all[country].some((r, i) => r.deadline !== original[i]?.deadline)) dirty = true;
+  }
+  if (dirty) await kvSet(K.countryTargets, all);
+  return all;
 }
 
 export async function getCountryTargets(country: string): Promise<TargetRow[]> {
@@ -133,7 +144,7 @@ export async function saveCountryTargets(country: string, targets: TargetRow[]):
   all[country] = targets;
   await kvSet(K.countryTargets, all);
 
-  // 2â€“4. Update all derived data in parallel where possible
+  // 2–4. Update all derived data in parallel where possible
   await Promise.all([
     syncCountryStats(country, targets),
     syncActionRow(country, targets),
@@ -208,7 +219,44 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   await saveCountries(countries);
 }
 
-/* â”€â”€ Users (Neon DB primary, JSON file fallback) â”€â”€â”€ */
+/* ── Country-filtered dashboard ─────────────────── */
+
+export function filterDashboardForCountry(
+  data: DashboardData,
+  countryTargets: Record<string, TargetRow[]>,
+  country: string
+): DashboardData & { countryTargets: Record<string, TargetRow[]> } {
+  const actions   = data.actions.filter((a) => a.country === country);
+  const countries = data.countries.filter((c) => c.country === country);
+  const targets   = countryTargets[country] ?? data.targets.map((t) => ({ ...t, pct: 0, status: "notstarted" as const }));
+
+  // All KPI percentages derived from targets (questionnaire objectives) for the country
+  // profile — a single synthetic action row per country is not granular enough.
+  const tTotal = targets.length || 1;
+  const tPct = (fn: (t: TargetRow) => boolean) => Math.round(targets.filter(fn).length / tTotal * 100);
+
+  const kpis: KpiData = {
+    ...data.kpis,
+    totalCountries:      1,
+    totalCountriesTrend: "",
+    totalActions:        targets.filter((t) => t.pct > 0).length,
+    totalActionsTrend:   "",
+    pctCompleted:        tPct((t) => t.pct === 100),
+    pctInProgress:       tPct((t) => t.pct > 0 && t.pct < 100),
+    pctDelayed:      0,
+    pctNotStarted:   tPct((t) => t.pct === 0),
+  };
+
+  return {
+    kpis,
+    actions,
+    countries,
+    targets,
+    countryTargets: { [country]: targets },
+  };
+}
+
+/* ── Users (Neon DB primary, JSON file fallback) ─── */
 
 export async function getUsers(): Promise<AppUser[]> {
   let kvUsers: AppUser[] | null = null;
@@ -235,7 +283,7 @@ export async function findUser(username: string): Promise<AppUser | null> {
   return users.find((u) => u.username.toLowerCase() === normalized) ?? null;
 }
 
-/* â”€â”€ Update logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Update logs ─────────────────────────────────── */
 
 export async function getUpdateLogs(): Promise<UpdateLog[]> {
   return (await kvGet<UpdateLog[]>(K.updates)) ?? [];
@@ -247,8 +295,9 @@ export async function appendUpdateLog(log: UpdateLog): Promise<void> {
   await kvSet(K.updates, logs);
 }
 
-export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
-  const logs = await getUpdateLogs();
+export async function getTopExperts(limit = 3, country?: string | null): Promise<ExpertStat[]> {
+  const allLogs = await getUpdateLogs();
+  const logs = country ? allLogs.filter(l => l.country === country) : allLogs;
   const map: Record<string, { total: number; targetsSum: number; lastDate: string; fullName?: string }> = {};
 
   for (const log of logs) {
@@ -273,3 +322,9 @@ export async function getTopExperts(limit = 3): Promise<ExpertStat[]> {
     .slice(0, limit);
 }
 
+export async function getLastCountryUpdate(country?: string | null): Promise<UpdateLog | null> {
+  const logs = await getUpdateLogs();
+  const filtered = country ? logs.filter(l => l.country === country) : logs;
+  if (filtered.length === 0) return null;
+  return filtered.reduce((latest, log) => log.date > latest.date ? log : latest);
+}

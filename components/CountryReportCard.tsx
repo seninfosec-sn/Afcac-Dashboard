@@ -43,10 +43,9 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
       wsKpi["!cols"] = [{ wch: 30 }, { wch: 30 }];
       XLSX.utils.book_append_sheet(wb, wsKpi, "KPI Summary");
 
-      // Sheet 2: Safety Targets (exclude targets with deadline before 2026)
-      const excelTargets = targets.filter(tgt => { const m = tgt.deadline?.match(/(\d{4})/); return !m || parseInt(m[1]) >= 2026; });
+      // Sheet 2: Safety Targets
       const tHeaders = ["ID", "Group", "Title", "Score (%)", "Status", "Deadline"];
-      const tRows = excelTargets.map(tgt => [tgt.id, tgt.group, tgt.title, tgt.pct, tgt.status, tgt.deadline]);
+      const tRows = targets.map(tgt => [tgt.id, tgt.group, tgt.title, tgt.pct, tgt.status, tgt.deadline]);
       const wsTargets = XLSX.utils.aoa_to_sheet([tHeaders, ...tRows]);
       wsTargets["!cols"] = tHeaders.map((h, ci) => ({
         wch: Math.max(h.length, ...tRows.map(r => String(r[ci] ?? "").length)) + 2,
@@ -152,13 +151,12 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         },
       });
 
-      // ── Page 2: Safety Targets (exclude targets with deadline before 2026) ──
-      const pdfTargets = targets.filter(tgt => { const m = tgt.deadline?.match(/(\d{4})/); return !m || parseInt(m[1]) >= 2026; });
+      // ── Page 2: Safety Targets ──
       doc.addPage();
       addPageHeader("Safety Targets — Progress by Sub-target");
       autoTable(doc, {
         head: [["ID", "Group", "Title", "Score", "Status", "Deadline"]],
-        body: pdfTargets.map(tgt => [tgt.id, tgt.group, tgt.title, `${tgt.pct}%`, tgt.status, tgt.deadline]),
+        body: targets.map(tgt => [tgt.id, tgt.group, tgt.title, `${tgt.pct}%`, tgt.status, tgt.deadline]),
         startY: 30,
         styles: { fontSize: 7.5, cellPadding: 2.5 },
         headStyles: { fillColor: C.forest, textColor: [255, 255, 255], fontStyle: "bold" },

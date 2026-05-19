@@ -46,8 +46,17 @@ export async function getCountries(): Promise<CountryRow[]> {
   return dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
 }
 
+const DEADLINE_FIXES: Record<string, string> = { "Dec 2025": "May 2026" };
+
+function fixDeadlines<T extends { deadline?: string }>(rows: T[]): T[] {
+  return rows.map(r => r.deadline && DEADLINE_FIXES[r.deadline] ? { ...r, deadline: DEADLINE_FIXES[r.deadline] } : r);
+}
+
 export async function getTargets(): Promise<TargetRow[]> {
-  return dbGetOrSeed<TargetRow[]>(K.targets, "targets.json");
+  const rows = await dbGetOrSeed<TargetRow[]>(K.targets, "targets.json");
+  const fixed = fixDeadlines(rows);
+  if (fixed.some((r, i) => r.deadline !== rows[i].deadline)) await kvSet(K.targets, fixed);
+  return fixed;
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -109,11 +118,15 @@ const COUNTRY_REGIONS: Record<string, string> = {
 
 export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
   const all = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  let dirty = false;
   for (const country of Object.keys(all)) {
-    all[country] = all[country].map((t) =>
+    const original = all[country];
+    all[country] = fixDeadlines(original.map((t) =>
       (t.status as string) === "onhold" ? { ...t, status: "notstarted" as const } : t
-    );
+    ));
+    if (all[country].some((r, i) => r.deadline !== original[i]?.deadline)) dirty = true;
   }
+  if (dirty) await kvSet(K.countryTargets, all);
   return all;
 }
 
