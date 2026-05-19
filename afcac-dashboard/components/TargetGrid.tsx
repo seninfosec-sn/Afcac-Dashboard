@@ -36,7 +36,7 @@ function groupNum(id: string): number {
 
 const TOTAL_AFRICAN_STATES = 54;
 
-export default function TargetGrid({ targets, isAdmin, allCountryTargets }: { targets: TargetRow[]; isAdmin?: boolean; allCountryTargets?: Record<string, TargetRow[]> }) {
+export default function TargetGrid({ targets, isAdmin, canExport, allCountryTargets }: { targets: TargetRow[]; isAdmin?: boolean; canExport?: boolean; allCountryTargets?: Record<string, TargetRow[]> }) {
   const { t } = useLanguage();
 
   function statusInfo(pct: number): { label: string; cls: string } {
@@ -60,6 +60,7 @@ export default function TargetGrid({ targets, isAdmin, allCountryTargets }: { ta
       const num = Number(n);
       let avgPct: number;
       if (allSubmissions) {
+        // Average per sub-target across all 54 countries (0 for non-submitted), then avg the group
         const groupAvg = ts.reduce((sum, tRow) => {
           const submittedSum = allSubmissions.reduce((s, sub) => s + (sub.find(x => x.id === tRow.id)?.pct ?? 0), 0);
           return sum + submittedSum / TOTAL_AFRICAN_STATES;
@@ -68,7 +69,9 @@ export default function TargetGrid({ targets, isAdmin, allCountryTargets }: { ta
       } else {
         avgPct = Math.round(ts.reduce((s, tRow) => s + tRow.pct, 0) / ts.length);
       }
-      const deadlines = [...new Set(ts.map(tRow => tRow.deadline))].join(" / ");
+      const deadlines = [...new Set(ts.map(tRow => tRow.deadline))]
+        .filter(dl => { const m = dl?.match(/(\d{4})/); return !m || parseInt(m[1]) >= 2026; })
+        .join(" / ") || "Ongoing";
       return { num, name: TARGET_NAMES[num] ?? ts[0].group, avgPct, count: ts.length, deadlines };
     })
     .sort((a, b) => a.num - b.num);
@@ -93,7 +96,7 @@ export default function TargetGrid({ targets, isAdmin, allCountryTargets }: { ta
       <div className="card-head">
         <span className="card-head-title">{t("targetAchievement")}</span>
         <span className="card-head-badge">{t("continentalScore")} · {globalAvg}%</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
 
       <div className="card-body">

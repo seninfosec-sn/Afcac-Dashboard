@@ -69,7 +69,9 @@ export default function TargetGrid({ targets, isAdmin, canExport, allCountryTarg
       } else {
         avgPct = Math.round(ts.reduce((s, tRow) => s + tRow.pct, 0) / ts.length);
       }
-      const deadlines = [...new Set(ts.map(tRow => tRow.deadline))].join(" / ");
+      const deadlines = [...new Set(ts.map(tRow => tRow.deadline))]
+        .filter(dl => { const m = dl?.match(/(\d{4})/); return !m || parseInt(m[1]) >= 2026; })
+        .join(" / ") || "Ongoing";
       return { num, name: TARGET_NAMES[num] ?? ts[0].group, avgPct, count: ts.length, deadlines };
     })
     .sort((a, b) => a.num - b.num);
