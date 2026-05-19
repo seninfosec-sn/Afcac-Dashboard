@@ -59,10 +59,13 @@ export async function getActions(): Promise<ActionRow[]> {
   return fixed;
 }
 
-const DEADLINE_FIXES: Record<string, string> = { "Dec 2025": "May 2026" };
-
+// Replace any deadline year ≤ 2025 with 2026 (covers stale KV data like "2024", "Dec 2024", "Dec 2025", etc.)
 function fixDeadlines<T extends { deadline?: string }>(rows: T[]): T[] {
-  return rows.map(r => r.deadline && DEADLINE_FIXES[r.deadline] ? { ...r, deadline: DEADLINE_FIXES[r.deadline] } : r);
+  return rows.map(r => {
+    if (!r.deadline) return r;
+    const fixed = r.deadline.replace(/\b(20(?:0\d|1\d|2[0-5]))\b/g, "2026");
+    return fixed !== r.deadline ? { ...r, deadline: fixed } : r;
+  });
 }
 
 export async function getTargets(): Promise<TargetRow[]> {
