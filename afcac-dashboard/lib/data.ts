@@ -34,7 +34,14 @@ async function dbGetOrSeed<T>(key: string, filename: string): Promise<T> {
 /* ── Readers ─────────────────────────────────────── */
 
 export async function getKpis(): Promise<KpiData> {
-  return dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
+  const kpis = await dbGetOrSeed<KpiData>(K.kpis, "kpis.json");
+  // Migrate stale dates: update lastUpdated/reportPeriod if still showing pre-2026 values
+  if (kpis.lastUpdated < "2026-01-01") {
+    const fixed = { ...kpis, lastUpdated: "2026-05-20", reportPeriod: "Q2 2026" };
+    await kvSet(K.kpis, fixed);
+    return fixed;
+  }
+  return kpis;
 }
 
 const COUNTRY_RENAMES: Record<string, string> = { "Ivory Coast": "Cote D'Ivoire" };
