@@ -305,7 +305,7 @@ export default function AdminClient({
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
             <div className="profile-name">{displayName}</div>
-            <div className="profile-role">{role === "admin" ? t("roleAdministrator") : role === "focal_point" ? t("roleFocalPointLabel") : t("filterExpert")} · AFCAC</div>
+            <div className="profile-role">{role === "admin" ? t("roleAdministrator") : role === "focal_point" ? t("roleFocalPointLabel") : role === "rsoo" ? t("filterRsoo") : t("filterExpert")} · AFCAC</div>
             <div className="profile-meta">
               <div className="profile-meta-row">
                 <span>🗓</span>
@@ -813,8 +813,8 @@ export default function AdminClient({
 
           {/* ─────────────────── USERS / ACCESS ─────────────────── */}
           {tab === "users" && isMasterAdmin && (() => {
-            const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60" };
-            const ROLE_LABELS: Record<string, string> = { admin: t("roleAdministrator"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert") };
+            const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60", rsoo: "#8e44ad" };
+            const ROLE_LABELS: Record<string, string> = { admin: t("roleAdministrator"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert"), rsoo: t("filterRsoo") };
             const filtered = localUsers.filter((u) => {
               if (roleFilter !== "all" && u.role !== roleFilter) return false;
               const q = userSearch.toLowerCase();
@@ -837,14 +837,19 @@ export default function AdminClient({
                     placeholder={t("searchUserPlaceholder")}
                     style={{ flex: 1, minWidth: 200, padding: "6px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)" }}
                   />
-                  {(["all", "admin", "focal_point", "expert"] as const).map((r) => (
-                    <button key={r} onClick={() => setRoleFilter(r)} style={{
+                  {(["all", "admin", "focal_point", "expert", "rsoo"] as const).map((r) => (
+                    <button key={r} onClick={() => setRoleFilter(r as "all" | UserRole)} style={{
                       padding: "5px 12px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
                       border: roleFilter === r ? "2px solid var(--forest2)" : "1px solid var(--border)",
                       background: roleFilter === r ? "var(--forest2)" : "var(--surface2)",
                       color: roleFilter === r ? "#fff" : "var(--ink2)",
                     }}>
-                      {r === "all" ? `${t("filterAll")} (${localUsers.length})` : r === "admin" ? `${t("admin")} (${localUsers.filter(u => u.role === "admin").length})` : r === "focal_point" ? `${t("filterFocalPoint")} (${localUsers.filter(u => u.role === "focal_point").length})` : `${t("filterExpert")} (${localUsers.filter(u => u.role === "expert").length})`}
+                      {r === "all"
+                        ? `${t("filterAll")} (${localUsers.length})`
+                        : r === "admin"       ? `${t("roleAdministrator")} (${localUsers.filter(u => u.role === "admin").length})`
+                        : r === "focal_point" ? `${t("filterFocalPoint")} (${localUsers.filter(u => u.role === "focal_point").length})`
+                        : r === "rsoo"        ? `${t("filterRsoo")} (${localUsers.filter(u => u.role === "rsoo").length})`
+                        :                       `${t("filterExpert")} (${localUsers.filter(u => u.role === "expert").length})`}
                     </button>
                   ))}
                   <button onClick={() => exportExcel(
@@ -954,6 +959,7 @@ export default function AdminClient({
                                         <option value="admin">Admin</option>
                                         <option value="focal_point">Focal Point</option>
                                         <option value="expert">Expert</option>
+                                        <option value="rsoo">RSOO</option>
                                       </select>
                                     </div>
                                     <div>
