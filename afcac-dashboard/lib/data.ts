@@ -58,6 +58,26 @@ const COUNTRIES_ZERO_V1 = new Set([
   "Seychelles", "Somalia", "Sudan", "Tunisia",
 ]);
 
+// Recompute global KPI percentages from countries that have submitted data (actions > 0)
+async function recomputeKpisFromCountries(countries: CountryRow[]): Promise<void> {
+  const active = countries.filter(c => c.actions > 0);
+  if (active.length === 0) return;
+  const n = active.length;
+  const avg = (field: keyof Pick<CountryRow, "completed" | "inprogress" | "delayed" | "notstarted">) =>
+    Math.round(active.reduce((s, c) => s + c[field], 0) / n);
+  const totalBudget = active.reduce((s, c) => s + (c.budget ?? 0), 0);
+  const current = await kvGet<KpiData>(K.kpis);
+  if (!current) return;
+  await kvSet(K.kpis, {
+    ...current,
+    pctCompleted:  avg("completed"),
+    pctInProgress: avg("inprogress"),
+    pctDelayed:    avg("delayed"),
+    pctNotStarted: avg("notstarted"),
+    totalBudget,
+  });
+}
+
 export async function getCountries(): Promise<CountryRow[]> {
   const rows = await dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
   const zeroV1Done = await kvGet<boolean>("countriesZeroV1");
@@ -71,17 +91,31 @@ export async function getCountries(): Promise<CountryRow[]> {
     if (row !== r) dirty = true;
     return row;
   });
-  if (!zeroV1Done) { await kvSet("countriesZeroV1", true); dirty = true; }
+  if (!zeroV1Done) {
+    await kvSet("countriesZeroV1", true);
+    dirty = true;
+    await recomputeKpisFromCountries(fixed);
+  }
   if (dirty) await kvSet(K.countries, fixed);
   return fixed;
 }
 
 export async function getActions(): Promise<ActionRow[]> {
   const rows = await dbGetOrSeed<ActionRow[]>(K.actions, "actions.json");
-  const fixed = rows
-    .map(r => (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r)
-    .map(r => ({ ...r, country: renameCountry(r.country) }));
-  if (fixed.some((r, i) => r.country !== rows[i].country)) await kvSet(K.actions, fixed);
+  const actZeroV1Done = await kvGet<boolean>("actZeroV1");
+  let dirty = false;
+  const fixed = rows.map(r => {
+    let row: ActionRow = (r.status as string) === "onhold" ? { ...r, status: "notstarted" as const } : r;
+    const country = renameCountry(row.country);
+    if (country !== row.country) row = { ...row, country };
+    if (!actZeroV1Done && COUNTRIES_ZERO_V1.has(row.country)) {
+      row = { ...row, status: "notstarted" as const, budget: 0 };
+    }
+    if (row !== r) dirty = true;
+    return row;
+  });
+  if (!actZeroV1Done) { await kvSet("actZeroV1", true); dirty = true; }
+  if (dirty) await kvSet(K.actions, fixed);
   return fixed;
 }
 
