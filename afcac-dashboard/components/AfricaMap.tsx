@@ -49,7 +49,7 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
 
   function getColor(name: string): string {
     const row = countryMap[name];
-    if (!row) return "#b8c8c0";
+    if (!row || row.actions === 0) return "#b8c8c0";
     return STATUS_COLORS[getDominantStatus(row)] ?? "#b8c8c0";
   }
 
@@ -196,7 +196,7 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
         {tooltip && (
           <div className="map-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
             <div style={{ fontWeight: 700, marginBottom: 4 }}>{tooltip.country}</div>
-            {tooltip.data ? (
+            {tooltip.data && tooltip.data.actions > 0 ? (
               <>
                 <div>{t("targetsLabel")} {tooltip.data.actions}</div>
                 <div style={{ color: "#52b788" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
