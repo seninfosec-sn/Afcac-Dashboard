@@ -50,10 +50,29 @@ function renameCountry(name: string): string {
   return COUNTRY_RENAMES[name] ?? name;
 }
 
+// Countries that have not submitted any questionnaire data — stats must be 0
+const COUNTRIES_ZERO_V1 = new Set([
+  "Algeria", "Botswana", "Cabo Verde", "Cameroon", "Central African Republic",
+  "Chad", "Comoros", "DR Congo", "Djibouti", "Eritrea", "Gambia", "Guinea",
+  "Guinea-Bissau", "Lesotho", "Libya", "Mauritius", "Morocco", "Rwanda",
+  "Seychelles", "Somalia", "Sudan", "Tunisia",
+]);
+
 export async function getCountries(): Promise<CountryRow[]> {
   const rows = await dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
-  const fixed = rows.map(r => ({ ...r, country: renameCountry(r.country) }));
-  if (fixed.some((r, i) => r.country !== rows[i].country)) await kvSet(K.countries, fixed);
+  const zeroV1Done = await kvGet<boolean>("countriesZeroV1");
+  let dirty = false;
+  const fixed = rows.map(r => {
+    const country = renameCountry(r.country);
+    let row: CountryRow = country !== r.country ? { ...r, country } : r;
+    if (!zeroV1Done && COUNTRIES_ZERO_V1.has(row.country)) {
+      row = { ...row, actions: 0, completed: 0, inprogress: 0, delayed: 0, notstarted: 0, budget: 0 };
+    }
+    if (row !== r) dirty = true;
+    return row;
+  });
+  if (!zeroV1Done) { await kvSet("countriesZeroV1", true); dirty = true; }
+  if (dirty) await kvSet(K.countries, fixed);
   return fixed;
 }
 
@@ -141,17 +160,21 @@ const COUNTRY_REGIONS: Record<string, string> = {
 
 export async function getAllCountryTargets(): Promise<Record<string, TargetRow[]>> {
   const raw = (await kvGet<Record<string, TargetRow[]>>(K.countryTargets)) ?? {};
+  const ctZeroV1Done = await kvGet<boolean>("ctZeroV1");
   let dirty = false;
   const all: Record<string, TargetRow[]> = {};
   for (const country of Object.keys(raw)) {
     const newKey = renameCountry(country);
     if (newKey !== country) dirty = true;
+    // One-time purge: drop stale/test submissions for countries that have no real data
+    if (!ctZeroV1Done && COUNTRIES_ZERO_V1.has(newKey)) { dirty = true; continue; }
     const original = raw[country];
     all[newKey] = fixDeadlines(original.map((t) =>
       (t.status as string) === "onhold" ? { ...t, status: "notstarted" as const } : t
     ));
     if (all[newKey].some((r, i) => r.deadline !== original[i]?.deadline)) dirty = true;
   }
+  if (!ctZeroV1Done) { await kvSet("ctZeroV1", true); dirty = true; }
   if (dirty) await kvSet(K.countryTargets, all);
   return all;
 }
