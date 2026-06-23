@@ -96,6 +96,12 @@ export default function AdminClient({
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
   const [userSaving, setUserSaving] = useState(false);
 
+  /* ── Add user modal states ── */
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const [addUserDraft, setAddUserDraft] = useState<{ username: string; displayName: string; devPassword: string; role: UserRole; country: string; email: string }>({ username: "", displayName: "", devPassword: "", role: "focal_point", country: "", email: "" });
+  const [addUserSaving, setAddUserSaving] = useState(false);
+  const [addUserError, setAddUserError] = useState("");
+
   function startEdit(u: AppUser) {
     setEditingUser(u.username);
     setEditDraft({ devPassword: "", role: u.role, country: u.country ?? "", displayName: u.displayName, email: u.email ?? "" });
@@ -146,6 +152,33 @@ export default function AdminClient({
       showToast("❌ " + t("toastSaveError"), "warn");
     } finally {
       setUserSaving(false);
+    }
+  }
+
+  async function createUser() {
+    if (!addUserDraft.username.trim() || !addUserDraft.displayName.trim() || !addUserDraft.devPassword.trim()) {
+      setAddUserError("Veuillez remplir les champs obligatoires (nom, identifiant, mot de passe).");
+      return;
+    }
+    setAddUserSaving(true);
+    setAddUserError("");
+    try {
+      const res = await fetch("/api/admin/create-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addUserDraft),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Erreur lors de la création");
+      const newUser: AppUser = { ...addUserDraft, passwordHash: "", disabled: false };
+      setLocalUsers((prev) => [...prev, newUser]);
+      setAddUserOpen(false);
+      setAddUserDraft({ username: "", displayName: "", devPassword: "", role: "focal_point", country: "", email: "" });
+      showToast("✅ Utilisateur créé avec succès !", "ok");
+    } catch (err) {
+      setAddUserError((err as Error).message);
+    } finally {
+      setAddUserSaving(false);
     }
   }
 
@@ -860,6 +893,9 @@ export default function AdminClient({
                   )} style={{ padding: "5px 14px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid #27ae60", background: "rgba(39,174,96,0.12)", color: "#27ae60", whiteSpace: "nowrap" }}>
                     {t("btnExportExcel")}
                   </button>
+                  <button onClick={() => { setAddUserOpen(true); setAddUserError(""); }} style={{ padding: "5px 16px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid var(--forest2)", background: "var(--forest2)", color: "#fff", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 5 }}>
+                    + {"Add User"}
+                  </button>
                 </div>
 
                 {/* Table */}
@@ -1027,6 +1063,117 @@ export default function AdminClient({
           {saving ? t("btnSaving") : t("btnSaveChanges")}
         </button>
       </div>
+
+      {/* ── ADD USER MODAL ── */}
+      {addUserOpen && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setAddUserOpen(false); }}>
+          <div style={{ background: "var(--bg1)", borderRadius: 12, boxShadow: "0 8px 40px rgba(0,0,0,0.35)", width: 520, maxWidth: "95vw", padding: 0, overflow: "hidden" }}>
+
+            {/* Modal header */}
+            <div style={{ background: "var(--forest)", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <div style={{ color: "#fff", fontWeight: 700, fontSize: 15, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: ".03em" }}>
+                  {"Add User"}
+                </div>
+                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 11, marginTop: 2 }}>Créer un nouveau compte utilisateur</div>
+              </div>
+              <button onClick={() => setAddUserOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 20, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}>✕</button>
+            </div>
+
+            {/* Modal body */}
+            <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 14 }}>
+
+              {/* Row 1: Display Name + Username */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                    {t("editDisplayName")} <span style={{ color: "#dc2626" }}>*</span>
+                  </label>
+                  <input type="text" value={addUserDraft.displayName}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, displayName: e.target.value }))}
+                    placeholder="Prénom Nom"
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                    {t("colUsername")} <span style={{ color: "#dc2626" }}>*</span>
+                  </label>
+                  <input type="text" value={addUserDraft.username}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, username: e.target.value.toLowerCase().replace(/\s/g, ".") }))}
+                    placeholder="prenom.nom"
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box", fontFamily: "monospace" }} />
+                </div>
+              </div>
+
+              {/* Row 2: Password + Role */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                    {t("editNewPassword")} <span style={{ color: "#dc2626" }}>*</span>
+                  </label>
+                  <input type="text" value={addUserDraft.devPassword}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, devPassword: e.target.value }))}
+                    placeholder="Mot de passe"
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                    {t("editRole")} <span style={{ color: "#dc2626" }}>*</span>
+                  </label>
+                  <select value={addUserDraft.role}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, role: e.target.value as UserRole }))}
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box", cursor: "pointer" }}>
+                    <option value="focal_point">Focal Point</option>
+                    <option value="admin">Administrateur</option>
+                    <option value="expert">Expert</option>
+                    <option value="rsoo">RSOO</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 3: Country + Email */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                    {t("editCountry")}
+                  </label>
+                  <select value={addUserDraft.country}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, country: e.target.value }))}
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box", cursor: "pointer" }}>
+                    <option value="">{t("editNoCountry")}</option>
+                    {AFRICAN_STATES.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Email</label>
+                  <input type="email" value={addUserDraft.email}
+                    onChange={(e) => setAddUserDraft((d) => ({ ...d, email: e.target.value }))}
+                    placeholder="email@domaine.com"
+                    style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
+                </div>
+              </div>
+
+              {/* Error */}
+              {addUserError && (
+                <div style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.3)", borderRadius: 6, padding: "8px 12px", fontSize: 12, color: "#dc2626" }}>
+                  ⚠ {addUserError}
+                </div>
+              )}
+
+              {/* Actions */}
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 4 }}>
+                <button onClick={() => setAddUserOpen(false)} style={{ padding: "8px 18px", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", background: "var(--surface2)", color: "var(--ink2)", border: "1px solid var(--border)" }}>
+                  {t("btnCancel")}
+                </button>
+                <button onClick={createUser} disabled={addUserSaving} style={{ padding: "8px 22px", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: addUserSaving ? "not-allowed" : "pointer", background: "var(--forest2)", color: "#fff", border: "none", opacity: addUserSaving ? 0.7 : 1 }}>
+                  {addUserSaving ? t("btnSaving") : ("Créer l'utilisateur")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Toast */}
       <Toast msg={toast.msg} type={toast.type} visible={toastVisible} />
