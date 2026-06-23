@@ -45,6 +45,7 @@ export async function getKpis(): Promise<KpiData> {
 }
 
 const COUNTRY_RENAMES: Record<string, string> = { "Ivory Coast": "Cote D'Ivoire" };
+const USER_RENAMES: Record<string, string> = { "mbaioulem": "Djekilamber.mbaioulem." };
 
 function renameCountry(name: string): string {
   return COUNTRY_RENAMES[name] ?? name;
@@ -350,9 +351,15 @@ export async function getUsers(): Promise<AppUser[]> {
 
   if (!kvUsers || kvUsers.length === 0) return fileUsers;
 
-  // Migrate country renames in KV
-  const renamed = kvUsers.map(u => u.country ? { ...u, country: renameCountry(u.country) } : u);
-  const needsRename = renamed.some((u, i) => u.country !== kvUsers![i].country);
+  // Migrate country and username renames in KV
+  const renamed = kvUsers.map(u => {
+    const newUsername = USER_RENAMES[u.username] ?? u.username;
+    const newCountry = u.country ? renameCountry(u.country) : u.country;
+    return (newUsername !== u.username || newCountry !== u.country)
+      ? { ...u, username: newUsername, country: newCountry }
+      : u;
+  });
+  const needsRename = renamed.some((u, i) => u.username !== kvUsers![i].username || u.country !== kvUsers![i].country);
 
   // Auto-sync: add any new user from users.json not yet in KV
   const kvUsernames = new Set(renamed.map((u) => u.username.toLowerCase()));

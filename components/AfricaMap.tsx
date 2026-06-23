@@ -7,8 +7,8 @@ import { useLanguage } from "./LanguageProvider";
 
 const STATUS_COLORS: Record<string, string> = {
   completed:  "#2d9d5e",
-  inprogress: "#f0a500",
-  delayed:    "#e07b39",
+  inprogress: "#e07b39",
+  delayed:    "#e74c3c",
   notstarted: "#95a5a6",
 };
 
@@ -199,8 +199,8 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
             {tooltip.data && tooltip.data.actions > 0 ? (
               <>
                 <div>{t("targetsLabel")} {tooltip.data.actions}</div>
-                <div style={{ color: "#52b788" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
-                <div style={{ color: "#f0a500" }}>⏳ {tooltip.data.inprogress}% {t("inProgress").toLowerCase()}</div>
+                <div style={{ color: "#2d9d5e" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
+                <div style={{ color: "#e07b39" }}>⏳ {tooltip.data.inprogress}% {t("inProgress").toLowerCase()}</div>
                 <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data.entity}</div>
               </>
             ) : (

@@ -83,8 +83,8 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         forest2:   [1,  119, 100]  as [number,number,number], // #017764
         forest3:   [1,  148, 120]  as [number,number,number], // #019478
         complete:  [45, 157,  94]  as [number,number,number], // #2d9d5e
-        progress:  [176, 170,  52]  as [number,number,number], // #b0aa34 CAFAC yellow
-        delayed:   [224, 123,  57]  as [number,number,number], // #e07b39
+        progress:  [224, 123,  57]  as [number,number,number], // #e07b39 orange
+        delayed:   [231,  76,  60]  as [number,number,number], // #e74c3c red
         nostart:   [149, 165, 166]  as [number,number,number], // #95a5a6
         rowAlt:    [237, 247, 244]  as [number,number,number], // soft CAFAC green tint
         textMint:  [77,  184, 154]  as [number,number,number], // #4db89a

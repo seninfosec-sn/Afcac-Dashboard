@@ -9,13 +9,15 @@ import DocsDropdown from '@/components/DocsDropdown';
 interface Answer { pct: number; optIdx: number; label: string; }
 
 const COLORS: Record<number, string> = {
-  0: '#95a5a6', 25: '#e07b39', 50: '#f0a500', 75: '#52b788', 100: '#2d9d5e',
+  0: '#95a5a6', 25: '#e74c3c', 50: '#e07b39', 75: '#f0a500', 100: '#2d9d5e',
 };
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 
-interface Props { formNum: 1 | 2; }
+const ADMIN_ONLY_TARGETS = ['T4.2', 'T10.3', 'T12.4'];
 
-export default function QuestionnaireForm({ formNum }: Props) {
+interface Props { formNum: 1 | 2; isAdmin?: boolean; }
+
+export default function QuestionnaireForm({ formNum, isAdmin = false }: Props) {
   const { locale, t } = useLanguage();
 
   const [answers, setAnswers]   = useState<Record<string, Answer>>({});
@@ -25,8 +27,10 @@ export default function QuestionnaireForm({ formNum }: Props) {
   const [showSummary, setShowSummary] = useState(false);
   const [toast, setToast]       = useState<{ msg: string; type: 'ok' | 'warn' } | null>(null);
 
-  // Localize all questions based on current language
-  const questions = QUESTIONS.map(q => getLocalizedQuestion(q, locale));
+  // Localize all questions and filter restricted targets for non-admin users
+  const questions = QUESTIONS
+    .filter(q => isAdmin || !ADMIN_ONLY_TARGETS.includes(q.id))
+    .map(q => getLocalizedQuestion(q, locale));
 
   const answered  = Object.keys(answers).length;
   const total     = questions.length;
@@ -75,7 +79,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
 
   function exportJSON() {
     const payload = {
-      form: `${t('qFormLabel')} ${formNum}`,
+      form: `Formulaire ${formNum}`,
       state,
       submittedAt: new Date().toISOString(),
       responses: questions.map(q => ({
@@ -93,11 +97,11 @@ export default function QuestionnaireForm({ formNum }: Props) {
   }
 
   function exportCSV() {
-    const rows = [[t('qFormLabel'), 'State', 'Target ID', 'Title', 'Group', 'Deadline', 'Score (%)', 'Status', 'Comment']];
+    const rows = [['Form', 'State', 'Target ID', 'Title', 'Group', 'Deadline', 'Score (%)', 'Status', 'Comment']];
     questions.forEach(q => {
       const a = answers[q.id];
       rows.push([
-        `${t('qFormLabel')} ${formNum}`, state, q.id,
+        `Formulaire ${formNum}`, state, q.id,
         `"${q.title.replace(/"/g, '""')}"`,
         `"${q.group}"`, q.deadline,
         String(a?.pct ?? ''),
@@ -119,13 +123,15 @@ export default function QuestionnaireForm({ formNum }: Props) {
     return 'p100';
   };
 
+  const introText = t('qIntroText').replace('{total}', String(total));
+
   return (
     <>
       {/* ── HEADER ── */}
       <header className="header">
         <div className="h-emblem">✈</div>
         <div>
-          <div className="h-title">{t('qFormTitle')} · {t('qFormLabel')} {formNum}</div>
+          <div className="h-title">{t('qFormTitle')} · Formulaire {formNum}</div>
           <div className="h-sub">{t('qFormSub')} · {total} {total > 1 ? t('qQuestionsPlural') : t('qQuestions')}</div>
         </div>
         <div className="h-right">
@@ -157,8 +163,8 @@ export default function QuestionnaireForm({ formNum }: Props) {
             {Object.entries(groups).map(([grp, qs]) => (
               <div key={grp}>
                 <div className="sb-section">{grp}</div>
-                {qs.map((q) => {
-                  const globalIdx = questions.indexOf(q);
+                {qs.map(q => {
+                  const globalIdx = QUESTIONS.findIndex(orig => orig.id === q.id);
                   const done = !!answers[q.id];
                   return (
                     <div
@@ -195,11 +201,9 @@ export default function QuestionnaireForm({ formNum }: Props) {
           {/* Intro */}
           <div className="intro">
             <div className="intro-title">
-              {t('qFormTitle')} · {t('qFormLabel')} {formNum}
+              {t('qFormTitle')} · Formulaire {formNum}
             </div>
-            <div className="intro-text">
-              {t('qIntroText').replace('{total}', String(total))}
-            </div>
+            <div className="intro-text">{introText}</div>
           </div>
 
           {/* Questions */}
@@ -212,7 +216,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
                 </div>
 
                 {qs.map(q => {
-                  const globalIdx = questions.indexOf(q);
+                  const globalIdx = QUESTIONS.findIndex(orig => orig.id === q.id);
                   const ans = answers[q.id];
                   const color = ans ? (COLORS[ans.pct] || '#95a5a6') : undefined;
 
@@ -291,7 +295,7 @@ export default function QuestionnaireForm({ formNum }: Props) {
       {/* ── BOTTOM ACTION BAR ── */}
       <div className="form-actions">
         <div className="fa-stats">
-          <strong>{t('qFormLabel')} {formNum}</strong> — <strong>{answered}</strong> / {total} {t('qQuestionsPlural')} {t('qAnswered').toLowerCase()}
+          <strong>Formulaire {formNum}</strong> — <strong>{answered}</strong> / {total} {t('qQuestionsPlural')}
           &nbsp;·&nbsp; {t('qAvgScore')}: <strong>{avg !== null ? `${avg}%` : '—'}</strong>
         </div>
         <button className="btn btn-secondary" onClick={clearAll}>{t('qClearAll')}</button>
@@ -304,13 +308,13 @@ export default function QuestionnaireForm({ formNum }: Props) {
         <div className="summary-panel open">
           <div className="summary-box">
             <div className="summary-head">
-              <span className="summary-head-title">{t('qSummaryTitle')} — {t('qFormLabel')} {formNum}</span>
-              <button className="summary-close" onClick={() => setShowSummary(false)}>{t('qClose')}</button>
+              <span className="summary-head-title">{t('qSummaryTitle')} — Formulaire {formNum}</span>
+              <button className="summary-close" onClick={() => setShowSummary(false)}>✕</button>
             </div>
             <div className="summary-body">
               <div className="summary-kpis">
                 {[
-                  { val: `F${formNum}`, label: t('qFormLabel') },
+                  { val: `F${formNum}`, label: 'Formulaire' },
                   { val: answered,       label: t('qAnswered') },
                   { val: total - answered, label: t('qRemaining') },
                   { val: avg !== null ? `${avg}%` : '—', label: t('qAvgScore') },

@@ -9,7 +9,7 @@ import DocsDropdown from '@/components/DocsDropdown';
 interface Answer { pct: number; optIdx: number; label: string; }
 
 const COLORS: Record<number, string> = {
-  0: '#95a5a6', 25: '#e07b39', 50: '#f0a500', 75: '#52b788', 100: '#2d9d5e',
+  0: '#95a5a6', 25: '#e74c3c', 50: '#e07b39', 75: '#f0a500', 100: '#2d9d5e',
 };
 const LETTERS = ['a', 'b', 'c', 'd', 'e'];
 

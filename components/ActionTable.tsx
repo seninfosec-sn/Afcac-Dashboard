@@ -13,7 +13,7 @@ const SC: Record<string, { cls: string }> = {
 };
 
 const PCT_COLOR: Record<number, string> = {
-  0: "#95a5a6", 25: "#e07b39", 50: "#f0a500", 75: "#52b788", 100: "#2d9d5e",
+  0: "#95a5a6", 25: "#e74c3c", 50: "#e07b39", 75: "#f0a500", 100: "#2d9d5e",
 };
 
 export default function ActionTable({

@@ -31,7 +31,7 @@ const STATUS_LABELS: Record<string, string> = {
   delayed: "Delayed", notstarted: "Not Started",
 };
 const PCT_COLORS: Record<number, string> = {
-  0: "#95a5a6", 25: "#e07b39", 50: "#f0a500", 75: "#52b788", 100: "#2d9d5e",
+  0: "#95a5a6", 25: "#e74c3c", 50: "#e07b39", 75: "#f0a500", 100: "#2d9d5e",
 };
 
 /* ─── Section nav items (translated at render time) ─ */
@@ -530,7 +530,7 @@ export default function AdminClient({
                 const meta: Record<string, { label: string; color: string; trendKey: keyof KpiData; icon: string }> = {
                   pctCompleted:  { label: t("pctCompleted"),  color: "#2d9d5e", trendKey: "pctCompletedTrend",  icon: "✅" },
                   pctInProgress: { label: t("pctInProgress"), color: "#f0a500", trendKey: "pctInProgressTrend", icon: "⏳" },
-                  pctDelayed:    { label: t("pctDelayed"),    color: "#e07b39", trendKey: "pctDelayedTrend",    icon: "⚠" },
+                  pctDelayed:    { label: t("pctDelayed"),    color: "#e74c3c", trendKey: "pctDelayedTrend",    icon: "⚠" },
                   pctNotStarted: { label: t("pctNotStarted"), color: "#95a5a6", trendKey: "pctNotStartedTrend", icon: "🔘" },
                 };
                 const m = meta[key];
@@ -713,7 +713,7 @@ export default function AdminClient({
               </div>
               {actions.map((row, idx) => {
                 const statusColor: Record<string, string> = {
-                  completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e07b39", notstarted: "#95a5a6",
+                  completed: "#2d9d5e", inprogress: "#e07b39", delayed: "#e74c3c", notstarted: "#95a5a6",
                 };
                 const sc = statusColor[row.status] ?? "#95a5a6";
                 const isLast = idx === actions.length - 1;
