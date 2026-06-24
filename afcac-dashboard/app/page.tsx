@@ -91,7 +91,7 @@ export default async function DashboardPage() {
         {/* Section 3: Map + Status Bar */}
         <div className="section-label">{t(locale, "geoOverview")}</div>
         <div className="row-map">
-          <AfricaMap countries={countries} isAdmin={isAdmin} />
+          <AfricaMap countries={countries} isAdmin={isAdmin} allCountryTargets={allCountryTargets} />
           <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} isCountryProfile={!isAdmin && !!userCountry} targets={targets} />
         </div>
 

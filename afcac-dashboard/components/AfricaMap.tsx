@@ -1,24 +1,36 @@
 "use client";
 import { useState } from "react";
-import type { CountryRow } from "@/lib/types";
+import type { CountryRow, TargetRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
 import { exportExcel, exportPdf } from "@/lib/exportUtils";
 import { useLanguage } from "./LanguageProvider";
 
-const STATUS_COLORS: Record<string, string> = {
-  completed:  "#2d9d5e",
-  inprogress: "#f0a500",
-  delayed:    "#e74c3c",
-  notstarted: "#95a5a6",
-};
+const PCT_COLORS: { pct: number; color: string; label: string }[] = [
+  { pct: 0,   color: "#95a5a6", label: "Not Started / N/A"               },
+  { pct: 25,  color: "#e74c3c", label: "Partially / Initiated (0–25%)"   },
+  { pct: 50,  color: "#e07b39", label: "Partially / Initiated (25–50%)"  },
+  { pct: 75,  color: "#f0a500", label: "In Progress / Part. Achieved"    },
+  { pct: 100, color: "#2d9d5e", label: "Fully Achieved"                  },
+];
 
-function getDominantStatus(row: CountryRow): string {
-  return [
-    { k: "completed",  v: row.completed },
-    { k: "inprogress", v: row.inprogress },
-    { k: "delayed",    v: row.delayed },
-    { k: "notstarted", v: row.notstarted },
-  ].reduce((a, b) => (b.v > a.v ? b : a)).k;
+function avgPctToColor(avg: number): string {
+  if (avg >= 75) return "#2d9d5e";
+  if (avg >= 50) return "#f0a500";
+  if (avg >= 25) return "#e07b39";
+  if (avg > 0)   return "#e74c3c";
+  return "#95a5a6";
+}
+
+function getTargetStats(targets: TargetRow[]) {
+  const total = targets.length;
+  if (total === 0) return null;
+  const avg = Math.round(targets.reduce((s, t) => s + t.pct, 0) / total);
+  const counts = PCT_COLORS.map(d => ({
+    ...d,
+    count: targets.filter(t => t.pct === d.pct).length,
+    pctShare: Math.round(targets.filter(t => t.pct === d.pct).length / total * 100),
+  }));
+  return { avg, total, counts };
 }
 
 function hex(cx: number, cy: number, r: number): string {
@@ -35,22 +47,29 @@ function hex(cx: number, cy: number, r: number): string {
 
 interface Tooltip { x: number; y: number; country: string; data: CountryRow | null }
 
-export default function AfricaMap({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
+export default function AfricaMap({ countries, isAdmin, allCountryTargets }: {
+  countries: CountryRow[];
+  isAdmin?: boolean;
+  allCountryTargets?: Record<string, TargetRow[]>;
+}) {
   const { t } = useLanguage();
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const countryMap = Object.fromEntries(countries.map((c) => [c.country, c]));
 
-  const statusLabels: Record<string, string> = {
-    completed:  t("completed"),
-    inprogress: t("inProgress"),
-    delayed:    t("delayed"),
-    notstarted: t("notStarted"),
-  };
-
   function getColor(name: string): string {
     const row = countryMap[name];
     if (!row || row.actions === 0) return "#b8c8c0";
-    return STATUS_COLORS[getDominantStatus(row)] ?? "#b8c8c0";
+    const targets = allCountryTargets?.[name];
+    if (targets && targets.length > 0) {
+      const avg = targets.reduce((s, t) => s + t.pct, 0) / targets.length;
+      return avgPctToColor(avg);
+    }
+    // fallback to 4-status
+    const dominant = (["completed","inprogress","delayed","notstarted"] as const)
+      .map(k => ({ k, v: row[k] as number }))
+      .reduce((a, b) => (b.v > a.v ? b : a)).k;
+    const fallback: Record<string, string> = { completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e74c3c", notstarted: "#95a5a6" };
+    return fallback[dominant] ?? "#b8c8c0";
   }
 
   function handleMouseMove(e: React.MouseEvent, name: string) {
@@ -124,10 +143,16 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
   ];
 
   async function handleExcel() {
-    const headers = [t("colCountry"), t("totalActions"), t("pctCompleted"), t("pctInProgress"), t("delayed"), t("notStarted"), "Entity", t("colStatus")];
+    const headers = [t("colCountry"), "Targets", "Avg PCT", "0%", "25%", "50%", "75%", "100%"];
     const rows = [...countries]
       .sort((a, b) => a.country.localeCompare(b.country))
-      .map(c => [c.country, c.actions, c.completed, c.inprogress, c.delayed, c.notstarted, c.entity, statusLabels[getDominantStatus(c)]]);
+      .map(c => {
+        const tgts = allCountryTargets?.[c.country] ?? [];
+        const stats = getTargetStats(tgts);
+        if (!stats) return [c.country, 0, 0, 0, 0, 0, 0, 0];
+        return [c.country, stats.total, stats.avg,
+          ...PCT_COLORS.map(d => stats.counts.find(x => x.pct === d.pct)?.count ?? 0)];
+      });
     await exportExcel("AFCAC_Africa_Map_Status", t("africaMap"), headers, rows);
   }
 
@@ -193,28 +218,45 @@ export default function AfricaMap({ countries, isAdmin }: { countries: CountryRo
           })}
         </svg>
 
-        {tooltip && (
-          <div className="map-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
-            <div style={{ fontWeight: 700, marginBottom: 4 }}>{tooltip.country}</div>
-            {tooltip.data && tooltip.data.actions > 0 ? (
-              <>
-                <div>{t("targetsLabel")} {tooltip.data.actions}</div>
-                <div style={{ color: "#2d9d5e" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
-                <div style={{ color: "#e07b39" }}>⏳ {tooltip.data.inprogress}% {t("inProgress").toLowerCase()}</div>
-                <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data.entity}</div>
-              </>
-            ) : (
-              <div style={{ color: "rgba(255,255,255,0.5)" }}>{t("noData")}</div>
-            )}
-          </div>
-        )}
+        {tooltip && (() => {
+          const tgts = allCountryTargets?.[tooltip.country] ?? [];
+          const stats = getTargetStats(tgts);
+          return (
+            <div className="map-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>{tooltip.country}</div>
+              {tooltip.data && tooltip.data.actions > 0 ? (
+                stats ? (
+                  <>
+                    <div style={{ marginBottom: 4 }}>{stats.total} targets · avg {stats.avg}%</div>
+                    {stats.counts.filter(x => x.count > 0).map(x => (
+                      <div key={x.pct} style={{ color: x.color, display: "flex", justifyContent: "space-between", gap: 10 }}>
+                        <span>{x.label}</span>
+                        <strong>{x.count}</strong>
+                      </div>
+                    ))}
+                    <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data!.entity}</div>
+                  </>
+                ) : (
+                  <>
+                    <div>{t("targetsLabel")} {tooltip.data.actions}</div>
+                    <div style={{ color: "#2d9d5e" }}>✓ {tooltip.data.completed}% {t("completed").toLowerCase()}</div>
+                    <div style={{ color: "#f0a500" }}>⏳ {tooltip.data.inprogress}% {t("inProgress").toLowerCase()}</div>
+                    <div style={{ color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{tooltip.data.entity}</div>
+                  </>
+                )
+              ) : (
+                <div style={{ color: "rgba(255,255,255,0.5)" }}>{t("noData")}</div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Legend */}
         <div style={{ position: "absolute", bottom: 12, right: 12, background: "rgba(255,255,255,0.95)", borderRadius: 6, padding: "8px 12px", fontSize: 10, border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-          {Object.entries(STATUS_COLORS).map(([k, c]) => (
-            <div key={k} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
-              <span style={{ color: "var(--ink2)" }}>{statusLabels[k] ?? k}</span>
+          {PCT_COLORS.map(d => (
+            <div key={d.pct} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color }} />
+              <span style={{ color: "var(--ink2)" }}>{d.label}</span>
             </div>
           ))}
         </div>
