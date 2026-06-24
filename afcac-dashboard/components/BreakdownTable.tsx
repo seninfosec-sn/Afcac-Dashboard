@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import type { CountryRow } from "@/lib/types";
 import ExportButtons from "@/components/ExportButtons";
@@ -7,9 +7,11 @@ import { useLanguage } from "./LanguageProvider";
 
 type SortKey = keyof CountryRow;
 
-export default function BreakdownTable({ countries, isAdmin }: { countries: CountryRow[]; isAdmin?: boolean }) {
+export default function BreakdownTable({ countries, isAdmin, canExport }: { countries: CountryRow[]; isAdmin?: boolean; canExport?: boolean }) {
   const { t } = useLanguage();
-  const [sorted, setSorted] = useState<CountryRow[]>(countries);
+  const [sorted, setSorted] = useState<CountryRow[]>(
+    [...countries].sort((a, b) => a.country.localeCompare(b.country))
+  );
   const [sortCol, setSortCol] = useState(-1);
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -49,7 +51,7 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
       <div className="card-head">
         <span className="card-head-title">{t("actionPlanBreakdown")}</span>
         <span className="card-head-badge">{sorted.length} {t("countries")}</span>
-        {isAdmin && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
+        {(canExport ?? isAdmin) && <ExportButtons onExcel={handleExcel} onPdf={handlePdf} />}
       </div>
       <div className="tbl-scroll" style={{ maxHeight: "none" }}>
         <table className="dtable">
@@ -72,7 +74,7 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
                   <span style={{ color: "var(--c-complete)", fontWeight: 700 }}>{row.completed}%</span>
                 </td>
                 <td>
-                  <span style={{ color: "#b07800", fontWeight: 700 }}>{row.inprogress}%</span>
+                  <span style={{ color: "var(--c-progress)", fontWeight: 700 }}>{row.inprogress}%</span>
                 </td>
                 <td style={{ color: "var(--ink3)", fontSize: 11 }}>{row.entity}</td>
                 <td style={{ minWidth: 120 }}>
@@ -80,7 +82,8 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
                     {[
                       { pct: row.completed,  color: "var(--c-complete)" },
                       { pct: row.inprogress, color: "var(--c-progress)" },
-                      { pct: row.delayed,    color: "var(--c-delayed)" },                      { pct: row.notstarted, color: "var(--c-nostart)" },
+                      { pct: row.delayed,    color: "var(--c-delayed)" },
+                      { pct: row.notstarted, color: "var(--c-nostart)" },
                     ].map((s, si) =>
                       s.pct > 0 ? (
                         <div
@@ -100,4 +103,3 @@ export default function BreakdownTable({ countries, isAdmin }: { countries: Coun
     </div>
   );
 }
-

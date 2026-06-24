@@ -74,7 +74,7 @@ export default function BreakdownTable({ countries, isAdmin, canExport }: { coun
                   <span style={{ color: "var(--c-complete)", fontWeight: 700 }}>{row.completed}%</span>
                 </td>
                 <td>
-                  <span style={{ color: "#b07800", fontWeight: 700 }}>{row.inprogress}%</span>
+                  <span style={{ color: "var(--c-progress)", fontWeight: 700 }}>{row.inprogress}%</span>
                 </td>
                 <td style={{ color: "var(--ink3)", fontSize: 11 }}>{row.entity}</td>
                 <td style={{ minWidth: 120 }}>

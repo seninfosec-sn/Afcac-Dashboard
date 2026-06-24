@@ -808,13 +808,13 @@ export default function AdminClient({
                               style={{ borderColor: "var(--c-complete)" }} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "#b07800" }}>{t("pctInProgress")}</label>
+                            <label className="field-label" style={{ color: "#f0a500" }}>{t("pctInProgress")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.inprogress}
                               onChange={(e) => updateCountry(row.country, "inprogress", Number(e.target.value))}
                               style={{ borderColor: "var(--c-progress)" }} />
                           </div>
                           <div className="field-group">
-                            <label className="field-label" style={{ color: "var(--amber)" }}>{t("pctDelayed")}</label>
+                            <label className="field-label" style={{ color: "var(--c-delayed)" }}>{t("pctDelayed")}</label>
                             <input className="field-input" type="number" min="0" max="100" value={row.delayed}
                               onChange={(e) => updateCountry(row.country, "delayed", Number(e.target.value))}
                               style={{ borderColor: "var(--c-delayed)" }} />

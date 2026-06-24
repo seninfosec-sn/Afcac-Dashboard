@@ -24,9 +24,9 @@ const TARGET_NAMES: Record<number, string> = {
 
 function barColor(pct: number): string {
   if (pct >= 100) return "var(--c-complete)";
-  if (pct >= 75)  return "var(--mint)";
-  if (pct >= 50)  return "var(--gold)";
-  if (pct >= 25)  return "var(--amber)";
+  if (pct >= 75)  return "#f0a500";
+  if (pct >= 50)  return "var(--c-progress)";
+  if (pct >= 25)  return "var(--c-delayed)";
   return "var(--c-nostart)";
 }
 

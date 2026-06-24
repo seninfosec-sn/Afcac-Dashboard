@@ -371,9 +371,9 @@ body {
   font-weight: 600;
   white-space: nowrap;
 }
-.s-completed  { background: rgba(45,157,94,0.12); color: var(--c-complete); }
-.s-inprogress { background: rgba(240,165,0,0.12);  color: #b07800; }
-.s-delayed    { background: rgba(224,123,57,0.12); color: var(--amber); }
+.s-completed  { background: rgba(45,157,94,0.12);  color: var(--c-complete); }
+.s-inprogress { background: rgba(240,165,0,0.12);  color: #f0a500; }
+.s-delayed    { background: rgba(231,76,60,0.12);  color: var(--c-delayed); }
 .s-notstarted { background: rgba(149,165,166,0.15);color: #6b8a7a; }
 
 /* ── TARGET GRID ── */
@@ -968,7 +968,7 @@ body {
 .p0   { background: rgba(149,165,166,.15); color: #95a5a6; }
 .p25  { background: rgba(231,76,60,.12);   color: #e74c3c; }
 .p50  { background: rgba(224,123,57,.12);  color: #e07b39; }
-.p75  { background: rgba(240,165,0,.12);   color: #b07800; }
+.p75  { background: rgba(240,165,0,.12);   color: #f0a500; }
 .p100 { background: rgba(45,157,94,.12);   color: #2d9d5e; }
 
 /* ── COUNTRY BLOCK ── */
