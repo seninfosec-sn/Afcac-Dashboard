@@ -45,7 +45,7 @@ export async function getKpis(): Promise<KpiData> {
 }
 
 const COUNTRY_RENAMES: Record<string, string> = { "Ivory Coast": "Cote D'Ivoire" };
-const USER_RENAMES: Record<string, string> = { "mbaioulem": "Djekilamber.mbaioulem" };
+const USER_RENAMES: Record<string, string> = { "mbaioulem": "Djekilamber.mbaioulem", "Djekilamber.mbaioulem.": "Djekilamber.mbaioulem" };
 
 function renameCountry(name: string): string {
   return COUNTRY_RENAMES[name] ?? name;
