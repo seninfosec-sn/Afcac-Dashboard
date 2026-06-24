@@ -63,6 +63,7 @@ export default function AdminClient({
   role,
   users = [],
   isMasterAdmin = false,
+  userCountry,
 }: {
   initialData: DashboardData;
   username: string;
@@ -70,6 +71,7 @@ export default function AdminClient({
   role: UserRole;
   users?: AppUser[];
   isMasterAdmin?: boolean;
+  userCountry?: string;
 }) {
   const router = useRouter();
   const { t } = useLanguage();
@@ -81,7 +83,7 @@ export default function AdminClient({
   const [saving, setSaving] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
   const [fullName] = useState(displayName);
-  const [updaterCountry, setUpdaterCountry] = useState("");
+  const [updaterCountry, setUpdaterCountry] = useState(userCountry ?? "");
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "warn" | "" }>({ msg: "", type: "" });
   const [toastVisible, setToastVisible] = useState(false);
   const [loginTime] = useState(() => new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
@@ -338,7 +340,10 @@ export default function AdminClient({
           <div className="profile-block">
             <div className="profile-avatar">{initial}</div>
             <div className="profile-name">{displayName}</div>
-            <div className="profile-role">{role === "admin" ? t("roleAdministrator") : role === "focal_point" ? t("roleFocalPointLabel") : role === "rsoo" ? t("filterRsoo") : t("filterExpert")} · AFCAC</div>
+            <div className="profile-role">
+              {role === "admin" ? t("roleAdministrator") : role === "focal_point" ? t("roleFocalPointLabel") : role === "rsoo" ? t("filterRsoo") : t("filterExpert")}
+              {userCountry ? ` — ${userCountry}` : " · AFCAC"}
+            </div>
             <div className="profile-meta">
               <div className="profile-meta-row">
                 <span>🗓</span>
@@ -451,7 +456,7 @@ export default function AdminClient({
               </div>
               <div className="q-card" style={{ borderRadius: "0 0 8px 8px", borderTop: "1px solid var(--border)", marginBottom: 24 }}>
                 <div className="q-options">
-                  <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
+                  <div className="field-grid" style={{ gridTemplateColumns: userCountry ? "1fr" : "1fr 1fr" }}>
                     <div className="field-group">
                       <label className="field-label">{t("adminFullName")}</label>
                       <input
@@ -462,20 +467,33 @@ export default function AdminClient({
                         style={{ background: "var(--bg2)", color: "var(--ink2)", cursor: "default" }}
                       />
                     </div>
-                    <div className="field-group">
-                      <label className="field-label">{t("adminCountryRepresented")}</label>
-                      <select
-                        className="field-input"
-                        value={updaterCountry}
-                        onChange={(e) => setUpdaterCountry(e.target.value)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        <option value="">{t("adminSelectCountry")}</option>
-                        {AFRICAN_STATES.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
+                    {userCountry ? (
+                      <div className="field-group">
+                        <label className="field-label">{t("adminCountryRepresented")}</label>
+                        <input
+                          className="field-input"
+                          type="text"
+                          value={userCountry}
+                          readOnly
+                          style={{ background: "var(--bg2)", color: "#2d9d5e", fontWeight: 700, cursor: "default" }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="field-group">
+                        <label className="field-label">{t("adminCountryRepresented")}</label>
+                        <select
+                          className="field-input"
+                          value={updaterCountry}
+                          onChange={(e) => setUpdaterCountry(e.target.value)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <option value="">{t("adminSelectCountry")}</option>
+                          {AFRICAN_STATES.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

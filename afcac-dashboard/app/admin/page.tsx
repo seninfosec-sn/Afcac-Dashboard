@@ -13,20 +13,19 @@ export default async function AdminPage() {
 
   if (!session) redirect("/login");
 
-  // Focal points and experts load their own country's targets (not the global aggregate)
-  let initialData = data;
-  if (session.role === "expert" || session.role === "focal_point") {
-    const user = await findUser(session.username);
-    if (user?.country) {
-      initialData = { ...data, targets: await getCountryTargets(user.country) };
-    }
-  }
-
   const currentUser = await findUser(session.username);
   const displayName = currentUser?.displayName ?? session.username;
+  const userCountry = currentUser?.country?.trim() || undefined;
+
+  // Focal points and experts load their own country's targets (not the global aggregate)
+  let initialData = data;
+  if ((session.role === "expert" || session.role === "focal_point") && userCountry) {
+    initialData = { ...data, targets: await getCountryTargets(userCountry) };
+  }
+
   const allUsers = await getUsers();
   const isMasterAdmin = ["admin", "mohamed.wade"].includes(session.username);
   const users = isMasterAdmin ? allUsers : [];
 
-  return <AdminClient initialData={initialData} username={session.username} displayName={displayName} role={session.role} users={users} isMasterAdmin={isMasterAdmin} />;
+  return <AdminClient initialData={initialData} username={session.username} displayName={displayName} role={session.role} users={users} isMasterAdmin={isMasterAdmin} userCountry={userCountry} />;
 }
