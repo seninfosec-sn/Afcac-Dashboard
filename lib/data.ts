@@ -79,6 +79,27 @@ async function recomputeKpisFromCountries(countries: CountryRow[]): Promise<void
   });
 }
 
+// Largest-remainder method: distributes integer percentages that always sum to 100.
+function pctLargestRemainder(counts: number[], total: number): number[] {
+  if (total === 0) return counts.map(() => 0);
+  const raws    = counts.map(c => c / total * 100);
+  const floored = raws.map(v => Math.floor(v));
+  const rems    = raws.map((v, i) => v - floored[i]);
+  let leftover  = 100 - floored.reduce((a, b) => a + b, 0);
+  const order   = rems.map((_, i) => i).sort((a, b) => rems[b] - rems[a]);
+  for (const i of order) { if (leftover-- <= 0) break; floored[i]++; }
+  return floored;
+}
+
+// Normalize stored country row so the 4 PCT fields always sum to 100.
+function normalizeCountryPcts(r: CountryRow): CountryRow {
+  const vals = [r.completed, r.inprogress, r.delayed, r.notstarted];
+  const sum  = vals.reduce((a, b) => a + b, 0);
+  if (sum === 100 || sum === 0) return r;
+  const [completed, inprogress, delayed, notstarted] = pctLargestRemainder(vals, sum);
+  return { ...r, completed, inprogress, delayed, notstarted };
+}
+
 export async function getCountries(): Promise<CountryRow[]> {
   const rows = await dbGetOrSeed<CountryRow[]>(K.countries, "countries.json");
   const zeroV1Done = await kvGet<boolean>("countriesZeroV1");
@@ -89,6 +110,9 @@ export async function getCountries(): Promise<CountryRow[]> {
     if (!zeroV1Done && COUNTRIES_ZERO_V1.has(row.country)) {
       row = { ...row, actions: 0, completed: 0, inprogress: 0, delayed: 0, notstarted: 0, budget: 0 };
     }
+    // Fix any stored row whose 4 PCT fields don't sum to 100
+    const norm = normalizeCountryPcts(row);
+    if (norm !== row) { row = norm; dirty = true; }
     if (row !== r) dirty = true;
     return row;
   });
@@ -288,10 +312,11 @@ async function syncCountryStats(country: string, targets: TargetRow[]): Promise<
   const total = targets.length;
   if (total === 0) return;
 
-  const completed  = Math.round(targets.filter((t) => t.pct === 100).length                / total * 100);
-  const inprogress = Math.round(targets.filter((t) => t.pct === 50 || t.pct === 75).length / total * 100);
-  const delayed    = Math.round(targets.filter((t) => t.pct === 25).length                  / total * 100);
-  const notstarted = Math.max(0, 100 - completed - inprogress - delayed);
+  const c100   = targets.filter((t) => t.pct === 100).length;
+  const c7550  = targets.filter((t) => t.pct === 50 || t.pct === 75).length;
+  const c25    = targets.filter((t) => t.pct === 25).length;
+  const c0     = total - c100 - c7550 - c25;
+  const [completed, inprogress, delayed, notstarted] = pctLargestRemainder([c100, c7550, c25, c0], total);
 
   const countries = await getCountries();
   const idx = countries.findIndex((c) => c.country === country);
