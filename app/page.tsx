@@ -84,7 +84,7 @@ export default async function DashboardPage() {
         {/* Section 2: Status + Action Table */}
         <div className="section-label">{t(locale, "statusOverview")}</div>
         <div className="row-wide">
-          <StatusDonut kpis={kpis} isAdmin={isAdmin} />
+          <StatusDonut kpis={kpis} isAdmin={isAdmin} targets={targets} />
           <ActionTable actions={actions} targets={targets} countryTargets={countryTargets} isAdmin={isAdmin} canExport={isAdmin} />
         </div>
 
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
         <div className="section-label">{t(locale, "geoOverview")}</div>
         <div className="row-map">
           <AfricaMap countries={countries} isAdmin={isAdmin} />
-          <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} isCountryProfile={!isAdmin && !!userCountry} />
+          <StatusBar kpis={kpis} isAdmin={isAdmin} canExport={!!session} isCountryProfile={!isAdmin && !!userCountry} targets={targets} />
         </div>
 
         {/* Section 4: Country Breakdown — hidden for country profile */}
