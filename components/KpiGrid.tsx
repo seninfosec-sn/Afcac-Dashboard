@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import type { KpiData, ExpertStat, UpdateLog } from "@/lib/types";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
@@ -13,7 +14,7 @@ interface KpiCardProps {
   trendClass: string;
   colorClass: string;
   delay?: string;
-  bottomNote?: JSX.Element | null | false;
+  bottomNote?: ReactNode;
 }
 
 function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, colorClass, delay, bottomNote }: KpiCardProps) {
