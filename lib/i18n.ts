@@ -39,6 +39,7 @@ export const translations = {
     expertsPlanned: "Experts Planned",
     monthsAvg: "● 3.5 months avg.",
     afcacExperts: "● AFCAC Experts",
+    connectedUsersLabel: "users connected",
 
     // Top Experts
     topExpert: "Top Expert — Updates",
@@ -358,6 +359,7 @@ export const translations = {
     expertsPlanned: "Experts Prévus",
     monthsAvg: "● Moy. 3.5 mois",
     afcacExperts: "● Experts AFCAC",
+    connectedUsersLabel: "utilisateurs connectés",
 
     // Top Experts
     topExpert: "Top Expert — Mises à Jour",
@@ -676,6 +678,7 @@ export const translations = {
     expertsPlanned: "Especialistas Previstos",
     monthsAvg: "● Méd. 3,5 meses",
     afcacExperts: "● Especialistas AFCAC",
+    connectedUsersLabel: "utilizadores conectados",
 
     // Top Experts
     topExpert: "Top Especialista — Atualizações",
@@ -994,6 +997,7 @@ export const translations = {
     expertsPlanned: "الخبراء المخططون",
     monthsAvg: "● متوسط 3.5 أشهر",
     afcacExperts: "● خبراء أفكاك",
+    connectedUsersLabel: "مستخدم متصل",
     reportPeriodLabel: "فترة التقرير",
 
     // Top Experts

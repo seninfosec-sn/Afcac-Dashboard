@@ -86,7 +86,7 @@ export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdat
           colorClass="k-blue" icon="👥" iconBg="#eee8f8"
           value={String(kpis.expertsPlanned)} label={t(locale, "expertsPlanned")}
           trend={t(locale, "afcacExperts")} trendClass="trend-flat" delay=".3s"
-          bottomNote={connectedUsers > 0 ? <><span style={{ width: 7, height: 7, borderRadius: "50%", background: "#2d9d5e", display: "inline-block" }} /><span><strong style={{ color: "var(--ink)" }}>{connectedUsers}</strong> utilisateur{connectedUsers > 1 ? "s" : ""} connecté{connectedUsers > 1 ? "s" : ""}</span></> : undefined}
+          bottomNote={connectedUsers > 0 ? <><span style={{ width: 7, height: 7, borderRadius: "50%", background: "#2d9d5e", display: "inline-block" }} /><span><strong style={{ color: "var(--ink)" }}>{connectedUsers}</strong> {t(locale, "connectedUsersLabel")}</span></> : undefined}
         />
       )}
       <TopExpertsCard experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} />
