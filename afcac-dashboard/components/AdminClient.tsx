@@ -88,6 +88,7 @@ export default function AdminClient({
   const [toastVisible, setToastVisible] = useState(false);
   const [loginTime] = useState(() => new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
   const [loginDate] = useState(() => new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }));
+  const [sessionStats, setSessionStats] = useState<{ online: number; total: number } | null>(null);
   const mainRef = useRef<HTMLElement>(null);
 
   /* ── User management states ── */
@@ -190,6 +191,14 @@ export default function AdminClient({
     ping();
     const id = setInterval(ping, 2 * 60 * 1000);
     return () => clearInterval(id);
+  }, []);
+
+  /* ── Session stats for profile card ── */
+  useEffect(() => {
+    fetch("/api/admin/sessions?page=0&limit=1")
+      .then(r => r.json())
+      .then(d => setSessionStats({ online: (d.online ?? []).length, total: d.total ?? 0 }))
+      .catch(() => {});
   }, []);
 
   function showToast(msg: string, type: "ok" | "warn") {
@@ -362,6 +371,19 @@ export default function AdminClient({
               <div className="profile-dot" />
               Connected
             </div>
+            {sessionStats !== null && (
+              <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--border)", width: "100%", display: "flex", justifyContent: "space-between", fontSize: 10 }}>
+                <div style={{ textAlign: "center", flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: "#2d9d5e" }}>{sessionStats.online}</div>
+                  <div style={{ color: "var(--ink3)", marginTop: 1 }}>En ligne</div>
+                </div>
+                <div style={{ width: 1, background: "var(--border)" }} />
+                <div style={{ textAlign: "center", flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: "var(--ink)" }}>{sessionStats.total.toLocaleString()}</div>
+                  <div style={{ color: "var(--ink3)", marginTop: 1 }}>Connexions</div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Navigation */}
