@@ -13,20 +13,26 @@ interface KpiCardProps {
   trendClass: string;
   colorClass: string;
   delay?: string;
+  bottomNote?: JSX.Element | null | false;
 }
 
-function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, colorClass, delay }: KpiCardProps) {
+function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, colorClass, delay, bottomNote }: KpiCardProps) {
   return (
     <div className={`kpi-card ${colorClass}`} style={delay ? { animationDelay: delay } : {}}>
       <div className="kpi-icon-wrap" style={{ background: iconBg }}>{icon}</div>
       <div className="kpi-val" style={valueColor ? { color: valueColor } : {}}>{value}</div>
       <div className="kpi-label">{label}</div>
       <div className={`kpi-trend ${trendClass}`}>{trend}</div>
+      {bottomNote && (
+        <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.07)", fontSize: 10, color: "var(--ink3)", display: "flex", alignItems: "center", gap: 5 }}>
+          {bottomNote}
+        </div>
+      )}
     </div>
   );
 }
 
-export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdate, isCountryProfile = false, globalPctCompleted = 0 }: { kpis: KpiData; experts: ExpertStat[]; locale?: Locale; lastCountryUpdate?: UpdateLog | null; isCountryProfile?: boolean; globalPctCompleted?: number }) {
+export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdate, isCountryProfile = false, globalPctCompleted = 0, connectedUsers = 0 }: { kpis: KpiData; experts: ExpertStat[]; locale?: Locale; lastCountryUpdate?: UpdateLog | null; isCountryProfile?: boolean; globalPctCompleted?: number; connectedUsers?: number }) {
   return (
     <div className="kpi-grid">
       <KpiCard
@@ -79,6 +85,7 @@ export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdat
           colorClass="k-blue" icon="👥" iconBg="#eee8f8"
           value={String(kpis.expertsPlanned)} label={t(locale, "expertsPlanned")}
           trend={t(locale, "afcacExperts")} trendClass="trend-flat" delay=".3s"
+          bottomNote={connectedUsers > 0 ? <><span style={{ width: 7, height: 7, borderRadius: "50%", background: "#2d9d5e", display: "inline-block" }} /><span><strong style={{ color: "var(--ink)" }}>{connectedUsers}</strong> utilisateur{connectedUsers > 1 ? "s" : ""} connecté{connectedUsers > 1 ? "s" : ""}</span></> : undefined}
         />
       )}
       <TopExpertsCard experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} />

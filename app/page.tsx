@@ -1,5 +1,6 @@
 import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry, getLastCountryUpdate } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
+import { getSessions } from "@/lib/sessions";
 import { cookies } from "next/headers";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
@@ -22,11 +23,13 @@ export default async function DashboardPage() {
   const langCookie = cookieStore.get("lang")?.value;
   const locale: Locale = langCookie === "fr" || langCookie === "pt" || langCookie === "ar" ? langCookie : "en";
 
-  const [rawData, allCountryTargets, session] = await Promise.all([
+  const [rawData, allCountryTargets, session, allSessions] = await Promise.all([
     getDashboardData(),
     getAllCountryTargets(),
     getServerSession(),
+    getSessions(),
   ]);
+  const connectedUsers = new Set(allSessions.map(s => s.username)).size;
 
   const isAdmin = session?.role === "admin";
 
@@ -79,7 +82,7 @@ export default async function DashboardPage() {
 
         {/* Section 1: KPI Summary */}
         <div className="section-label">{t(locale, "execSummary")}</div>
-        <KpiGrid kpis={kpis} experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} isCountryProfile={!isAdmin && !!userCountry} globalPctCompleted={rawData.kpis.pctCompleted} />
+        <KpiGrid kpis={kpis} experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} isCountryProfile={!isAdmin && !!userCountry} globalPctCompleted={rawData.kpis.pctCompleted} connectedUsers={connectedUsers} />
 
         {/* Section 2: Status + Action Table */}
         <div className="section-label">{t(locale, "statusOverview")}</div>
