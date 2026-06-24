@@ -71,7 +71,7 @@ export default function BreakdownTable({ countries, isAdmin, canExport }: { coun
                 <td style={{ fontWeight: 600 }}>{row.country}</td>
                 <td style={{ textAlign: "center" }}>{row.actions}</td>
                 <td>
-                  <span style={{ color: "var(--c-complete)", fontWeight: 700 }}>{row.completed}%</span>
+                  <span style={{ color: "#2d9d5e", fontWeight: 700 }}>{row.completed}%</span>
                 </td>
                 <td>
                   <span style={{ color: "var(--c-progress)", fontWeight: 700 }}>{row.inprogress}%</span>
@@ -80,10 +80,10 @@ export default function BreakdownTable({ countries, isAdmin, canExport }: { coun
                 <td style={{ minWidth: 120 }}>
                   <div style={{ display: "flex", gap: 2, height: 10 }}>
                     {[
-                      { pct: row.completed,  color: "var(--c-complete)" },
-                      { pct: row.inprogress, color: "var(--c-progress)" },
-                      { pct: row.delayed,    color: "var(--c-delayed)" },
-                      { pct: row.notstarted, color: "var(--c-nostart)" },
+                      { pct: row.completed,  color: "#2d9d5e" },
+                      { pct: row.inprogress, color: "#f0a500" },
+                      { pct: row.delayed,    color: "#e74c3c" },
+                      { pct: row.notstarted, color: "#95a5a6" },
                     ].map((s, si) =>
                       s.pct > 0 ? (
                         <div

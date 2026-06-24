@@ -829,9 +829,10 @@ export default function AdminClient({
                         {/* Visual bar */}
                         <div style={{ marginTop: 14, display: "flex", gap: 2, height: 8, borderRadius: 4, overflow: "hidden" }}>
                           {[
-                            { v: row.completed, c: "var(--c-complete)" },
-                            { v: row.inprogress, c: "var(--c-progress)" },
-                            { v: row.delayed, c: "var(--c-delayed)" },                            { v: row.notstarted, c: "var(--c-nostart)" },
+                            { v: row.completed,  c: "#2d9d5e" },
+                            { v: row.inprogress, c: "#f0a500" },
+                            { v: row.delayed,    c: "#e74c3c" },
+                            { v: row.notstarted, c: "#95a5a6" },
                           ].map((s, i) => s.v > 0 && (
                             <div key={i} style={{ width: `${s.v}%`, background: s.c, minWidth: 4 }} title={`${s.v}%`} />
                           ))}

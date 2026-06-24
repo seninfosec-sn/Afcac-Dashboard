@@ -43,20 +43,20 @@ export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdat
       />
       <KpiCard
         colorClass="k-green" icon="✅" iconBg="#d4f0e0"
-        value={`${kpis.pctCompleted}%`} valueColor="var(--c-complete)"
+        value={`${kpis.pctCompleted}%`} valueColor="#2d9d5e"
         label={t(locale, "pctCompleted")}
         trend={`▲ ${kpis.pctCompletedTrend}`} trendClass="trend-up" delay=".15s"
       />
       <KpiCard
         colorClass="k-amber" icon="⏳" iconBg="#fff0e0"
-        value={`${kpis.pctInProgress}%`} valueColor="var(--c-progress)"
+        value={`${kpis.pctInProgress}%`} valueColor="#f0a500"
         label={t(locale, "pctInProgress")}
         trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".2s"
       />
       {isCountryProfile ? (
         <KpiCard
           colorClass="k-red" icon="⏸" iconBg="#fdecea"
-          value={`${kpis.pctNotStarted}%`} valueColor="var(--c-notstarted)"
+          value={`${kpis.pctNotStarted}%`} valueColor="#95a5a6"
           label={t(locale, "pctNotStarted")}
           trend={`▼ ${kpis.pctNotStartedTrend}`} trendClass="trend-down" delay=".25s"
         />
@@ -70,7 +70,7 @@ export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdat
       {isCountryProfile ? (
         <KpiCard
           colorClass="k-green" icon="🌍" iconBg="#d4f0e0"
-          value={`${globalPctCompleted}%`} valueColor="var(--c-complete)"
+          value={`${globalPctCompleted}%`} valueColor="#2d9d5e"
           label={t(locale, "continentalProgress")}
           trend={t(locale, "continentalSub")} trendClass="trend-flat" delay=".3s"
         />

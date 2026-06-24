@@ -9,10 +9,10 @@ export default function StatusBar({ kpis, isAdmin, canExport, isCountryProfile }
   const titleKey = isCountryProfile ? "stateStatusDistribution" : "statusDistribution";
 
   const segs = [
-    { pct: kpis.pctCompleted,   color: "var(--c-complete)", label: t("completed"),   hex: "#2d9d5e" },
-    { pct: kpis.pctInProgress,  color: "var(--c-progress)", label: t("inProgress"),  hex: "#f0a500" },
-    { pct: kpis.pctDelayed,     color: "var(--c-delayed)",  label: t("delayed"),     hex: "#e74c3c" },
-    { pct: kpis.pctNotStarted,  color: "var(--c-nostart)",  label: t("notStarted"),  hex: "#95a5a6" },
+    { pct: kpis.pctCompleted,   color: "#2d9d5e", label: t("completed"),   hex: "#2d9d5e" },
+    { pct: kpis.pctInProgress,  color: "#f0a500", label: t("inProgress"),  hex: "#f0a500" },
+    { pct: kpis.pctDelayed,     color: "#e74c3c", label: t("delayed"),     hex: "#e74c3c" },
+    { pct: kpis.pctNotStarted,  color: "#95a5a6", label: t("notStarted"),  hex: "#95a5a6" },
   ];
 
   async function handleExcel() {
@@ -84,10 +84,10 @@ export default function StatusBar({ kpis, isAdmin, canExport, isCountryProfile }
             {t("statusBarDesc")}
           </p>
           <ul style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.7, margin: "8px 0 0 0", paddingLeft: 16 }}>
-            <li><strong style={{ color: "var(--c-complete)" }}>{t("completed")}</strong> {t("completedDesc")}</li>
-            <li><strong style={{ color: "var(--c-progress)" }}>{t("inProgress")}</strong> {t("inProgressDesc")}</li>
-            <li><strong style={{ color: "var(--c-delayed)" }}>{t("delayed")}</strong> {t("delayedDesc")}</li>
-            <li><strong style={{ color: "var(--c-nostart)" }}>{t("notStarted")}</strong> {t("notStartedDesc")}</li>
+            <li><strong style={{ color: "#2d9d5e" }}>{t("completed")}</strong> {t("completedDesc")}</li>
+            <li><strong style={{ color: "#f0a500" }}>{t("inProgress")}</strong> {t("inProgressDesc")}</li>
+            <li><strong style={{ color: "#e74c3c" }}>{t("delayed")}</strong> {t("delayedDesc")}</li>
+            <li><strong style={{ color: "#95a5a6" }}>{t("notStarted")}</strong> {t("notStartedDesc")}</li>
           </ul>
           <p style={{ fontSize: 10, color: "var(--ink3)", marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
             {t("statusSource")}

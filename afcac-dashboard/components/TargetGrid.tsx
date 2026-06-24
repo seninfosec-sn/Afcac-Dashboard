@@ -23,11 +23,11 @@ const TARGET_NAMES: Record<number, string> = {
 };
 
 function barColor(pct: number): string {
-  if (pct >= 100) return "var(--c-complete)";
+  if (pct >= 100) return "#2d9d5e";
   if (pct >= 75)  return "#f0a500";
-  if (pct >= 50)  return "var(--c-progress)";
-  if (pct >= 25)  return "var(--c-delayed)";
-  return "var(--c-nostart)";
+  if (pct >= 50)  return "#e07b39";
+  if (pct >= 25)  return "#e74c3c";
+  return "#95a5a6";
 }
 
 function groupNum(id: string): number {

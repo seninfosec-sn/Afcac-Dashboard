@@ -1,4 +1,4 @@
-import type { KpiData, ExpertStat } from "@/lib/types";
+import type { KpiData, ExpertStat, UpdateLog } from "@/lib/types";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import TopExpertsCard from "./TopExpertsCard";
@@ -26,43 +26,62 @@ function KpiCard({ icon, iconBg, value, valueColor, label, trend, trendClass, co
   );
 }
 
-export default function KpiGrid({ kpis, experts, locale = "en" }: { kpis: KpiData; experts: ExpertStat[]; locale?: Locale }) {
+export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdate, isCountryProfile = false, globalPctCompleted = 0 }: { kpis: KpiData; experts: ExpertStat[]; locale?: Locale; lastCountryUpdate?: UpdateLog | null; isCountryProfile?: boolean; globalPctCompleted?: number }) {
   return (
     <div className="kpi-grid">
       <KpiCard
         colorClass="k-teal" icon="🌍" iconBg="#e8f5ee"
         value={String(kpis.totalCountries)} label={t(locale, "totalCountries")}
-        trend={`▲ ${kpis.totalCountriesTrend}`} trendClass="trend-up" delay=".05s"
+        trend={kpis.totalCountriesTrend ? `▲ ${kpis.totalCountriesTrend}` : ""}
+        trendClass={kpis.totalCountriesTrend ? "trend-up" : "trend-flat"} delay=".05s"
       />
       <KpiCard
         colorClass="k-blue" icon="📋" iconBg="#e8f0f8"
         value={String(kpis.totalActions)} label={t(locale, "totalActions")}
-        trend={`▲ ${kpis.totalActionsTrend}`} trendClass="trend-up" delay=".1s"
+        trend={kpis.totalActionsTrend ? `▲ ${kpis.totalActionsTrend}` : ""}
+        trendClass={kpis.totalActionsTrend ? "trend-up" : "trend-flat"} delay=".1s"
       />
       <KpiCard
         colorClass="k-green" icon="✅" iconBg="#d4f0e0"
-        value={`${kpis.pctCompleted}%`} valueColor="var(--c-complete)"
+        value={`${kpis.pctCompleted}%`} valueColor="#2d9d5e"
         label={t(locale, "pctCompleted")}
         trend={`▲ ${kpis.pctCompletedTrend}`} trendClass="trend-up" delay=".15s"
       />
       <KpiCard
         colorClass="k-amber" icon="⏳" iconBg="#fff0e0"
-        value={`${kpis.pctInProgress}%`} valueColor="var(--c-progress)"
+        value={`${kpis.pctInProgress}%`} valueColor="#f0a500"
         label={t(locale, "pctInProgress")}
         trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".2s"
       />
-      <KpiCard
-        colorClass="k-red" icon="⏸" iconBg="#fdecea"
-        value={`${kpis.pctNotStarted}%`} valueColor="var(--c-notstarted)"
-        label={t(locale, "pctNotStarted")}
-        trend={`▼ ${kpis.pctNotStartedTrend}`} trendClass="trend-down" delay=".25s"
-      />
-      <KpiCard
-        colorClass="k-blue" icon="👥" iconBg="#eee8f8"
-        value={String(kpis.expertsPlanned)} label={t(locale, "expertsPlanned")}
-        trend={t(locale, "afcacExperts")} trendClass="trend-flat" delay=".3s"
-      />
-      <TopExpertsCard experts={experts} locale={locale} />
+      {isCountryProfile ? (
+        <KpiCard
+          colorClass="k-red" icon="⏸" iconBg="#fdecea"
+          value={`${kpis.pctNotStarted}%`} valueColor="#95a5a6"
+          label={t(locale, "pctNotStarted")}
+          trend={`▼ ${kpis.pctNotStartedTrend}`} trendClass="trend-down" delay=".25s"
+        />
+      ) : (
+        <KpiCard
+          colorClass="k-teal" icon="⏱" iconBg="#e8f2f8"
+          value={String(kpis.avgDurationWeeks)} label={t(locale, "avgDuration")}
+          trend={t(locale, "monthsAvg")} trendClass="trend-flat" delay=".25s"
+        />
+      )}
+      {isCountryProfile ? (
+        <KpiCard
+          colorClass="k-green" icon="🌍" iconBg="#d4f0e0"
+          value={`${globalPctCompleted}%`} valueColor="#2d9d5e"
+          label={t(locale, "continentalProgress")}
+          trend={t(locale, "continentalSub")} trendClass="trend-flat" delay=".3s"
+        />
+      ) : (
+        <KpiCard
+          colorClass="k-blue" icon="👥" iconBg="#eee8f8"
+          value={String(kpis.expertsPlanned)} label={t(locale, "expertsPlanned")}
+          trend={t(locale, "afcacExperts")} trendClass="trend-flat" delay=".3s"
+        />
+      )}
+      <TopExpertsCard experts={experts} locale={locale} lastCountryUpdate={lastCountryUpdate} />
     </div>
   );
 }
