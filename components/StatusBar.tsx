@@ -10,7 +10,7 @@ export default function StatusBar({ kpis, isAdmin, canExport, isCountryProfile }
 
   const segs = [
     { pct: kpis.pctCompleted,   color: "var(--c-complete)", label: t("completed"),   hex: "#2d9d5e" },
-    { pct: kpis.pctInProgress,  color: "var(--c-progress)", label: t("inProgress"),  hex: "#e07b39" },
+    { pct: kpis.pctInProgress,  color: "var(--c-progress)", label: t("inProgress"),  hex: "#f0a500" },
     { pct: kpis.pctDelayed,     color: "var(--c-delayed)",  label: t("delayed"),     hex: "#e74c3c" },
     { pct: kpis.pctNotStarted,  color: "var(--c-nostart)",  label: t("notStarted"),  hex: "#95a5a6" },
   ];

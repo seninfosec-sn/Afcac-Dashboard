@@ -713,7 +713,7 @@ export default function AdminClient({
               </div>
               {actions.map((row, idx) => {
                 const statusColor: Record<string, string> = {
-                  completed: "#2d9d5e", inprogress: "#e07b39", delayed: "#e74c3c", notstarted: "#95a5a6",
+                  completed: "#2d9d5e", inprogress: "#f0a500", delayed: "#e74c3c", notstarted: "#95a5a6",
                 };
                 const sc = statusColor[row.status] ?? "#95a5a6";
                 const isLast = idx === actions.length - 1;

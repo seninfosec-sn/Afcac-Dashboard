@@ -7,7 +7,7 @@ import { useLanguage } from "./LanguageProvider";
 
 const STATUS_COLORS: Record<string, string> = {
   completed:  "#2d9d5e",
-  inprogress: "#e07b39",
+  inprogress: "#f0a500",
   delayed:    "#e74c3c",
   notstarted: "#95a5a6",
 };

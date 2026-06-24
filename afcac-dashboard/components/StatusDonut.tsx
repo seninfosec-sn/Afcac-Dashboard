@@ -10,7 +10,7 @@ export default function StatusDonut({ kpis, isAdmin }: { kpis: KpiData; isAdmin?
 
   const data = [
     { name: t("completed"),   value: kpis.pctCompleted,  color: "#2d9d5e" },
-    { name: t("inProgress"),  value: kpis.pctInProgress, color: "#e07b39" },
+    { name: t("inProgress"),  value: kpis.pctInProgress, color: "#f0a500" },
     { name: t("delayed"),     value: kpis.pctDelayed,    color: "#e74c3c" },
     { name: t("notStarted"),  value: kpis.pctNotStarted, color: "#95a5a6" },
   ];
