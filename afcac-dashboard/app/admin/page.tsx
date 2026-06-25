@@ -1,4 +1,4 @@
-import { getDashboardData, getUsers, findUser, getCountryTargets } from "@/lib/data";
+import { getDashboardData, getAllCountryTargets, getUsers, findUser, getCountryTargets, filterDashboardForCountries } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import AdminClient from "@/components/AdminClient";
 import { redirect } from "next/navigation";
@@ -16,10 +16,15 @@ export default async function AdminPage() {
   const currentUser = await findUser(session.username);
   const displayName = currentUser?.displayName ?? session.username;
   const userCountry = currentUser?.country?.trim() || undefined;
+  const userCountries = currentUser?.countries?.length ? currentUser.countries : undefined;
 
-  // Focal points and experts load their own country's targets (not the global aggregate)
+  // Load filtered targets based on role
   let initialData = data;
-  if ((session.role === "expert" || session.role === "focal_point") && userCountry) {
+  if (userCountries) {
+    // RSOO: filter dashboard to their assigned countries
+    const allCountryTargets = await getAllCountryTargets();
+    initialData = filterDashboardForCountries(data, allCountryTargets, userCountries);
+  } else if ((session.role === "expert" || session.role === "focal_point") && userCountry) {
     initialData = { ...data, targets: await getCountryTargets(userCountry) };
   }
 

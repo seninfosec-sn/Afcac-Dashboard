@@ -47,6 +47,14 @@ export async function getKpis(): Promise<KpiData> {
 const COUNTRY_RENAMES: Record<string, string> = { "Ivory Coast": "Cote D'Ivoire" };
 const USER_RENAMES: Record<string, string> = { "mbaioulem": "Djekilamber.mbaioulem", "Djekilamber.mbaioulem.": "Djekilamber.mbaioulem" };
 
+// Forced role/countries overrides applied on every read (overrides KV)
+const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>> = {
+  "oche.victor-elias": {
+    role: "rsoo",
+    countries: ["Cabo Verde", "Gambia", "Ghana", "Guinea", "Liberia", "Nigeria", "Sierra Leone"],
+  },
+};
+
 function renameCountry(name: string): string {
   return COUNTRY_RENAMES[name] ?? name;
 }
@@ -365,6 +373,45 @@ export function filterDashboardForCountry(
   };
 }
 
+/* ── RSOO multi-country filtered dashboard ──────── */
+
+export function filterDashboardForCountries(
+  data: DashboardData,
+  allCountryTargets: Record<string, TargetRow[]>,
+  countriesList: string[]
+): DashboardData & { countryTargets: Record<string, TargetRow[]> } {
+  const countrySet = new Set(countriesList);
+  const filteredCountries = data.countries.filter((c) => countrySet.has(c.country));
+  const filteredActions   = data.actions.filter((a) => countrySet.has(a.country));
+
+  const filteredCountryTargets: Record<string, TargetRow[]> = {};
+  const filteredTargets: TargetRow[] = [];
+  for (const c of countriesList) {
+    const ct = allCountryTargets[c] ?? [];
+    filteredCountryTargets[c] = ct;
+    filteredTargets.push(...ct);
+  }
+
+  const active = filteredCountries.filter((c) => c.actions > 0);
+  const n = active.length || 1;
+  const avg = (field: keyof Pick<CountryRow, "completed" | "inprogress" | "delayed" | "notstarted">) =>
+    Math.round(active.reduce((s, c) => s + c[field], 0) / n);
+
+  const kpis: KpiData = {
+    ...data.kpis,
+    totalCountries:      active.length,
+    totalCountriesTrend: "",
+    totalActions:        filteredActions.length,
+    totalActionsTrend:   "",
+    pctCompleted:        active.length > 0 ? avg("completed")  : 0,
+    pctInProgress:       active.length > 0 ? avg("inprogress") : 0,
+    pctDelayed:          active.length > 0 ? avg("delayed")    : 0,
+    pctNotStarted:       active.length > 0 ? avg("notstarted") : 0,
+  };
+
+  return { kpis, actions: filteredActions, countries: filteredCountries, targets: filteredTargets, countryTargets: filteredCountryTargets };
+}
+
 /* ── Users (Neon DB primary, JSON file fallback) ─── */
 
 export async function getUsers(): Promise<AppUser[]> {
@@ -376,15 +423,21 @@ export async function getUsers(): Promise<AppUser[]> {
 
   if (!kvUsers || kvUsers.length === 0) return fileUsers;
 
-  // Migrate country and username renames in KV
+  // Migrate country and username renames in KV, then apply forced role/countries overrides
   const renamed = kvUsers.map(u => {
     const newUsername = USER_RENAMES[u.username] ?? u.username;
     const newCountry = u.country ? renameCountry(u.country) : u.country;
-    return (newUsername !== u.username || newCountry !== u.country)
+    const upd = USER_UPDATES[newUsername];
+    const base = (newUsername !== u.username || newCountry !== u.country)
       ? { ...u, username: newUsername, country: newCountry }
       : u;
+    return upd ? { ...base, ...upd } : base;
   });
-  const needsRename = renamed.some((u, i) => u.username !== kvUsers![i].username || u.country !== kvUsers![i].country);
+  const needsRename = renamed.some((u, i) => {
+    const orig = kvUsers![i];
+    return u.username !== orig.username || u.country !== orig.country
+      || u.role !== orig.role || JSON.stringify(u.countries) !== JSON.stringify((orig as AppUser).countries);
+  });
 
   // Auto-sync: add any new user from users.json not yet in KV
   const kvUsernames = new Set(renamed.map((u) => u.username.toLowerCase()));

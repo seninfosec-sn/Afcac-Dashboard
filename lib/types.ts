@@ -101,5 +101,6 @@ export interface AppUser {
   devPassword: string;
   email: string;
   country: string;
+  countries?: string[];  // RSOO: list of countries they oversee
   disabled?: boolean;
 }

@@ -1145,11 +1145,12 @@
   {
     "username": "oche.victor-elias",
     "displayName": "Oche Victor-Elias",
-    "role": "focal_point",
+    "role": "rsoo",
     "passwordHash": "",
     "devPassword": "Victor2024",
     "email": "oche.victor-elias@afcac.org",
-    "country": "Nigeria"
+    "country": "Nigeria",
+    "countries": ["Cabo Verde", "Gambia", "Ghana", "Guinea", "Liberia", "Nigeria", "Sierra Leone"]
   },
   {
     "username": "jackline.kwagala",

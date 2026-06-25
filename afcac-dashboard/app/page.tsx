@@ -1,4 +1,4 @@
-import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry, getLastCountryUpdate } from "@/lib/data";
+import { getDashboardData, getTopExperts, getAllCountryTargets, findUser, filterDashboardForCountry, filterDashboardForCountries, getLastCountryUpdate } from "@/lib/data";
 import { getServerSession } from "@/lib/auth";
 import { getSessions } from "@/lib/sessions";
 import { cookies } from "next/headers";
@@ -33,17 +33,21 @@ export default async function DashboardPage() {
 
   const isAdmin = session?.role === "admin";
 
-  // Determine user country for focal_point filtering
+  // Determine user country/countries for filtering
   let userCountry: string | null = null;
+  let userCountries: string[] | null = null;
   if (session && !isAdmin) {
     const appUser = await findUser(session.username);
-    userCountry = appUser?.country?.trim() || null;
+    userCountries = appUser?.countries?.length ? appUser.countries : null;
+    userCountry   = userCountries ? null : (appUser?.country?.trim() || null);
   }
 
-  // Apply country filter for non-admin users with an assigned country
-  const filtered = (!isAdmin && userCountry)
-    ? filterDashboardForCountry(rawData, allCountryTargets, userCountry)
-    : null;
+  // Apply country filter: RSOO → multi-country, focal_point/expert → single country
+  const filtered = userCountries
+    ? filterDashboardForCountries(rawData, allCountryTargets, userCountries)
+    : (!isAdmin && userCountry)
+      ? filterDashboardForCountry(rawData, allCountryTargets, userCountry)
+      : null;
 
   const { kpis, actions, countries, targets } = filtered ?? rawData;
   const countryTargets = filtered?.countryTargets ?? allCountryTargets;
