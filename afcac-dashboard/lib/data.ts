@@ -54,7 +54,7 @@ const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>>
     countries: ["Cabo Verde", "Gambia", "Ghana", "Guinea", "Liberia", "Nigeria", "Sierra Leone"],
   },
   "uae.expert": {
-    role: "admin",
+    role: "observer",
     countries: undefined,
   },
 };

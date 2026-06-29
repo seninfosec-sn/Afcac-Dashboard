@@ -914,8 +914,8 @@ export default function AdminClient({
 
           {/* ─────────────────── USERS / ACCESS ─────────────────── */}
           {tab === "users" && isMasterAdmin && (() => {
-            const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60", rsoo: "#8e44ad" };
-            const ROLE_LABELS: Record<string, string> = { admin: t("roleAdministrator"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert"), rsoo: t("filterRsoo") };
+            const ROLE_COLORS: Record<string, string> = { admin: "#c0392b", focal_point: "#2980b9", expert: "#27ae60", rsoo: "#8e44ad", observer: "#d97706" };
+            const ROLE_LABELS: Record<string, string> = { admin: t("roleAdministrator"), focal_point: t("roleFocalPointLabel"), expert: t("filterExpert"), rsoo: t("filterRsoo"), observer: t("roleObserver") };
             const filtered = localUsers.filter((u) => {
               if (roleFilter !== "all" && u.role !== roleFilter) return false;
               const q = userSearch.toLowerCase();
@@ -938,7 +938,7 @@ export default function AdminClient({
                     placeholder={t("searchUserPlaceholder")}
                     style={{ flex: 1, minWidth: 200, padding: "6px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)" }}
                   />
-                  {(["all", "admin", "focal_point", "expert", "rsoo"] as const).map((r) => (
+                  {(["all", "admin", "focal_point", "expert", "rsoo", "observer"] as const).map((r) => (
                     <button key={r} onClick={() => setRoleFilter(r as "all" | UserRole)} style={{
                       padding: "5px 12px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
                       border: roleFilter === r ? "2px solid var(--forest2)" : "1px solid var(--border)",
@@ -950,6 +950,7 @@ export default function AdminClient({
                         : r === "admin"       ? `${t("roleAdministrator")} (${localUsers.filter(u => u.role === "admin").length})`
                         : r === "focal_point" ? `${t("filterFocalPoint")} (${localUsers.filter(u => u.role === "focal_point").length})`
                         : r === "rsoo"        ? `${t("filterRsoo")} (${localUsers.filter(u => u.role === "rsoo").length})`
+                        : r === "observer"    ? `${t("filterObserver")} (${localUsers.filter(u => u.role === "observer").length})`
                         :                       `${t("filterExpert")} (${localUsers.filter(u => u.role === "expert").length})`}
                     </button>
                   ))}
@@ -1092,6 +1093,7 @@ export default function AdminClient({
                                         <option value="focal_point">Focal Point</option>
                                         <option value="expert">Expert</option>
                                         <option value="rsoo">RSOO</option>
+                                        <option value="observer">Observer</option>
                                       </select>
                                     </div>
                                     <div>

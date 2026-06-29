@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   ]);
   const connectedUsers = new Set(allSessions.map(s => s.username)).size;
 
-  const isAdmin = session?.role === "admin";
+  const isAdmin = session?.role === "admin" || session?.role === "observer";
 
   // Determine user country/countries for filtering
   let userCountry: string | null = null;

@@ -22,9 +22,11 @@ export default function HeaderControls({ session }: { session: { username: strin
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <Link href="/admin" className="hbtn" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none", background: "rgba(255,255,255,0.12)" }}>
-        {t("admin")}
-      </Link>
+      {session.role !== "observer" && (
+        <Link href="/admin" className="hbtn" style={{ fontSize: 11, width: "auto", padding: "0 12px", gap: 6, textDecoration: "none", background: "rgba(255,255,255,0.12)" }}>
+          {t("admin")}
+        </Link>
+      )}
       <button
         onClick={handleLogout}
         className="hbtn"
