@@ -94,7 +94,7 @@ export default function AdminClient({
   /* ── User management states ── */
   const [localUsers, setLocalUsers] = useState<AppUser[]>(users);
   const [editingUser, setEditingUser] = useState<string | null>(null);
-  const [editDraft, setEditDraft] = useState<{ devPassword: string; role: UserRole; country: string; displayName: string; email: string }>({ devPassword: "", role: "focal_point", country: "", displayName: "", email: "" });
+  const [editDraft, setEditDraft] = useState<{ newUsername: string; devPassword: string; role: UserRole; country: string; displayName: string; email: string }>({ newUsername: "", devPassword: "", role: "focal_point", country: "", displayName: "", email: "" });
   const [userSearch, setUserSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
   const [userSaving, setUserSaving] = useState(false);
@@ -109,7 +109,7 @@ export default function AdminClient({
 
   function startEdit(u: AppUser) {
     setEditingUser(u.username);
-    setEditDraft({ devPassword: "", role: u.role, country: u.country ?? "", displayName: u.displayName, email: u.email ?? "" });
+    setEditDraft({ newUsername: u.username, devPassword: "", role: u.role, country: u.country ?? "", displayName: u.displayName, email: u.email ?? "" });
   }
   function cancelEdit() { setEditingUser(null); }
 
@@ -142,9 +142,15 @@ export default function AdminClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: editingUser, ...editDraft }),
       });
-      if (!res.ok) throw new Error("Save failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 409) { showToast(t("toastUsernameTaken"), "warn"); return; }
+        throw new Error(data.error ?? "Save failed");
+      }
+      const resolvedUsername = editDraft.newUsername.trim() || editingUser;
       setLocalUsers((prev) => prev.map((u) => u.username === editingUser ? {
         ...u,
+        username: resolvedUsername,
         displayName: editDraft.displayName || u.displayName,
         role: editDraft.role,
         country: editDraft.country,
@@ -1061,7 +1067,12 @@ export default function AdminClient({
                             {isEditing && (
                               <tr key={`${u.username}-edit`} style={{ background: "rgba(1,119,100,0.04)", borderTop: "1px dashed var(--forest2)" }}>
                                 <td colSpan={8} style={{ padding: "14px 16px" }}>
-                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+                                    <div>
+                                      <label style={{ fontSize: 10, fontWeight: 700, color: "var(--forest2)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editUsername")}</label>
+                                      <input type="text" value={editDraft.newUsername} onChange={(e) => setEditDraft((d) => ({ ...d, newUsername: e.target.value }))}
+                                        style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--forest2)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--forest2)", boxSizing: "border-box", fontFamily: "monospace" }} />
+                                    </div>
                                     <div>
                                       <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editDisplayName")}</label>
                                       <input type="text" value={editDraft.displayName} onChange={(e) => setEditDraft((d) => ({ ...d, displayName: e.target.value }))}

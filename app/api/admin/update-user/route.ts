@@ -12,11 +12,13 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json() as {
     username: string;
+    newUsername?: string;
     devPassword?: string;
     role?: UserRole;
     country?: string;
     displayName?: string;
     email?: string;
+    disabled?: boolean;
   };
 
   if (!body.username) {
@@ -30,6 +32,17 @@ export async function POST(request: NextRequest) {
   }
 
   const updated: AppUser = { ...users[idx] };
+
+  // Username rename
+  if (body.newUsername !== undefined && body.newUsername.trim() !== "" && body.newUsername.trim().toLowerCase() !== body.username.toLowerCase()) {
+    const newUname = body.newUsername.trim();
+    const conflict = users.some((u, i) => i !== idx && u.username.toLowerCase() === newUname.toLowerCase());
+    if (conflict) {
+      return NextResponse.json({ error: "Username already taken" }, { status: 409 });
+    }
+    updated.username = newUname;
+  }
+
   if (body.devPassword !== undefined && body.devPassword.trim() !== "") {
     updated.devPassword  = body.devPassword.trim();
     updated.passwordHash = "";           // reset hash — dev mode
@@ -38,7 +51,8 @@ export async function POST(request: NextRequest) {
   if (body.country     !== undefined) updated.country     = body.country;
   if (body.displayName !== undefined && body.displayName.trim() !== "")
     updated.displayName = body.displayName.trim();
-  if (body.email !== undefined) updated.email = body.email;
+  if (body.email       !== undefined) updated.email       = body.email;
+  if (body.disabled    !== undefined) updated.disabled    = body.disabled;
 
   users[idx] = updated;
   await kvSet("users", users);
