@@ -104,6 +104,8 @@ export default function AdminClient({
   const [addUserDraft, setAddUserDraft] = useState<{ username: string; displayName: string; devPassword: string; role: UserRole; country: string; email: string }>({ username: "", displayName: "", devPassword: "", role: "focal_point", country: "", email: "" });
   const [addUserSaving, setAddUserSaving] = useState(false);
   const [addUserError, setAddUserError] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [userDeleting, setUserDeleting] = useState(false);
 
   function startEdit(u: AppUser) {
     setEditingUser(u.username);
@@ -182,6 +184,25 @@ export default function AdminClient({
       setAddUserError((err as Error).message);
     } finally {
       setAddUserSaving(false);
+    }
+  }
+
+  async function deleteUser(uname: string) {
+    setUserDeleting(true);
+    try {
+      const res = await fetch("/api/admin/delete-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: uname }),
+      });
+      if (!res.ok) throw new Error();
+      setLocalUsers((prev) => prev.filter((u) => u.username !== uname));
+      showToast(t("toastUserDeleted"), "ok");
+    } catch {
+      showToast("❌ " + t("toastSaveError"), "warn");
+    } finally {
+      setUserDeleting(false);
+      setDeleteConfirm(null);
     }
   }
 
@@ -951,7 +972,7 @@ export default function AdminClient({
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colRole")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700 }}>{t("colAccountStatus")}</th>
                         <th style={{ padding: "9px 12px", textAlign: "left", fontWeight: 700 }}>{t("colPassword")}</th>
-                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 80 }}>{t("colActions")}</th>
+                        <th style={{ padding: "9px 12px", textAlign: "center", fontWeight: 700, width: 140 }}>{t("colActions")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1001,15 +1022,38 @@ export default function AdminClient({
                                   {u.devPassword}
                                 </code>
                               </td>
-                              <td style={{ padding: "8px 12px", textAlign: "center" }}>
-                                <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
-                                  padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                                  border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
-                                  background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
-                                  color: isEditing ? "var(--amber)" : "var(--forest2)",
-                                }}>
-                                  {isEditing ? t("btnCancelEdit") : t("btnEdit")}
-                                </button>
+                              <td style={{ padding: "6px 12px", textAlign: "center" }}>
+                                <div style={{ display: "flex", gap: 5, justifyContent: "center", alignItems: "center" }}>
+                                  <button onClick={() => isEditing ? cancelEdit() : startEdit(u)} style={{
+                                    padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                                    border: isEditing ? "1px solid var(--amber)" : "1px solid var(--forest2)",
+                                    background: isEditing ? "rgba(240,165,0,0.1)" : "rgba(1,119,100,0.1)",
+                                    color: isEditing ? "var(--amber)" : "var(--forest2)",
+                                  }}>
+                                    {isEditing ? t("btnCancelEdit") : t("btnEdit")}
+                                  </button>
+                                  {canToggle && deleteConfirm === u.username ? (
+                                    <>
+                                      <button onClick={() => deleteUser(u.username)} disabled={userDeleting} style={{
+                                        padding: "4px 8px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: userDeleting ? "not-allowed" : "pointer",
+                                        border: "1px solid #dc2626", background: "rgba(220,38,38,0.15)", color: "#dc2626",
+                                      }}>
+                                        {t("confirmDeleteUser")}
+                                      </button>
+                                      <button onClick={() => setDeleteConfirm(null)} style={{
+                                        padding: "4px 6px", borderRadius: 5, fontSize: 11, cursor: "pointer",
+                                        border: "1px solid var(--border)", background: "var(--surface2)", color: "var(--ink3)",
+                                      }}>✕</button>
+                                    </>
+                                  ) : canToggle && (
+                                    <button onClick={() => setDeleteConfirm(u.username)} title={t("btnDeleteUser")} style={{
+                                      padding: "4px 8px", borderRadius: 5, fontSize: 12, cursor: "pointer",
+                                      border: "1px solid rgba(220,38,38,0.4)", background: "rgba(220,38,38,0.07)", color: "#dc2626",
+                                    }}>
+                                      🗑
+                                    </button>
+                                  )}
+                                </div>
                               </td>
                             </tr>
 
