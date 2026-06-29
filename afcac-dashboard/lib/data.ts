@@ -53,6 +53,10 @@ const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>>
     role: "rsoo",
     countries: ["Cabo Verde", "Gambia", "Ghana", "Guinea", "Liberia", "Nigeria", "Sierra Leone"],
   },
+  "uae.expert": {
+    role: "admin",
+    countries: undefined,
+  },
 };
 
 function renameCountry(name: string): string {
