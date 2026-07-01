@@ -1000,7 +1000,24 @@ export default function AdminClient({
                                   {u.username}
                                 </code>
                               </td>
-                              <td style={{ padding: "8px 12px", color: "var(--ink2)" }}>{u.country || "—"}</td>
+                              <td style={{ padding: "8px 12px", color: "var(--ink2)", maxWidth: 260 }}>
+                                {u.role === "rsoo" && u.countries?.length ? (
+                                  <div>
+                                    <div style={{ fontSize: 10, fontWeight: 700, color: "#8e44ad", textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 4 }}>
+                                      {u.countries.length} pays assignés
+                                    </div>
+                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                                      {u.countries.map((c) => (
+                                        <span key={c} style={{ display: "inline-block", padding: "1px 6px", borderRadius: 10, fontSize: 9, fontWeight: 600, background: "rgba(142,68,173,0.10)", color: "#8e44ad", border: "1px solid rgba(142,68,173,0.25)", whiteSpace: "nowrap" }}>
+                                          {c}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  u.country || "—"
+                                )}
+                              </td>
                               <td style={{ padding: "8px 12px" }}>
                                 <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 700, background: ROLE_COLORS[u.role] + "22", color: ROLE_COLORS[u.role], border: `1px solid ${ROLE_COLORS[u.role]}44` }}>
                                   {ROLE_LABELS[u.role] ?? u.role}
