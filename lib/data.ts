@@ -73,6 +73,14 @@ const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>>
     role: "rsoo",
     countries: ["Benin", "Burkina Faso", "Cote D'Ivoire", "Guinea-Bissau", "Mali", "Mauritania", "Niger", "Senegal", "Togo"],
   },
+  "beloved.mupfurururwa": {
+    role: "rsoo",
+    countries: ["Angola", "Botswana", "DR Congo", "Lesotho", "Madagascar", "Malawi", "Mauritius", "Mozambique", "Namibia", "Seychelles", "South Africa", "Eswatini", "Tanzania", "Zambia", "Zimbabwe"],
+  },
+  "edgar.dupont": {
+    role: "rsoo",
+    countries: ["Angola", "Botswana", "DR Congo", "Lesotho", "Madagascar", "Malawi", "Mauritius", "Mozambique", "Namibia", "Seychelles", "South Africa", "Eswatini", "Tanzania", "Zambia", "Zimbabwe"],
+  },
 };
 
 function renameCountry(name: string): string {
