@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
 
     const now = new Date().toISOString();
 
-    // Ensure SQL schema exists before recording session
-    setupSchema().catch(() => {});
+    // Ensure SQL schema exists before recording session (awaited)
+    try { await setupSchema(); } catch { /* ignore */ }
 
     // Record session (non-blocking — don't delay login response)
     upsertSession({

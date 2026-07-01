@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { getOnlineSessions, getAllRecentSessions } from "@/lib/sessions";
-import { getSessionLogs, countSessionLogs, setupSchema } from "@/lib/db";
+import { getSessionLogs, countSessionLogs, setupSchema, insertSessionLog } from "@/lib/db";
 import type { SessionEntry } from "@/lib/types";
 
 export async function GET(req: Request) {
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     getAllRecentSessions(),
   ]);
 
-  // Try permanent SQL history; fall back to KV recent sessions if SQL unavailable
+  // Try permanent SQL history; fall back to KV sessions if SQL unavailable
   let history: SessionEntry[] = [];
   let total = 0;
   try {
@@ -33,14 +33,17 @@ export async function GET(req: Request) {
     ]);
     history = logs as SessionEntry[];
     total   = count;
+
+    // Backfill: if SQL has no rows yet but KV has sessions, insert them all into SQL
+    if (count === 0 && recent.length > 0 && page === 0) {
+      for (const s of recent) {
+        insertSessionLog(s).catch(() => {});
+      }
+      history = recent;
+      total   = recent.length;
+    }
   } catch {
     // SQL not available or table missing — serve KV sessions as fallback
-    history = recent;
-    total   = recent.length;
-  }
-
-  // If SQL returned 0 but KV has sessions, surface KV sessions (first page only)
-  if (total === 0 && recent.length > 0 && page === 0) {
     history = recent;
     total   = recent.length;
   }

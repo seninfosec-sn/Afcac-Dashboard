@@ -1,8 +1,8 @@
-import { kvGet, kvSet, insertSessionLog, updateSessionLastSeen, setSessionLogout } from "./db";
+import { kvGet, kvSet, insertSessionLog, updateSessionLastSeen, setSessionLogout, setupSchema } from "./db";
 import type { SessionEntry } from "./types";
 
 const SESSION_KEY = "sessions";
-const TTL_MS = 24 * 60 * 60 * 1000; // KV keeps 24 h for real-time view
+const TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days in KV (SQL is permanent)
 
 export async function getSessions(): Promise<SessionEntry[]> {
   return (await kvGet<SessionEntry[]>(SESSION_KEY)) ?? [];
@@ -19,14 +19,14 @@ export async function upsertSession(entry: SessionEntry): Promise<void> {
     sessions[idx] = entry;
   }
 
-  // Prune KV to last 24 h
+  // Prune KV to last 30 days (SQL keeps everything permanently)
   const cutoff = new Date(Date.now() - TTL_MS).toISOString();
   const cleaned = sessions.filter((s) => s.lastSeen >= cutoff);
   await kvSet(SESSION_KEY, cleaned);
 
-  // Persist permanently in SQL (fire-and-forget)
+  // Persist permanently in SQL — awaited so failures are retried inside insertSessionLog
   if (isNew) {
-    insertSessionLog(entry).catch(() => {});
+    try { await insertSessionLog(entry); } catch { /* already logged inside insertSessionLog */ }
   } else {
     updateSessionLastSeen(entry.sessionId, entry.lastSeen).catch(() => {});
   }
@@ -64,11 +64,13 @@ export async function getOnlineSessions(minutes = 10): Promise<SessionEntry[]> {
     .sort((a, b) => b.lastSeen.localeCompare(a.lastSeen));
 }
 
-/** All sessions from the KV (last 24 h) — kept for backwards compat */
+/** All sessions from KV (last 30 days) — used as fallback if SQL is unavailable */
 export async function getAllRecentSessions(): Promise<SessionEntry[]> {
   const sessions = await getSessions();
-  const cutoff = new Date(Date.now() - TTL_MS).toISOString();
-  return sessions
-    .filter((s) => s.loginTime >= cutoff)
-    .sort((a, b) => b.loginTime.localeCompare(a.loginTime));
+  return [...sessions].sort((a, b) => b.loginTime.localeCompare(a.loginTime));
+}
+
+/** Ensure schema exists and backfill KV sessions into SQL */
+export async function ensureSessionsSchema(): Promise<void> {
+  try { await setupSchema(); } catch { /* ignore */ }
 }
