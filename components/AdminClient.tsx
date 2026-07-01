@@ -168,7 +168,7 @@ export default function AdminClient({
 
   async function createUser() {
     if (!addUserDraft.username.trim() || !addUserDraft.displayName.trim() || !addUserDraft.devPassword.trim()) {
-      setAddUserError("Veuillez remplir les champs obligatoires (nom, identifiant, mot de passe).");
+      setAddUserError(t("addUserRequired"));
       return;
     }
     setAddUserSaving(true);
@@ -185,7 +185,7 @@ export default function AdminClient({
       setLocalUsers((prev) => [...prev, newUser]);
       setAddUserOpen(false);
       setAddUserDraft({ username: "", displayName: "", devPassword: "", role: "focal_point", country: "", email: "" });
-      showToast("✅ Utilisateur créé avec succès !", "ok");
+      showToast(t("toastUserCreated"), "ok");
     } catch (err) {
       setAddUserError((err as Error).message);
     } finally {
@@ -963,7 +963,7 @@ export default function AdminClient({
                     {t("btnExportExcel")}
                   </button>
                   <button onClick={() => { setAddUserOpen(true); setAddUserError(""); }} style={{ padding: "5px 16px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid var(--forest2)", background: "var(--forest2)", color: "#fff", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 5 }}>
-                    + {"Add User"}
+                    + {t("btnAddUser")}
                   </button>
                 </div>
 
@@ -1004,7 +1004,7 @@ export default function AdminClient({
                                 {u.role === "rsoo" && u.countries?.length ? (
                                   <div>
                                     <div style={{ fontSize: 10, fontWeight: 700, color: "#8e44ad", textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 4 }}>
-                                      {u.countries.length} pays assignés
+                                      {u.countries.length} {t("countriesAssigned")}
                                     </div>
                                     <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
                                       {u.countries.map((c) => (
@@ -1106,11 +1106,11 @@ export default function AdminClient({
                                       <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>{t("editRole")}</label>
                                       <select value={editDraft.role} onChange={(e) => setEditDraft((d) => ({ ...d, role: e.target.value as UserRole }))}
                                         style={{ width: "100%", padding: "6px 8px", border: "1px solid var(--border)", borderRadius: 5, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }}>
-                                        <option value="admin">Admin</option>
-                                        <option value="focal_point">Focal Point</option>
-                                        <option value="expert">Expert</option>
-                                        <option value="rsoo">RSOO</option>
-                                        <option value="observer">Observer</option>
+                                        <option value="admin">{t("roleAdministrator")}</option>
+                                        <option value="focal_point">{t("roleFocalPointLabel")}</option>
+                                        <option value="expert">{t("filterExpert")}</option>
+                                        <option value="rsoo">{t("filterRsoo")}</option>
+                                        <option value="observer">{t("roleObserver")}</option>
                                       </select>
                                     </div>
                                     <div>
@@ -1189,9 +1189,9 @@ export default function AdminClient({
             <div style={{ background: "var(--forest)", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
                 <div style={{ color: "#fff", fontWeight: 700, fontSize: 15, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: ".03em" }}>
-                  {"Add User"}
+                  {t("btnAddUser")}
                 </div>
-                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 11, marginTop: 2 }}>Créer un nouveau compte utilisateur</div>
+                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 11, marginTop: 2 }}>{t("addUserSubtitle")}</div>
               </div>
               <button onClick={() => setAddUserOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 20, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}>✕</button>
             </div>
@@ -1207,7 +1207,7 @@ export default function AdminClient({
                   </label>
                   <input type="text" value={addUserDraft.displayName}
                     onChange={(e) => setAddUserDraft((d) => ({ ...d, displayName: e.target.value }))}
-                    placeholder="Prénom Nom"
+                    placeholder={t("placeholderFullName")}
                     style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
                 </div>
                 <div>
@@ -1216,7 +1216,7 @@ export default function AdminClient({
                   </label>
                   <input type="text" value={addUserDraft.username}
                     onChange={(e) => setAddUserDraft((d) => ({ ...d, username: e.target.value.toLowerCase().replace(/\s/g, ".") }))}
-                    placeholder="prenom.nom"
+                    placeholder={t("placeholderNewUsername")}
                     style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box", fontFamily: "monospace" }} />
                 </div>
               </div>
@@ -1229,7 +1229,7 @@ export default function AdminClient({
                   </label>
                   <input type="text" value={addUserDraft.devPassword}
                     onChange={(e) => setAddUserDraft((d) => ({ ...d, devPassword: e.target.value }))}
-                    placeholder="Mot de passe"
+                    placeholder={t("placeholderPassword")}
                     style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
                 </div>
                 <div>
@@ -1239,10 +1239,11 @@ export default function AdminClient({
                   <select value={addUserDraft.role}
                     onChange={(e) => setAddUserDraft((d) => ({ ...d, role: e.target.value as UserRole }))}
                     style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box", cursor: "pointer" }}>
-                    <option value="focal_point">Focal Point</option>
-                    <option value="admin">Administrateur</option>
-                    <option value="expert">Expert</option>
-                    <option value="rsoo">RSOO</option>
+                    <option value="focal_point">{t("roleFocalPointLabel")}</option>
+                    <option value="admin">{t("roleAdministrator")}</option>
+                    <option value="expert">{t("filterExpert")}</option>
+                    <option value="rsoo">{t("filterRsoo")}</option>
+                    <option value="observer">{t("roleObserver")}</option>
                   </select>
                 </div>
               </div>
@@ -1264,7 +1265,7 @@ export default function AdminClient({
                   <label style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", display: "block", marginBottom: 4, textTransform: "uppercase", letterSpacing: ".05em" }}>Email</label>
                   <input type="email" value={addUserDraft.email}
                     onChange={(e) => setAddUserDraft((d) => ({ ...d, email: e.target.value }))}
-                    placeholder="email@domaine.com"
+                    placeholder={t("placeholderEmail")}
                     style={{ width: "100%", padding: "7px 10px", border: "1px solid var(--border)", borderRadius: 6, fontSize: 12, background: "var(--bg2)", color: "var(--ink1)", boxSizing: "border-box" }} />
                 </div>
               </div>
@@ -1282,7 +1283,7 @@ export default function AdminClient({
                   {t("btnCancel")}
                 </button>
                 <button onClick={createUser} disabled={addUserSaving} style={{ padding: "8px 22px", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: addUserSaving ? "not-allowed" : "pointer", background: "var(--forest2)", color: "#fff", border: "none", opacity: addUserSaving ? 0.7 : 1 }}>
-                  {addUserSaving ? t("btnSaving") : ("Créer l'utilisateur")}
+                  {addUserSaving ? t("btnSaving") : t("btnCreateUser")}
                 </button>
               </div>
             </div>
