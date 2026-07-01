@@ -57,6 +57,18 @@ const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>>
     role: "observer",
     countries: undefined,
   },
+  "paul.rwegasha": {
+    role: "rsoo",
+    countries: ["Burundi", "DR Congo", "Kenya", "Rwanda", "Somalia", "South Sudan", "Tanzania", "Uganda"],
+  },
+  "jackline.kwagala": {
+    role: "rsoo",
+    countries: ["Burundi", "DR Congo", "Kenya", "Rwanda", "Somalia", "South Sudan", "Tanzania", "Uganda"],
+  },
+  "sylvestre.sinarinzi": {
+    role: "rsoo",
+    countries: ["Burundi", "DR Congo", "Kenya", "Rwanda", "Somalia", "South Sudan", "Tanzania", "Uganda"],
+  },
 };
 
 function renameCountry(name: string): string {
