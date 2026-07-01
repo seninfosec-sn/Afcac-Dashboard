@@ -69,6 +69,10 @@ const USER_UPDATES: Record<string, Partial<Pick<AppUser, "role" | "countries">>>
     role: "rsoo",
     countries: ["Burundi", "DR Congo", "Kenya", "Rwanda", "Somalia", "South Sudan", "Tanzania", "Uganda"],
   },
+  "katchienne.silue": {
+    role: "rsoo",
+    countries: ["Benin", "Burkina Faso", "Cote D'Ivoire", "Guinea-Bissau", "Mali", "Mauritania", "Niger", "Senegal", "Togo"],
+  },
 };
 
 function renameCountry(name: string): string {
