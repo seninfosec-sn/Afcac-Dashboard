@@ -199,7 +199,7 @@ export const QUESTIONS: Question[] = [
       { pct: 100, label: 'Full Implementation',         text: 'All eligible GSPs certified under ISAGO, with continuous oversight.' },
     ],
   },
-  // ── GROUP 6 & 7: Infrastructure ──
+  // ── GROUP 6: Infrastructure ──
   {
     id: 'T6.1', group: 'Air Navigation & Aerodrome Infrastructure', deadline: 'Ongoing',
     title: 'Establish and Maintain an Increasing Trend of Air Navigation and Aerodrome Infrastructure Meeting ICAO Standards',
@@ -213,7 +213,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
   {
-    id: 'T7.1', group: 'Air Navigation & Aerodrome Infrastructure', deadline: 'Dec 2026',
+    id: 'T6.2', group: 'Air Navigation & Aerodrome Infrastructure', deadline: 'Dec 2026',
     title: 'All States to Identify Gaps in Existing International Aerodrome Infrastructure',
     statement: 'Has the State identified and documented gaps in existing international aerodrome infrastructure in line with ICAO standards and the Revised Abuja Safety Targets, with a clear plan for addressing them by 2026?',
     options: [
@@ -225,7 +225,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
   {
-    id: 'T7.2', group: 'Air Navigation & Aerodrome Infrastructure', deadline: 'Dec 2026',
+    id: 'T6.3', group: 'Air Navigation & Aerodrome Infrastructure', deadline: 'Dec 2026',
     title: 'All States to Identify Gaps in Existing Air Navigation Services (ANS) Infrastructure',
     statement: 'Has the State conducted a comprehensive assessment to identify gaps in existing air navigation services (ANS) infrastructure, and documented these findings in line with ICAO standards?',
     options: [

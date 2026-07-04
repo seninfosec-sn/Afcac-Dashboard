@@ -457,8 +457,8 @@ export const QUESTION_I18N: Record<string, Record<QLocale, QuestionTranslation>>
     },
   },
 
-  // ── T7.1 ──
-  'T7.1': {
+  // ── T6.2 ──
+  'T6.2': {
     fr: {
       group: 'Infrastructure de Navigation Aérienne et Aérodromique',
       title: "Tous les États identifient les lacunes des infrastructures aérodromiques internationales existantes",
@@ -485,8 +485,8 @@ export const QUESTION_I18N: Record<string, Record<QLocale, QuestionTranslation>>
     },
   },
 
-  // ── T7.2 ──
-  'T7.2': {
+  // ── T6.3 ──
+  'T6.3': {
     fr: {
       group: 'Infrastructure de Navigation Aérienne et Aérodromique',
       title: "Tous les États identifient les lacunes des infrastructures des Services de Navigation Aérienne (SNA)",
