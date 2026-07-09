@@ -67,6 +67,7 @@ export interface UpdateLog {
   targetsUpdated: number;
   fullName?: string;
   country?: string;
+  targetIds?: string[];
 }
 
 export interface ExpertStat {

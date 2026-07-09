@@ -338,6 +338,15 @@ export const translations = {
     pageNext: "Next →",
     pageSessions: "sessions",
     timeJustNow: "just now",
+    navUpdatesLabel: "Activity Log",
+    navUpdatesSub: "Updates history",
+    adminTabUpdatesTitle: "Updates Activity Log",
+    adminIntroUpdates: "View all updates submitted by users — which targets were filled and when.",
+    colDateTime: "Date & Time",
+    colTargetsCount: "Targets",
+    colTargetIds: "Target IDs",
+    noUpdatesYet: "No updates recorded yet.",
+    updatesRefresh: "Refresh",
   },
 
   fr: {
@@ -674,6 +683,15 @@ export const translations = {
     pageNext: "Suivant →",
     pageSessions: "sessions",
     timeJustNow: "à l'instant",
+    navUpdatesLabel: "Journal d'activité",
+    navUpdatesSub: "Historique des mises à jour",
+    adminTabUpdatesTitle: "Journal d'activité des mises à jour",
+    adminIntroUpdates: "Visualisez toutes les mises à jour soumises par les utilisateurs — quels objectifs ont été renseignés et quand.",
+    colDateTime: "Date & Heure",
+    colTargetsCount: "Objectifs",
+    colTargetIds: "IDs des objectifs",
+    noUpdatesYet: "Aucune mise à jour enregistrée.",
+    updatesRefresh: "Rafraîchir",
   },
 
   pt: {
@@ -1010,6 +1028,15 @@ export const translations = {
     pageNext: "Seguinte →",
     pageSessions: "sessões",
     timeJustNow: "agora mesmo",
+    navUpdatesLabel: "Registo de Atividade",
+    navUpdatesSub: "Histórico de atualizações",
+    adminTabUpdatesTitle: "Registo de Atividade de Atualizações",
+    adminIntroUpdates: "Veja todas as atualizações enviadas pelos utilizadores — quais objetivos foram preenchidos e quando.",
+    colDateTime: "Data & Hora",
+    colTargetsCount: "Objetivos",
+    colTargetIds: "IDs dos Objetivos",
+    noUpdatesYet: "Nenhuma atualização registada ainda.",
+    updatesRefresh: "Atualizar",
   },
 
   ar: {
@@ -1346,6 +1373,15 @@ export const translations = {
     pageNext: "التالي →",
     pageSessions: "جلسات",
     timeJustNow: "الآن",
+    navUpdatesLabel: "سجل النشاط",
+    navUpdatesSub: "تاريخ التحديثات",
+    adminTabUpdatesTitle: "سجل نشاط التحديثات",
+    adminIntroUpdates: "عرض جميع التحديثات المقدمة من المستخدمين — الأهداف التي تم تحديثها ومتى.",
+    colDateTime: "التاريخ والوقت",
+    colTargetsCount: "الأهداف",
+    colTargetIds: "معرّفات الأهداف",
+    noUpdatesYet: "لا توجد تحديثات مسجلة بعد.",
+    updatesRefresh: "تحديث",
   },
 } as const;
 

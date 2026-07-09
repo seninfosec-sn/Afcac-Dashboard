@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser } from "@/lib/types";
+import type { DashboardData, KpiData, ActionRow, CountryRow, TargetRow, UserRole, AppUser, UpdateLog } from "@/lib/types";
 import OnlineUsers from "@/components/OnlineUsers";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DocsDropdown from "@/components/DocsDropdown";
@@ -10,7 +10,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { exportExcel } from "@/lib/exportUtils";
 
 /* ─── Types ──────────────────────────────────────── */
-type Tab = "kpis" | "targets" | "actions" | "countries" | "users" | "sessions";
+type Tab = "kpis" | "targets" | "actions" | "countries" | "users" | "sessions" | "updates";
 
 const AFRICAN_STATES = [
   "Algeria","Angola","Benin","Botswana","Burkina Faso","Burundi","Cabo Verde",
@@ -42,6 +42,7 @@ const NAV_ITEM_DEFS: { id: Tab; icon: string; labelKey: string; subKey: string; 
   { id: "countries", icon: "🌍", labelKey: "navCountriesLabel",subKey: "navCountriesSub" },
   { id: "users",     icon: "🔑", labelKey: "navUsersLabel",    subKey: "navUsersSub",    adminOnly: true },
   { id: "sessions",  icon: "🟢", labelKey: "navSessionsLabel", subKey: "navSessionsSub", adminOnly: true },
+  { id: "updates",   icon: "📝", labelKey: "navUpdatesLabel",  subKey: "navUpdatesSub",  adminOnly: true },
 ];
 
 /* ─── Toast ──────────────────────────────────────── */
@@ -106,6 +107,11 @@ export default function AdminClient({
   const [addUserError, setAddUserError] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [userDeleting, setUserDeleting] = useState(false);
+
+  /* ── Update logs states ── */
+  const [updateLogs, setUpdateLogs] = useState<UpdateLog[]>([]);
+  const [updatesLoading, setUpdatesLoading] = useState(false);
+  const [updatesLoaded, setUpdatesLoaded] = useState(false);
 
   function startEdit(u: AppUser) {
     setEditingUser(u.username);
@@ -227,6 +233,17 @@ export default function AdminClient({
       .then(d => setSessionStats({ online: (d.online ?? []).length, total: d.total ?? 0 }))
       .catch(() => {});
   }, []);
+
+  /* ── Load update logs when tab opens ── */
+  useEffect(() => {
+    if (tab !== "updates" || updatesLoaded) return;
+    setUpdatesLoading(true);
+    fetch("/api/admin/updates")
+      .then(r => r.json())
+      .then(d => { setUpdateLogs(d.logs ?? []); setUpdatesLoaded(true); })
+      .catch(() => {})
+      .finally(() => setUpdatesLoading(false));
+  }, [tab, updatesLoaded]);
 
   function showToast(msg: string, type: "ok" | "warn") {
     setToast({ msg, type });
@@ -485,6 +502,7 @@ export default function AdminClient({
               {tab === "countries" && t('adminTabCountriesTitle')}
               {tab === "users"     && t('adminTabUsersTitle')}
               {tab === "sessions"  && t('adminTabSessionsTitle')}
+              {tab === "updates"   && t('adminTabUpdatesTitle')}
             </div>
             <div className="intro-text">
               {tab === "kpis"      && t('adminIntroKpis')}
@@ -493,6 +511,7 @@ export default function AdminClient({
               {tab === "countries" && t('adminIntroCountries')}
               {tab === "users"     && t('adminIntroUsers').replace('{n}', String(users?.length ?? 0))}
               {tab === "sessions"  && t('adminIntroSessions')}
+              {tab === "updates"   && t('adminIntroUpdates')}
             </div>
           </div>
 
@@ -1156,6 +1175,90 @@ export default function AdminClient({
           {/* ─────────────────── SESSIONS ─────────────────── */}
           {tab === "sessions" && role === "admin" && (
             <OnlineUsers />
+          )}
+
+          {/* ─────────────────── UPDATES LOG ─────────────────── */}
+          {tab === "updates" && role === "admin" && (
+            <div className="card">
+              <div className="card-head">
+                <span className="card-head-title">{t("adminTabUpdatesTitle")}</span>
+                <span className="card-head-badge">{updateLogs.length} {t("pageSessions")}</span>
+                <button
+                  onClick={() => { setUpdatesLoaded(false); }}
+                  style={{ marginLeft: 8, padding: "3px 10px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--surface2)", cursor: "pointer", fontSize: 11, color: "var(--ink2)" }}
+                >
+                  ↺ {t("updatesRefresh")}
+                </button>
+              </div>
+              <div className="card-body">
+                {updatesLoading ? (
+                  <div style={{ padding: 32, textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>{t("sessionsLoading")}</div>
+                ) : updateLogs.length === 0 ? (
+                  <div style={{ padding: 32, textAlign: "center", color: "var(--ink3)", fontSize: 13 }}>{t("noUpdatesYet")}</div>
+                ) : (
+                  <div className="tbl-scroll">
+                    <table className="dtable">
+                      <thead>
+                        <tr>
+                          <th style={{ width: 36 }}>#</th>
+                          <th>{t("colUser")}</th>
+                          <th>{t("colCountry")}</th>
+                          <th>{t("colDateTime")}</th>
+                          <th style={{ textAlign: "center" }}>{t("colTargetsCount")}</th>
+                          <th>{t("colTargetIds")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {updateLogs.map((log, i) => {
+                          const dt = new Date(log.date);
+                          const dateStr = dt.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+                          const timeStr = dt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+                          return (
+                            <tr key={i}>
+                              <td style={{ color: "var(--ink3)", fontSize: 11 }}>{updateLogs.length - i}</td>
+                              <td>
+                                <div style={{ fontWeight: 600, fontSize: 12 }}>{log.fullName || log.username}</div>
+                                <div style={{ fontSize: 10, color: "var(--ink3)", fontFamily: "monospace" }}>{log.username}</div>
+                              </td>
+                              <td style={{ fontSize: 12, color: "var(--ink2)" }}>{log.country || "—"}</td>
+                              <td>
+                                <div style={{ fontSize: 12, fontWeight: 600 }}>{dateStr}</div>
+                                <div style={{ fontSize: 10, color: "var(--ink3)" }}>{timeStr}</div>
+                              </td>
+                              <td style={{ textAlign: "center" }}>
+                                <span style={{
+                                  display: "inline-block", padding: "2px 8px", borderRadius: 10,
+                                  background: log.targetsUpdated > 0 ? "#e6f4ea" : "var(--surface2)",
+                                  color: log.targetsUpdated > 0 ? "#1a6b3c" : "var(--ink3)",
+                                  fontWeight: 700, fontSize: 12,
+                                }}>
+                                  {log.targetsUpdated}
+                                </span>
+                              </td>
+                              <td>
+                                {log.targetIds && log.targetIds.length > 0 ? (
+                                  <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                                    {log.targetIds.map(id => (
+                                      <span key={id} style={{
+                                        padding: "1px 6px", borderRadius: 4, fontSize: 10, fontWeight: 700,
+                                        fontFamily: "'Barlow Condensed', monospace",
+                                        background: "var(--navy)", color: "#fff",
+                                      }}>{id}</span>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span style={{ fontSize: 11, color: "var(--ink3)" }}>—</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
         </main>

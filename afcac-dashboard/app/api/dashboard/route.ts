@@ -53,14 +53,15 @@ export async function POST(request: NextRequest) {
 
     step = "append_log";
     try {
-      const targetsUpdated =
-        body.targetsUpdated ?? (body.targets?.filter((t) => t.pct > 0).length ?? 0);
+      const updatedTargets = body.targets?.filter((t) => t.pct > 0) ?? [];
+      const targetsUpdated = body.targetsUpdated ?? updatedTargets.length;
       await appendUpdateLog({
         username: session.username,
         date: new Date().toISOString(),
         targetsUpdated,
         fullName: body.fullName,
         country: body.updaterCountry,
+        targetIds: updatedTargets.map((t) => t.id),
       });
     } catch (logErr) {
       // Log failure is non-critical — don't block the save
