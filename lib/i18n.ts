@@ -141,8 +141,8 @@ export const translations = {
     networkError: "Network error — please try again",
 
     // Admin panel
-    adminPanelTitle: "AFCAC — Dashboard Update",
-    adminPanelSub: "AFCAC Dashboard · Real-time Data · Revised Abuja Safety Targets",
+    adminPanelTitle: "AFCAC Revised Abuja Safety Targets",
+    adminPanelSub: "Revised Abuja Safety Targets Monitoring and Reporting Dashboard",
     tabActions: "Actions",
     tabCountries: "Countries",
     tabTargets: "Targets",
