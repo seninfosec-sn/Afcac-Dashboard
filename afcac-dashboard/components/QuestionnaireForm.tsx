@@ -228,7 +228,6 @@ export default function QuestionnaireForm({ formNum, isAdmin = false }: Props) {
                     >
                       <div className="q-head">
                         <span className="q-num">Q{globalIdx + 1}</span>
-                        <span className="q-target">{q.id}</span>
                         <span className="q-title">{q.title}</span>
                         <span className="q-deadline">🗓 {q.deadline}</span>
                       </div>
