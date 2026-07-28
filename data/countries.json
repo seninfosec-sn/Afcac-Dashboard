@@ -27,7 +27,7 @@
   { "country": "Djibouti",                 "region": "East Africa",     "actions": 0,  "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 0,   "budget": 0,       "entity": "ADAC" },
   { "country": "Equatorial Guinea",        "region": "Central Africa",  "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "ANAC" },
   { "country": "Eritrea",                  "region": "East Africa",     "actions": 0,  "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 0,   "budget": 0,       "entity": "CAAE" },
-  { "country": "Eswatini",                 "region": "Southern Africa", "actions": 39, "completed": 8,  "inprogress": 59, "delayed": 13, "notstarted": 20,  "budget": 0,       "entity": "SWACAA" },
+  { "country": "Eswatini",                 "region": "Southern Africa", "actions": 39, "completed": 18, "inprogress": 59, "delayed": 0,  "notstarted": 23,  "budget": 0,       "entity": "SWACAA" },
   { "country": "Gabon",                    "region": "Central Africa",  "actions": 39, "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 100, "budget": 0,       "entity": "ANAC" },
   { "country": "Gambia",                   "region": "West Africa",     "actions": 0,  "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 0,   "budget": 0,       "entity": "GCAA" },
   { "country": "Guinea",                   "region": "West Africa",     "actions": 0,  "completed": 0,  "inprogress": 0,  "delayed": 0,  "notstarted": 0,   "budget": 0,       "entity": "ANAC" },
