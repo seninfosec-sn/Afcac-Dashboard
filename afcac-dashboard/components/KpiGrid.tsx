@@ -39,26 +39,24 @@ export default function KpiGrid({ kpis, experts, locale = "en", lastCountryUpdat
       <KpiCard
         colorClass="k-teal" icon="🌍" iconBg="#e8f5ee"
         value={String(kpis.totalCountries)} label={t(locale, "totalCountries")}
-        trend={kpis.totalCountriesTrend ? `▲ ${kpis.totalCountriesTrend}` : ""}
-        trendClass={kpis.totalCountriesTrend ? "trend-up" : "trend-flat"} delay=".05s"
+        trend="" trendClass="trend-flat" delay=".05s"
       />
       <KpiCard
         colorClass="k-blue" icon="📋" iconBg="#e8f0f8"
         value={String(kpis.totalActions)} label={t(locale, "totalActions")}
-        trend={kpis.totalActionsTrend ? `▲ ${kpis.totalActionsTrend}` : ""}
-        trendClass={kpis.totalActionsTrend ? "trend-up" : "trend-flat"} delay=".1s"
+        trend="" trendClass="trend-flat" delay=".1s"
       />
       <KpiCard
         colorClass="k-green" icon="✅" iconBg="#d4f0e0"
         value={`${kpis.pctCompleted}%`} valueColor="#2d9d5e"
         label={t(locale, "pctCompleted")}
-        trend={`▲ ${kpis.pctCompletedTrend}`} trendClass="trend-up" delay=".15s"
+        trend="" trendClass="trend-flat" delay=".15s"
       />
       <KpiCard
         colorClass="k-amber" icon="⏳" iconBg="#fff0e0"
         value={`${kpis.pctInProgress}%`} valueColor="#f0a500"
         label={t(locale, "pctInProgress")}
-        trend={`▲ ${kpis.pctInProgressTrend}`} trendClass="trend-up" delay=".2s"
+        trend="" trendClass="trend-flat" delay=".2s"
       />
       {isCountryProfile ? (
         <KpiCard
