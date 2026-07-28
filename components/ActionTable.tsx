@@ -141,42 +141,48 @@ export default function ActionTable({
                           <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 8 }}>
                             {t("abujaTargets")} — {row.country}
                           </div>
-                          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-                            <thead>
-                              <tr style={{ background: "var(--surface3, #eef0f3)" }}>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colId")}</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>{t("colTarget")}</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colGroup")}</th>
-                                <th style={{ padding: "5px 8px", textAlign: "center", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colProgress")}</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 90 }}>{t("colStatus")}</th>
-                                <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colDeadline")}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {(countryTargets[row.country] ?? targets).map((tRow, ti) => {
-                                const pctColor = PCT_COLOR[tRow.pct] ?? PCT_COLOR[0];
-                                const ts = SC[tRow.status] ?? SC.notstarted;
-                                const tsLabel = statusLabel[tRow.status] ?? tRow.status;
-                                return (
-                                  <tr key={ti} style={{ borderTop: "1px solid var(--border2, #e8eaed)" }}>
-                                    <td style={{ padding: "5px 8px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: "var(--navy)" }}>{tRow.id}</td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink1)" }}>{tRow.title}</td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink3)", fontSize: 10 }}>{tRow.group}</td>
-                                    <td style={{ padding: "5px 8px", textAlign: "center" }}>
-                                      <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "center" }}>
-                                        <div style={{ width: 40, height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
-                                          <div style={{ width: `${tRow.pct}%`, height: "100%", background: pctColor, borderRadius: 3 }} />
+                          {countryTargets[row.country] ? (
+                            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+                              <thead>
+                                <tr style={{ background: "var(--surface3, #eef0f3)" }}>
+                                  <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colId")}</th>
+                                  <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)" }}>{t("colTarget")}</th>
+                                  <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colGroup")}</th>
+                                  <th style={{ padding: "5px 8px", textAlign: "center", fontWeight: 700, color: "var(--ink2)", width: 60 }}>{t("colProgress")}</th>
+                                  <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 90 }}>{t("colStatus")}</th>
+                                  <th style={{ padding: "5px 8px", textAlign: "left", fontWeight: 700, color: "var(--ink2)", width: 80 }}>{t("colDeadline")}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {countryTargets[row.country].map((tRow, ti) => {
+                                  const pctColor = PCT_COLOR[tRow.pct] ?? PCT_COLOR[0];
+                                  const ts = SC[tRow.status] ?? SC.notstarted;
+                                  const tsLabel = statusLabel[tRow.status] ?? tRow.status;
+                                  return (
+                                    <tr key={ti} style={{ borderTop: "1px solid var(--border2, #e8eaed)" }}>
+                                      <td style={{ padding: "5px 8px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: "var(--navy)" }}>{tRow.id}</td>
+                                      <td style={{ padding: "5px 8px", color: "var(--ink1)" }}>{tRow.title}</td>
+                                      <td style={{ padding: "5px 8px", color: "var(--ink3)", fontSize: 10 }}>{tRow.group}</td>
+                                      <td style={{ padding: "5px 8px", textAlign: "center" }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "center" }}>
+                                          <div style={{ width: 40, height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
+                                            <div style={{ width: `${tRow.pct}%`, height: "100%", background: pctColor, borderRadius: 3 }} />
+                                          </div>
+                                          <span style={{ color: pctColor, fontWeight: 700, minWidth: 28 }}>{tRow.pct}%</span>
                                         </div>
-                                        <span style={{ color: pctColor, fontWeight: 700, minWidth: 28 }}>{tRow.pct}%</span>
-                                      </div>
-                                    </td>
-                                    <td style={{ padding: "5px 8px" }}><span className={`badge ${ts.cls}`}>{tsLabel}</span></td>
-                                    <td style={{ padding: "5px 8px", color: "var(--ink3)" }}>{tRow.deadline}</td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                                      </td>
+                                      <td style={{ padding: "5px 8px" }}><span className={`badge ${ts.cls}`}>{tsLabel}</span></td>
+                                      <td style={{ padding: "5px 8px", color: "var(--ink3)" }}>{tRow.deadline}</td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <div style={{ padding: "12px 8px", color: "var(--ink3)", fontSize: 11, fontStyle: "italic" }}>
+                              {t("noTargetData") || "No individual target data available for this country."}
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>
