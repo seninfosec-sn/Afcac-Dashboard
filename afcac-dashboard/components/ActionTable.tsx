@@ -180,7 +180,7 @@ export default function ActionTable({
                             </table>
                           ) : (
                             <div style={{ padding: "12px 8px", color: "var(--ink3)", fontSize: 11, fontStyle: "italic" }}>
-                              {t("noTargetData") || "No individual target data available for this country."}
+                              No individual target data available for this country.
                             </div>
                           )}
                         </div>
