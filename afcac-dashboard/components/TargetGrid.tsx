@@ -11,6 +11,7 @@ const TARGET_NAMES: Record<number, string> = {
   4:  "Assistance & Regional Safety Plans",
   5:  "Industry Safety Standards",
   6:  "Air Navigation & Aerodrome Infrastructure",
+  7:  "Air Navigation Infrastructure Gap Analysis",
   8:  "Aerodrome Certification",
   9:  "Search and Rescue (SAR)",
   10: "AIS to AIM Transition",
