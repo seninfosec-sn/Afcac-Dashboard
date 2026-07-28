@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
-import type { KpiData, CountryRow, TargetRow } from "@/lib/types";
+import type { KpiData, CountryRow, TargetRow, ActionRow } from "@/lib/types";
 import { useLanguage } from "./LanguageProvider";
 
 interface Props {
   kpis: KpiData;
   countries: CountryRow[];
   targets: TargetRow[];
+  actions?: ActionRow[];
   userCountry?: string | null;
 }
 
-export default function CountryReportCard({ kpis, countries, targets, userCountry }: Props) {
+export default function CountryReportCard({ kpis, countries, targets, actions = [], userCountry }: Props) {
   const { t } = useLanguage();
   const [loadingXls, setLoadingXls] = useState(false);
   const [loadingPdf, setLoadingPdf] = useState(false);
@@ -36,9 +37,14 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         [t("lastUpdated"), kpis.lastUpdated],
         [],
         ["Metric", "Value"],
-        ["% Completed", `${kpis.pctCompleted}%`],
+        ["% Completed",   `${kpis.pctCompleted}%`],
         ["% In Progress", `${kpis.pctInProgress}%`],
-        ["% Delayed", `${kpis.pctDelayed}%`],
+        ["% Delayed",     `${kpis.pctDelayed}%`],
+        ["% Not Started", `${kpis.pctNotStarted}%`],
+        ["Total Countries",    kpis.totalCountries],
+        ["Total Actions",      kpis.totalActions],
+        ["Total Budget (USD)", kpis.totalBudget],
+        ["Report Period",      kpis.reportPeriod],
       ]);
       wsKpi["!cols"] = [{ wch: 30 }, { wch: 30 }];
       XLSX.utils.book_append_sheet(wb, wsKpi, "KPI Summary");
@@ -54,13 +60,38 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
 
       // Sheet 3: Country Breakdown (admin / multi-country only)
       if (countries.length > 1) {
-        const cHeaders = ["Country", "Region", "Actions", "Completed %", "In Progress %", "Delayed %", "Not Started %"];
-        const cRows = countries.map(c => [c.country, c.region, c.actions, c.completed, c.inprogress, c.delayed, c.notstarted]);
+        const cHeaders = [
+          "Country", "Region", "Authority/Entity",
+          "Targets Total", "Completed %", "In Progress %", "Delayed %", "Not Started %",
+          "Budget (USD)",
+        ];
+        const cRows = countries.map(c => [
+          c.country, c.region, c.entity ?? "",
+          c.actions, c.completed, c.inprogress, c.delayed, c.notstarted,
+          c.budget ?? 0,
+        ]);
         const wsCountries = XLSX.utils.aoa_to_sheet([cHeaders, ...cRows]);
         wsCountries["!cols"] = cHeaders.map((h, ci) => ({
           wch: Math.max(h.length, ...cRows.map(r => String(r[ci] ?? "").length)) + 2,
         }));
         XLSX.utils.book_append_sheet(wb, wsCountries, "Country Breakdown");
+      }
+
+      // Sheet 4: Action Plans (one row per country)
+      if (actions.length > 0) {
+        const aHeaders = [
+          "Country", "Action / Target", "Section", "Status",
+          "Start Year", "End Year", "Duration (weeks)", "Budget (USD)",
+        ];
+        const aRows = actions.map(a => [
+          a.country, a.action, a.section, a.status,
+          a.start, a.end, a.duration, a.budget ?? 0,
+        ]);
+        const wsActions = XLSX.utils.aoa_to_sheet([aHeaders, ...aRows]);
+        wsActions["!cols"] = aHeaders.map((h, ci) => ({
+          wch: Math.max(h.length, ...aRows.map(r => String(r[ci] ?? "").length)) + 2,
+        }));
+        XLSX.utils.book_append_sheet(wb, wsActions, "Action Plans");
       }
 
       XLSX.writeFile(wb, `${reportName}.xlsx`);
@@ -74,20 +105,17 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
     try {
       const { jsPDF } = await import("jspdf");
       const autoTable = (await import("jspdf-autotable")).default;
-      const doc = new jsPDF({ orientation: "portrait" });
-      const pageW = doc.internal.pageSize.getWidth();
 
-      // CAFAC brand colors
       const C = {
-        forest:    [1,   61,  49]  as [number,number,number], // #013d31
-        forest2:   [1,  119, 100]  as [number,number,number], // #017764
-        forest3:   [1,  148, 120]  as [number,number,number], // #019478
-        complete:  [45, 157,  94]  as [number,number,number], // #2d9d5e
-        progress:  [240, 165,   0]  as [number,number,number], // #f0a500 yellow
-        delayed:   [231,  76,  60]  as [number,number,number], // #e74c3c red
-        nostart:   [149, 165, 166]  as [number,number,number], // #95a5a6
-        rowAlt:    [237, 247, 244]  as [number,number,number], // soft CAFAC green tint
-        textMint:  [77,  184, 154]  as [number,number,number], // #4db89a
+        forest:   [1,   61,  49]  as [number,number,number],
+        forest2:  [1,  119, 100]  as [number,number,number],
+        forest3:  [1,  148, 120]  as [number,number,number],
+        complete: [45, 157,  94]  as [number,number,number],
+        progress: [240, 165,   0]  as [number,number,number],
+        delayed:  [231,  76,  60]  as [number,number,number],
+        nostart:  [149, 165, 166]  as [number,number,number],
+        rowAlt:   [237, 247, 244]  as [number,number,number],
+        textMint: [77,  184, 154]  as [number,number,number],
       };
 
       const statusColor = (s: string): [number,number,number] => {
@@ -97,8 +125,12 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         return C.nostart;
       };
 
-      function addPageHeader(subtitle: string) {
-        // Dark green gradient band
+      function makeDoc(landscape = false) {
+        return new jsPDF({ orientation: landscape ? "landscape" : "portrait" });
+      }
+
+      function addPageHeader(doc: ReturnType<typeof makeDoc>, subtitle: string) {
+        const pageW = doc.internal.pageSize.getWidth();
         doc.setFillColor(...C.forest);
         doc.rect(0, 0, pageW, 24, "F");
         doc.setFillColor(...C.forest2);
@@ -112,11 +144,15 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         doc.setTextColor(...C.textMint);
         doc.text(subtitle, 14, 18);
         doc.setTextColor(255, 255, 255);
-        doc.text(`${dateStr}`, pageW - 14, 18, { align: "right" });
+        doc.text(dateStr, pageW - 14, 18, { align: "right" });
       }
 
+      // Build PDF as a multi-page portrait doc; landscape pages added as new docs then merged via pages
+      const doc = makeDoc(false);
+      const pageW = doc.internal.pageSize.getWidth();
+
       // ── Page 1: KPI Summary ──
-      addPageHeader(reportTitle);
+      addPageHeader(doc, reportTitle);
 
       if (userCountry) {
         doc.setFillColor(...C.complete);
@@ -130,10 +166,15 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
       autoTable(doc, {
         head: [["Indicator", "Value"]],
         body: [
-          ["Completed", `${kpis.pctCompleted}%`],
-          ["In Progress", `${kpis.pctInProgress}%`],
-          ["Delayed", `${kpis.pctDelayed}%`],
-          ["Last Updated", kpis.lastUpdated],
+          ["Completed",          `${kpis.pctCompleted}%`],
+          ["In Progress",        `${kpis.pctInProgress}%`],
+          ["Delayed",            `${kpis.pctDelayed}%`],
+          ["Not Started",        `${kpis.pctNotStarted}%`],
+          ["Total Countries",    String(kpis.totalCountries)],
+          ["Total Actions",      String(kpis.totalActions)],
+          ["Total Budget (USD)", kpis.totalBudget.toLocaleString()],
+          ["Report Period",      kpis.reportPeriod],
+          ["Last Updated",       kpis.lastUpdated],
         ],
         startY: userCountry ? 42 : 30,
         styles: { fontSize: 9, cellPadding: 3 },
@@ -143,8 +184,8 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
         columnStyles: { 0: { fontStyle: "bold", cellWidth: 70 } },
         didParseCell: (data) => {
           if (data.section !== "body") return;
-          const colors: [number,number,number][] = [C.complete, C.progress, C.delayed, C.forest3];
-          if (data.column.index === 1 && data.row.index < 3) {
+          const colors: [number,number,number][] = [C.complete, C.progress, C.delayed, C.nostart];
+          if (data.column.index === 1 && data.row.index < 4) {
             data.cell.styles.textColor = colors[data.row.index];
             data.cell.styles.fontStyle = "bold";
           }
@@ -153,7 +194,7 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
 
       // ── Page 2: Safety Targets ──
       doc.addPage();
-      addPageHeader("Safety Targets — Progress by Sub-target");
+      addPageHeader(doc, "Safety Targets — Progress by Sub-target");
       autoTable(doc, {
         head: [["ID", "Group", "Title", "Score", "Status", "Deadline"]],
         body: targets.map(tgt => [tgt.id, tgt.group, tgt.title, `${tgt.pct}%`, tgt.status, tgt.deadline]),
@@ -187,25 +228,73 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
 
       // ── Page 3: Country Breakdown (admin only) ──
       if (countries.length > 1) {
-        doc.addPage();
-        addPageHeader("Country Breakdown");
+        doc.addPage("a4", "landscape");
+        addPageHeader(doc, "Country Breakdown — All African States");
         autoTable(doc, {
-          head: [["Country", "Region", "Actions", "Completed%", "In Progress%", "Delayed%", "Not Started%"]],
-          body: countries.map(c => [c.country, c.region, c.actions, `${c.completed}%`, `${c.inprogress}%`, `${c.delayed}%`, `${c.notstarted}%`]),
+          head: [["Country", "Region", "Authority", "Targets", "Completed%", "In Progress%", "Delayed%", "Not Started%", "Budget (USD)"]],
+          body: countries.map(c => [
+            c.country, c.region, c.entity ?? "",
+            c.actions, `${c.completed}%`, `${c.inprogress}%`, `${c.delayed}%`, `${c.notstarted}%`,
+            (c.budget ?? 0).toLocaleString(),
+          ]),
           startY: 30,
-          styles: { fontSize: 7.5, cellPadding: 2.5 },
+          styles: { fontSize: 7, cellPadding: 2 },
           headStyles: { fillColor: C.forest, textColor: [255, 255, 255], fontStyle: "bold" },
           alternateRowStyles: { fillColor: C.rowAlt },
-          margin: { left: 14, right: 14 },
+          margin: { left: 10, right: 10 },
+          columnStyles: {
+            0: { cellWidth: 38 },
+            1: { cellWidth: 28 },
+            2: { cellWidth: 20 },
+            3: { cellWidth: 16, halign: "center" as const },
+            4: { cellWidth: 22, halign: "center" as const },
+            5: { cellWidth: 22, halign: "center" as const },
+            6: { cellWidth: 18, halign: "center" as const },
+            7: { cellWidth: 22, halign: "center" as const },
+            8: { cellWidth: 30, halign: "right"  as const },
+          },
           didParseCell: (data) => {
             if (data.section !== "body") return;
             const colColors: Record<number, [number,number,number]> = {
-              3: C.complete, 4: C.progress, 5: C.delayed, 6: C.nostart,
+              4: C.complete, 5: C.progress, 6: C.delayed, 7: C.nostart,
             };
             if (colColors[data.column.index]) {
               data.cell.styles.textColor = colColors[data.column.index];
               data.cell.styles.fontStyle = "bold";
             }
+          },
+        });
+      }
+
+      // ── Page 4: Action Plans ──
+      if (actions.length > 0) {
+        doc.addPage("a4", "landscape");
+        addPageHeader(doc, "Action Plans — Per-Country Implementation Status");
+        autoTable(doc, {
+          head: [["Country", "Action/Target", "Section", "Status", "Start", "End", "Duration (wks)", "Budget (USD)"]],
+          body: actions.map(a => [
+            a.country, a.action, a.section, a.status,
+            a.start, a.end, a.duration, (a.budget ?? 0).toLocaleString(),
+          ]),
+          startY: 30,
+          styles: { fontSize: 7, cellPadding: 2 },
+          headStyles: { fillColor: C.forest, textColor: [255, 255, 255], fontStyle: "bold" },
+          alternateRowStyles: { fillColor: C.rowAlt },
+          margin: { left: 10, right: 10 },
+          columnStyles: {
+            0: { cellWidth: 38 },
+            1: { cellWidth: 22 },
+            2: { cellWidth: 55 },
+            3: { cellWidth: 22 },
+            4: { cellWidth: 16, halign: "center" as const },
+            5: { cellWidth: 16, halign: "center" as const },
+            6: { cellWidth: 22, halign: "center" as const },
+            7: { cellWidth: 30, halign: "right"  as const },
+          },
+          didParseCell: (data) => {
+            if (data.section !== "body" || data.column.index !== 3) return;
+            data.cell.styles.textColor = statusColor(String(data.cell.raw));
+            data.cell.styles.fontStyle = "bold";
           },
         });
       }
@@ -281,6 +370,10 @@ export default function CountryReportCard({ kpis, countries, targets, userCountr
           {t("reportPeriodLabel")}: <strong>{kpis.reportPeriod}</strong>
           {" · "}
           {t("lastUpdated")}: <strong>{kpis.lastUpdated}</strong>
+          {" · "}
+          <span style={{ color: "var(--ink3)" }}>
+            {countries.length} countries · {targets.length} targets · {actions.length} action plans
+          </span>
         </div>
       </div>
     </div>

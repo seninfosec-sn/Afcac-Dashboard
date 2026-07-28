@@ -122,6 +122,7 @@ export default async function DashboardPage() {
               kpis={kpis}
               countries={countries}
               targets={targets}
+              actions={actions}
               userCountry={userCountry}
             />
           </>
