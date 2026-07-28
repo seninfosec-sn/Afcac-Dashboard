@@ -87,10 +87,9 @@ function renameCountry(name: string): string {
   return COUNTRY_RENAMES[name] ?? name;
 }
 
-// Countries that have not submitted any questionnaire data — stats must be 0
-// Note: Cameroon (vivien.malack) submitted 22 targets → removed from this list
+// Countries confirmed with 0 questionnaire submissions as of June 25, 2026 (PDF report)
 const COUNTRIES_ZERO_V1 = new Set([
-  "Algeria", "Botswana", "Cabo Verde", "Central African Republic",
+  "Algeria", "Botswana", "Cabo Verde", "Cameroon", "Central African Republic",
   "Chad", "Comoros", "DR Congo", "Djibouti", "Eritrea", "Gambia", "Guinea",
   "Guinea-Bissau", "Lesotho", "Libya", "Mauritius", "Morocco", "Rwanda",
   "Seychelles", "Somalia", "Sudan", "Tunisia",
