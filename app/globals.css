@@ -616,10 +616,11 @@ body {
   margin-bottom: 44px;
 }
 .landing-logo {
+  display: block;
   height: 80px;
   width: auto;
   object-fit: contain;
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
 }
 .landing-heading {
   font-family: 'Barlow Condensed', sans-serif;
