@@ -4,6 +4,7 @@ import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
+const ABUJA_URL = "https://safety-dashboard-master.vercel.app/";
 const WINDHOEK_URL = "https://afcac-windhoek-dashboard.vercel.app";
 
 export default async function HomePage() {
@@ -24,7 +25,7 @@ export default async function HomePage() {
       </div>
 
       <div className="landing-grid">
-        <Link href="/abuja" target="_blank" rel="noopener noreferrer" className="landing-card">
+        <Link href={ABUJA_URL} target="_blank" rel="noopener noreferrer" className="landing-card">
           <div className="landing-card-title">{t(locale, "dashboardSub")}</div>
           <span className="landing-card-cta">{t(locale, "cardEnter")}</span>
         </Link>
