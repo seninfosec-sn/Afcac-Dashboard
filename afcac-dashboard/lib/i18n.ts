@@ -21,6 +21,7 @@ export const translations = {
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     card4Title: "African air transport SAATM Monitor",
+    card5Title: "Yamoussoukro Decision Monitoring System",
     cardEnter: "Enter Dashboard →",
 
     // Section labels
@@ -376,6 +377,7 @@ export const translations = {
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     card4Title: "African air transport SAATM Monitor",
+    card5Title: "Yamoussoukro Decision Monitoring System",
     cardEnter: "Accéder au tableau de bord →",
 
     // Section labels
@@ -730,6 +732,7 @@ export const translations = {
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     card4Title: "African air transport SAATM Monitor",
+    card5Title: "Yamoussoukro Decision Monitoring System",
     cardEnter: "Aceder ao painel →",
 
     // Section labels
@@ -1084,6 +1087,7 @@ export const translations = {
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     card4Title: "African air transport SAATM Monitor",
+    card5Title: "Yamoussoukro Decision Monitoring System",
     cardEnter: "الدخول إلى اللوحة ←",
 
     // Section labels
