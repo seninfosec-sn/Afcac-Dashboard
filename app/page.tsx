@@ -6,6 +6,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const ABUJA_URL = "https://safety-dashboard-master.vercel.app/";
 const WINDHOEK_URL = "https://afcac-windhoek-dashboard.vercel.app";
+const JPAP_URL = "https://jpap-dashboard.vercel.app/";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
@@ -32,6 +33,12 @@ export default async function HomePage() {
 
         <Link href={WINDHOEK_URL} target="_blank" rel="noopener noreferrer" className="landing-card">
           <div className="landing-card-title">{t(locale, "card2Title")}</div>
+          <span className="landing-card-cta">{t(locale, "cardEnter")}</span>
+        </Link>
+
+        <Link href={JPAP_URL} target="_blank" rel="noopener noreferrer" className="landing-card">
+          <div className="landing-card-title">{t(locale, "card3Title")}</div>
+          <div className="landing-card-sub">{t(locale, "card3Sub")}</div>
           <span className="landing-card-cta">{t(locale, "cardEnter")}</span>
         </Link>
       </div>

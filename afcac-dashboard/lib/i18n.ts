@@ -18,6 +18,8 @@ export const translations = {
     landingHeading: "AFCAC Safety Targets Dashboards",
     landingSubheading: "Select a monitoring dashboard to continue",
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
+    card3Title: "JPAP 2026 — SAATM Action Plan",
+    card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     cardEnter: "Enter Dashboard →",
 
     // Section labels
@@ -370,6 +372,8 @@ export const translations = {
     landingHeading: "Tableaux de Bord des Objectifs de Sécurité de l'AFCAC",
     landingSubheading: "Sélectionnez un tableau de bord de suivi pour continuer",
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
+    card3Title: "JPAP 2026 — SAATM Action Plan",
+    card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     cardEnter: "Accéder au tableau de bord →",
 
     // Section labels
@@ -721,6 +725,8 @@ export const translations = {
     landingHeading: "Painéis de Metas de Segurança da AFCAC",
     landingSubheading: "Selecione um painel de monitorização para continuar",
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
+    card3Title: "JPAP 2026 — SAATM Action Plan",
+    card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     cardEnter: "Aceder ao painel →",
 
     // Section labels
@@ -1072,6 +1078,8 @@ export const translations = {
     landingHeading: "لوحات معلومات أهداف السلامة الخاصة بأفكاك",
     landingSubheading: "اختر لوحة متابعة للمتابعة",
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
+    card3Title: "JPAP 2026 — SAATM Action Plan",
+    card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
     cardEnter: "الدخول إلى اللوحة ←",
 
     // Section labels
