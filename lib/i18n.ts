@@ -20,6 +20,7 @@ export const translations = {
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
+    card4Title: "African air transport SAATM Monitor",
     cardEnter: "Enter Dashboard →",
 
     // Section labels
@@ -374,6 +375,7 @@ export const translations = {
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
+    card4Title: "African air transport SAATM Monitor",
     cardEnter: "Accéder au tableau de bord →",
 
     // Section labels
@@ -727,6 +729,7 @@ export const translations = {
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
+    card4Title: "African air transport SAATM Monitor",
     cardEnter: "Aceder ao painel →",
 
     // Section labels
@@ -1080,6 +1083,7 @@ export const translations = {
     card2Title: "MONITORING THE IMPLEMENTATION OF THE PROPOSED REVISED WINDHOEK DECLARATION AND TARGETS",
     card3Title: "JPAP 2026 — SAATM Action Plan",
     card3Sub: "Action Plan Monitoring Dashboard · Single African Air Transport Market (SAATM)",
+    card4Title: "African air transport SAATM Monitor",
     cardEnter: "الدخول إلى اللوحة ←",
 
     // Section labels
